@@ -1,0 +1,14 @@
+{
+  "chat.tools.global.autoApprove": false,
+  "chat.tools.terminal.autoApprove": {
+    "/^git (status|log|diff|add|commit|checkout|branch)\\b/": true,
+    "/^(ls|dir|cat|cd|mkdir|mv|cp|echo)\\b/": true,
+    "/^curl .*https?:\\/\\/(127\\.0\\.0\\.1|localhost)/": true,
+    "/^dotnet (build|run|test|restore|watch)\\b/": true,
+    "/^git push --force/": false,
+    "/^git push -f\\b/": false,
+    "/^git reset --hard/": false,
+    "/^rm -rf/": false,
+    "del": false
+  }
+}
