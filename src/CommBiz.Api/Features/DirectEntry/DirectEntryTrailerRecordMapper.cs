@@ -8,18 +8,17 @@ public static class DirectEntryTrailerRecordMapper
     private const string RecordType = "7";
     private const string BsbNumber = "999-999";
 
-    // Only debit code per the Direct Entry spec; all other codes reaching this feature are credits
-    // (any other code is already rejected by F-005's validator).
+    // Only debit code per the Direct Entry spec; kept as a comparison (rather than assuming) so a future
+    // payment type with a differing static TransactionCode still classifies correctly.
     private const string DebitTransactionCode = "13";
 
-    public static string Map(IReadOnlyList<PaymentInstructionRequest> instructions)
+    public static string Map(IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings)
     {
-        var creditTotal = instructions
-            .Where(instruction => instruction.TransactionCode != DebitTransactionCode)
-            .Sum(instruction => instruction.AmountInCents);
-        var debitTotal = instructions
-            .Where(instruction => instruction.TransactionCode == DebitTransactionCode)
-            .Sum(instruction => instruction.AmountInCents);
+        var amountTotalInCents = instructions.Sum(instruction => AmountToCents(instruction.Amount));
+        var isDebit = settings.TransactionCode == DebitTransactionCode;
+
+        var creditTotal = isDebit ? 0 : amountTotalInCents;
+        var debitTotal = isDebit ? amountTotalInCents : 0;
         var netTotal = Math.Abs(creditTotal - debitTotal);
 
         return
@@ -33,4 +32,7 @@ public static class DirectEntryTrailerRecordMapper
             instructions.Count.ToString().PadLeft(6, '0') +
             new string(' ', 40);
     }
+
+    private static long AmountToCents(decimal amount) =>
+        (long)Math.Round(amount * 100m, MidpointRounding.AwayFromZero);
 }

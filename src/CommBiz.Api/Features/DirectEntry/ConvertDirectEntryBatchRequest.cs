@@ -1,25 +1,18 @@
 namespace CommBiz.Api.Features.DirectEntry;
 
-// Batch header metadata + instruction array (Direct Entry spec's Header Record fields).
-// F-005 owns real field validation; F-004 owns payment-type routing/rejection.
-public record ConvertDirectEntryBatchRequest(
-    string FileName,
-    string UserIdentificationNumber,
-    string DescriptionOfEntries,
-    DateOnly DateToBeProcessed,
-    IReadOnlyList<PaymentInstructionRequest> Instructions);
-
-// One Direct Entry Detail Record's worth of input (field names/positions per the Direct Entry spec).
+// One Direct Entry Detail Record's worth of input, matching the real upstream payload shape
+// (verified against two real sample instructions). Static/organisation-level fields (Title,
+// LodgementReference, TraceBsb, RemitterName, WithholdingTaxAmount, TransactionCode, Indicator)
+// no longer come from the request — see DirectEntrySettings.
 public record PaymentInstructionRequest(
-    string PaymentType,
-    string Bsb,
-    string AccountNumber,
-    string Indicator,
-    string TransactionCode,
-    long AmountInCents,
-    string AccountTitle,
-    string LodgementReference,
-    string TraceBsb,
-    string TraceAccountNumber,
-    string RemitterName,
-    long WithholdingTaxAmountInCents);
+    string PaymentTypeCode,
+    string AccountNo,
+    string PaymentSourceTypeCode,
+    string SourceBankAccountName,
+    string SourceBankAccountNo,
+    string SourceBankBsb,
+    DateTime PaymentDate,
+    string SourceCurrency,
+    decimal SourceAmount,
+    decimal Amount,
+    string CreateBy);

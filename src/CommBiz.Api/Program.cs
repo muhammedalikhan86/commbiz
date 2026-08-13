@@ -1,20 +1,18 @@
-using CommBiz.Api.Features.Diagnostics;
 using CommBiz.Api.Features.DirectEntry;
+using Microsoft.Extensions.Options;
 using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseWolverine();
+builder.Services.Configure<DirectEntrySettings>(builder.Configuration.GetSection("DirectEntry"));
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<DirectEntrySettings>>().Value);
 
 var app = builder.Build();
 
 app.MapGet("/health", () => Results.Ok(new { status = "Healthy" }));
 
-// Diagnostic-only endpoint proving the Wolverine dispatch path (F-002); not a real feature.
-app.MapPost("/diagnostics/ping", async (PingCommand command, IMessageBus bus) =>
-    Results.Ok(await bus.InvokeAsync<PingResult>(command)));
-
-app.MapPost("/direct-entry/convert", async (ConvertDirectEntryBatchRequest request, IMessageBus bus) =>
-    Results.Ok(await bus.InvokeAsync<ConvertDirectEntryBatchResponse>(new ConvertDirectEntryBatchCommand(request))));
+app.MapPost("/convert", async (List<PaymentInstructionRequest> instructions, IMessageBus bus) =>
+    Results.Ok(await bus.InvokeAsync<ConvertDirectEntryBatchResponse>(new ConvertDirectEntryBatchCommand(instructions))));
 
 app.Run();
 

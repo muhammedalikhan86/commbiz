@@ -1,10 +1,10 @@
 namespace CommBiz.Api.Features.DirectEntry;
 
-// Payment Type Router (F-004, FR-006, architecture.md §3/§8 A3): only "DirectEntry" is supported
+// Payment Type Router (F-004, FR-006, architecture.md §3/§8 A3): only "DE" is supported
 // in this tranche; any other declared type rejects the whole batch, no partial conversion.
 public static class PaymentTypeRouter
 {
-    private const string SupportedPaymentType = "DirectEntry";
+    private const string SupportedPaymentType = "DE";
 
     public static IReadOnlyList<PaymentInstructionError>? FindUnsupportedPaymentTypes(
         IReadOnlyList<PaymentInstructionRequest> instructions)
@@ -13,11 +13,11 @@ public static class PaymentTypeRouter
 
         for (var index = 0; index < instructions.Count; index++)
         {
-            var paymentType = instructions[index].PaymentType;
-            if (!string.Equals(paymentType, SupportedPaymentType, StringComparison.OrdinalIgnoreCase))
+            var paymentTypeCode = instructions[index].PaymentTypeCode;
+            if (!string.Equals(paymentTypeCode, SupportedPaymentType, StringComparison.OrdinalIgnoreCase))
             {
                 errors ??= [];
-                errors.Add(new PaymentInstructionError(index, $"Unsupported payment type '{paymentType}'."));
+                errors.Add(new PaymentInstructionError(index, $"Unsupported payment type '{paymentTypeCode}'."));
             }
         }
 

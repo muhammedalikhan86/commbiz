@@ -7,17 +7,31 @@ public static class DirectEntryDetailRecordMapper
 {
     private const string RecordType = "1";
 
-    public static string Map(PaymentInstructionRequest instruction) =>
+    // Spec: "Care should be exercised to ensure inclusion of 'N' symbol" — combined with withholding tax
+    // always being zero (static config), "N" (ordinary, non-withholding) is correct for every instruction.
+    private const string Indicator = "N";
+
+    public static string Map(PaymentInstructionRequest instruction, DirectEntrySettings settings) =>
         RecordType +
-        instruction.Bsb +
-        instruction.AccountNumber.PadLeft(9) +
-        instruction.Indicator.PadRight(1) +
-        instruction.TransactionCode +
-        instruction.AmountInCents.ToString().PadLeft(10, '0') +
-        instruction.AccountTitle.PadRight(32) +
-        instruction.LodgementReference.PadRight(18) +
-        instruction.TraceBsb +
-        instruction.TraceAccountNumber.PadLeft(9) +
-        instruction.RemitterName.PadRight(16) +
-        instruction.WithholdingTaxAmountInCents.ToString().PadLeft(8, '0');
+        FormatBsb(instruction.SourceBankBsb) +
+        instruction.SourceBankAccountNo.PadLeft(9) +
+        Indicator +
+        settings.TransactionCode +
+        AmountToCents(instruction.Amount).ToString().PadLeft(10, '0') +
+        FixedWidth(settings.Title, 32) +
+        FixedWidth(settings.LodgementReferenceDetails, 18) +
+        settings.TraceAccountBsb +
+        settings.TraceAccountAccNo.PadLeft(9) +
+        FixedWidth(settings.NameOfRemitter, 16) +
+        settings.AmountOfWithholdingTax;
+
+    // Reformats a raw 6-digit BSB (e.g. "015141") into the spec's nnn-nnn shape (e.g. "015-141").
+    private static string FormatBsb(string bsb) => bsb[..3] + "-" + bsb[3..];
+
+    private static long AmountToCents(decimal amount) =>
+        (long)Math.Round(amount * 100m, MidpointRounding.AwayFromZero);
+
+    // Truncates rather than overflows the fixed-width record if a config value is longer than its field.
+    private static string FixedWidth(string value, int width) =>
+        value.Length >= width ? value[..width] : value.PadRight(width);
 }

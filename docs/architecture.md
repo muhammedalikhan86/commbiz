@@ -1,7 +1,7 @@
 # Architecture: Shaw and Partners → CommBank Payment File Conversion Service
 
 > Status: APPROVED
-> Version: v4
+> Version: v5
 > Last updated: 2026-08-13
 > PRD: docs/prd.md (built against v6)
 
@@ -15,28 +15,39 @@ between Shaw and Partners' systems and whatever process ultimately hands the out
 
 ## 2. High-Level Architecture
 A single ASP.NET Core Minimal API service (.NET 10), self-hosted directly on Kestrel with no
-containerization. The codebase is organised as vertical slices — one slice per payment type
-(starting with Direct Entry), each slice owning its own request model, validation, mapping, and
-output-assembly logic end to end, rather than sharing horizontal layers (e.g. no shared
-generic "mapping layer" or "repository layer"). Wolverine is used as the in-process
-command/handler pipeline for each slice (CQRS), replacing the need for a separate mediator
-library. No database is used — the service holds no state beyond a single request's lifetime.
+containerization. A single generic HTTP endpoint (`POST /convert`) accepts a batch of payment
+instructions in Shaw and Partners' own native payload shape; routing to the correct payment-type
+slice happens internally, keyed on each instruction's declared payment type code — the endpoint
+itself is payment-type-agnostic, not path-per-type. The codebase is organised as vertical slices —
+one slice per payment type (starting with Direct Entry), each slice owning its own request model,
+validation, mapping, and output-assembly logic end to end, rather than sharing horizontal layers
+(e.g. no shared generic "mapping layer" or "repository layer"). Wolverine is used as the
+in-process command/handler pipeline for each slice (CQRS), replacing the need for a separate
+mediator library. No database is used — the service holds no state beyond a single request's
+lifetime. Organisation-level constants each payment type's output format requires (e.g. Direct
+Entry's institution code, remitter details, trace account, transaction code) are sourced from
+static application configuration, not carried in the request — the upstream payload only ever
+contains the data that genuinely varies per instruction (see §3, Direct Entry Configuration).
 
 ## 3. Components
 
 ### API Host
-- **Responsibility:** Exposes the HTTP Minimal API endpoint(s) that accept a batch conversion
-  request and return a result.
-- **Inputs:** HTTP request containing an array of payment instructions.
-- **Outputs:** JSON response containing either the converted Direct Entry content as text, or
+- **Responsibility:** Exposes a single generic HTTP Minimal API endpoint (`POST /convert`) that
+  accepts a batch conversion request and returns a result. The endpoint is payment-type-agnostic;
+  it does not know which slice will ultimately handle the batch.
+- **Inputs:** HTTP request body containing a plain JSON array of payment instructions, in Shaw
+  and Partners' own native payload shape (e.g. `paymentTypeCode`, `accountNo`,
+  `sourceBankAccountName`, `sourceBankAccountNo`, `sourceBankBSB`, `paymentDate`, `amount`,
+  `createBy`) — not a shape pre-mapped to any single bank format's fields.
+- **Outputs:** JSON response containing either the converted output content as text, or
   a validation failure with a reason per invalid instruction.
 - **Dependencies:** Wolverine pipeline for dispatching the request to the correct slice.
 - **Technology:** ASP.NET Core Minimal API, .NET 10, Kestrel.
 
 ### Payment Type Router
-- **Responsibility:** Inspects each instruction's declared payment type and dispatches the
+- **Responsibility:** Inspects each instruction's declared payment type code and dispatches the
   batch to the corresponding slice. Rejects the batch if it contains a payment type not yet
-  supported (only Direct Entry in this tranche).
+  supported (only Direct Entry, code `DE`, in this tranche).
 - **Inputs:** Parsed batch of payment instructions.
 - **Outputs:** Dispatch to a specific slice's Wolverine command, or a rejection.
 - **Dependencies:** Direct Entry Conversion Slice (today); future slices as added.
@@ -45,39 +56,62 @@ library. No database is used — the service holds no state beyond a single requ
 ### Direct Entry Conversion Slice
 - **Responsibility:** Validates and converts a batch of Direct-Entry-typed instructions into a
   CommBank Direct Entry file: one header record, one detail record per instruction, one trailer
-  record, per the fixed-width layout in the Direct Entry spec.
-- **Inputs:** Validated batch of Direct-Entry-typed payment instructions.
+  record, per the fixed-width layout in the Direct Entry spec. Fields the upstream payload does
+  not carry (because they are constant for every Direct Entry submission Shaw and Partners makes —
+  e.g. institution code, name of user supplying file, title of account, lodgement reference, trace
+  BSB/account, name of remitter, transaction code, withholding tax) are populated from the Direct
+  Entry Configuration component, not from the request.
+- **Inputs:** Validated batch of Direct-Entry-typed payment instructions; Direct Entry
+  Configuration.
 - **Outputs:** Assembled Direct Entry file content (header + details + trailer, CRLF-terminated
   120-character records).
-- **Dependencies:** Validation component.
+- **Dependencies:** Validation component; Direct Entry Configuration.
 - **Technology:** Plain C# mapping code (no AutoMapper/commercial mapping library, per
   Technology Decisions).
 
 ### Validation Component
-- **Responsibility:** Validates every instruction in the batch against Direct Entry field
-  rules (e.g. BSB format, account number rules, amount format, mandatory fields) before any
-  conversion happens. If any instruction fails, the entire batch is rejected with a reason per
-  invalid instruction (per PRD Q5) — no partial conversion.
+- **Responsibility:** Validates every instruction in the batch against the field rules that
+  apply to the data the upstream payload actually carries (e.g. source bank BSB/account format,
+  amount bounds, mandatory identifiers) before any conversion happens. If any instruction fails,
+  the entire batch is rejected with a reason per invalid instruction (per PRD Q5) — no partial
+  conversion. Also enforces the Direct Entry spec's minimum-2-detail-record structural rule.
 - **Inputs:** Raw batch of payment instructions.
 - **Outputs:** Either "all valid" (proceed to conversion) or a list of per-instruction
   validation failures.
 - **Dependencies:** None (pure validation logic).
 - **Technology:** Plain C# validation, run as part of the Wolverine pipeline for the slice.
 
+### Direct Entry Configuration
+- **Responsibility:** Holds the organisation-level constants a Direct Entry file requires that
+  never vary per instruction or per request — e.g. CommBank institution code, Shaw and Partners'
+  name/title/APCA user identification number, description of entries, lodgement reference, trace
+  BSB/account, name of remitter, transaction code, withholding tax amount. Kept out of the request
+  payload and out of source code as hardcoded defaults, so there is exactly one place these values
+  are set.
+- **Inputs:** None (static configuration, not request-driven).
+- **Outputs:** Confirmed static values consumed by the Direct Entry Conversion Slice's Header,
+  Detail, and Trailer record mapping.
+- **Dependencies:** None.
+- **Technology:** ASP.NET Core `IOptions<T>` configuration binding, sourced from `appsettings.json`.
+
 ## 4. Data Flow
 
 Primary use case — converting a batch of Direct Entry payment instructions:
 
-1. Shaw and Partners' system sends a batch of payment instructions to the API Host.
-2. The Payment Type Router checks every instruction's payment type. If any instruction's type
-   isn't supported yet, the whole batch is rejected.
-3. The Direct Entry Conversion Slice's Validation Component checks every instruction against
-   Direct Entry field rules.
+1. Shaw and Partners' system sends a batch of payment instructions, in its own native payload
+   shape, to the API Host's `POST /convert` endpoint.
+2. The Payment Type Router checks every instruction's declared payment type code. If any
+   instruction's type isn't supported yet, the whole batch is rejected.
+3. The Direct Entry Conversion Slice's Validation Component checks every instruction against the
+   field rules that apply to the data the payload carries, plus the batch-level minimum-2-record
+   structural rule.
 4. If any instruction is invalid, the batch is rejected in full, with a validation reason
    returned for every invalid instruction. No output is produced.
-5. If all instructions are valid, each is mapped to a Direct Entry detail record; a header
-   record is built from batch-level metadata; a trailer record is built with computed totals
-   (credit total, debit total, net total, record count) so the file is self-balancing.
+5. If all instructions are valid, each is mapped to a Direct Entry detail record — combining the
+   per-instruction data from the payload with the constant values from Direct Entry
+   Configuration; a header record is built from Direct Entry Configuration plus the earliest
+   instruction's payment date; a trailer record is built with computed totals (credit total,
+   debit total, net total, record count) so the file is self-balancing.
 6. The assembled file content is returned to the caller directly, as text within the JSON
    response body, alongside a success indicator — no download link, no temporary storage.
 
@@ -131,3 +165,4 @@ Primary use case — converting a batch of Direct Entry payment instructions:
 | v2 | 2026-08-13 | Resolved A2 (no auth, internal-only), A3 (reject batch on unsupported type, revisitable), A5 (Shaw.Diagnostics logging, ADR-006); deferred A4; proposed a Conversion Result Store + download-link design for A1 (ADR-007, PROPOSED) pending confirmation | Triage edit |
 | v3 | 2026-08-13 | Reversed A1: no download link after all — converted output returned inline as text in a JSON response. Removed Conversion Result Store component; rejected ADR-007; added ADR-008 (inline JSON response) | Triage edit |
 | v4 | 2026-08-13 | Architecture approved (A4 remains open, deferred by user request) | Gate approval |
+| v5 | 2026-08-13 | Reshaped the API Host/Payment Type Router/Direct Entry Conversion Slice/Validation Component descriptions to match the real upstream payload contract (`POST /convert`, payment-type-code-driven routing rather than a per-type URL path); added a new Direct Entry Configuration component documenting that organisation-level constants (institution code, remitter, trace account, transaction code, etc.) are sourced from application configuration rather than the request; updated Data Flow accordingly | Implementation-driven correction |
