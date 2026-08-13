@@ -1,0 +1,218 @@
+{
+  "nodes": [
+    {
+      "id": "direct_entry_slice",
+      "label": "Direct Entry Vertical Slice",
+      "file_type": "rationale",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/README.md",
+      "source_location": null
+    },
+    {
+      "id": "payment_type_router",
+      "label": "Payment Type Router",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/PaymentTypeRouter.cs"
+    },
+    {
+      "id": "direct_entry_validator",
+      "label": "Direct Entry Validator",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/DirectEntryValidator.cs"
+    },
+    {
+      "id": "detail_record_mapper",
+      "label": "Detail Record Mapper",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/DirectEntryDetailRecordMapper.cs"
+    },
+    {
+      "id": "header_record_mapper",
+      "label": "Header Record Mapper",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/DirectEntryHeaderRecordMapper.cs"
+    },
+    {
+      "id": "trailer_record_mapper",
+      "label": "Trailer Record Mapper",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/DirectEntryTrailerRecordMapper.cs"
+    },
+    {
+      "id": "fixed_width_assembly",
+      "label": "Fixed-Width File Assembly",
+      "file_type": "rationale",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/README.md"
+    },
+    {
+      "id": "convert_direct_entry_command",
+      "label": "ConvertDirectEntryBatchCommand",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchCommand.cs"
+    },
+    {
+      "id": "batch_request_model",
+      "label": "ConvertDirectEntryBatchRequest",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchRequest.cs"
+    },
+    {
+      "id": "batch_response_model",
+      "label": "ConvertDirectEntryBatchResponse",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchResponse.cs"
+    },
+    {
+      "id": "wolverine_cqrs",
+      "label": "Wolverine CQRS",
+      "file_type": "rationale",
+      "source_file": "src/CommBiz.Api/Program.cs"
+    },
+    {
+      "id": "kestrel_host",
+      "label": "Kestrel Minimal API Host",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Program.cs"
+    },
+    {
+      "id": "vertical_slice_arch",
+      "label": "Vertical Slice Architecture",
+      "file_type": "rationale",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/README.md"
+    }
+  ],
+  "edges": [
+    {
+      "source": "direct_entry_slice",
+      "target": "vertical_slice_arch",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "batch_request_model",
+      "target": "convert_direct_entry_command",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "convert_direct_entry_command",
+      "target": "batch_response_model",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "convert_direct_entry_command",
+      "target": "payment_type_router",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85
+    },
+    {
+      "source": "convert_direct_entry_command",
+      "target": "direct_entry_validator",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85
+    },
+    {
+      "source": "convert_direct_entry_command",
+      "target": "detail_record_mapper",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85
+    },
+    {
+      "source": "convert_direct_entry_command",
+      "target": "header_record_mapper",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85
+    },
+    {
+      "source": "convert_direct_entry_command",
+      "target": "trailer_record_mapper",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85
+    },
+    {
+      "source": "header_record_mapper",
+      "target": "fixed_width_assembly",
+      "relation": "participates_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85
+    },
+    {
+      "source": "trailer_record_mapper",
+      "target": "fixed_width_assembly",
+      "relation": "participates_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85
+    },
+    {
+      "source": "detail_record_mapper",
+      "target": "fixed_width_assembly",
+      "relation": "participates_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85
+    },
+    {
+      "source": "direct_entry_validator",
+      "target": "fixed_width_assembly",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75
+    },
+    {
+      "source": "convert_direct_entry_command",
+      "target": "wolverine_cqrs",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75
+    },
+    {
+      "source": "wolverine_cqrs",
+      "target": "kestrel_host",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "direct_entry_processing_flow",
+      "label": "Direct Entry Processing Pipeline",
+      "nodes": [
+        "batch_request_model",
+        "payment_type_router",
+        "direct_entry_validator",
+        "detail_record_mapper",
+        "header_record_mapper",
+        "trailer_record_mapper",
+        "fixed_width_assembly",
+        "batch_response_model"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "vertical_slice_pattern",
+      "label": "Vertical Slice Implementation",
+      "nodes": [
+        "direct_entry_slice",
+        "vertical_slice_arch",
+        "convert_direct_entry_command",
+        "batch_request_model",
+        "batch_response_model"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

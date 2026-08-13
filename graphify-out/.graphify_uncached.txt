@@ -1,0 +1,15 @@
+C:\Users\muhammedali.khan\source\repos\commbiz\src\CommBiz.Api\CommBiz.Api.csproj
+C:\Users\muhammedali.khan\source\repos\commbiz\src\CommBiz.Api\Features\Diagnostics\Ping.cs
+C:\Users\muhammedali.khan\source\repos\commbiz\src\CommBiz.Api\Features\DirectEntry\ConvertDirectEntryBatchCommand.cs
+C:\Users\muhammedali.khan\source\repos\commbiz\src\CommBiz.Api\Features\DirectEntry\ConvertDirectEntryBatchRequest.cs
+C:\Users\muhammedali.khan\source\repos\commbiz\src\CommBiz.Api\Features\DirectEntry\ConvertDirectEntryBatchResponse.cs
+C:\Users\muhammedali.khan\source\repos\commbiz\src\CommBiz.Api\Features\DirectEntry\DirectEntryDetailRecordMapper.cs
+C:\Users\muhammedali.khan\source\repos\commbiz\src\CommBiz.Api\Features\DirectEntry\DirectEntryHeaderRecordMapper.cs
+C:\Users\muhammedali.khan\source\repos\commbiz\src\CommBiz.Api\Features\DirectEntry\DirectEntryTrailerRecordMapper.cs
+C:\Users\muhammedali.khan\source\repos\commbiz\src\CommBiz.Api\Features\DirectEntry\DirectEntryValidator.cs
+C:\Users\muhammedali.khan\source\repos\commbiz\src\CommBiz.Api\Features\DirectEntry\PaymentTypeRouter.cs
+C:\Users\muhammedali.khan\source\repos\commbiz\src\CommBiz.Api\Program.cs
+C:\Users\muhammedali.khan\source\repos\commbiz\src\CommBiz.Api\Properties\launchSettings.json
+C:\Users\muhammedali.khan\source\repos\commbiz\src\CommBiz.Api\appsettings.Development.json
+C:\Users\muhammedali.khan\source\repos\commbiz\src\CommBiz.Api\appsettings.json
+C:\Users\muhammedali.khan\source\repos\commbiz\src\CommBiz.Api\Features\DirectEntry\README.md
