@@ -1,7 +1,8 @@
 @baseUrl = http://localhost:5182
 
 ### Valid batch: 2 real sample instructions. Every field satisfies the validation rules.
-### Expect: 200 OK, Success: true, ConvertedText populated, Errors: null.
+### Expect: 200 OK, Success: true, ConvertedText populated (header + 2 details + self-balancing
+### contra record + trailer, per F-014), Errors: null.
 POST {{baseUrl}}/convert
 Content-Type: application/json
 
@@ -105,10 +106,11 @@ Content-Type: application/json
   }
 ]
 
-### Only 1 instruction — below the minimum of 2, whole batch rejected on the header-level rule.
-### The single instruction is otherwise fully valid so only the minimum-count rule fires.
-### Expect: 200 OK, Success: false, Errors containing
-### "Payment file must contain at least 2 detail records (found 1)." at the header level.
+### Only 1 instruction — F-014 reduced the minimum from 2 to 1, since the self-balancing contra
+### record the service now adds itself already satisfies the Direct Entry spec's minimum-2-detail-
+### record structural rule. The single instruction is fully valid, so the batch now succeeds.
+### Expect: 200 OK, Success: true, ConvertedText populated (header + 1 detail + self-balancing
+### contra record + trailer), Errors: null.
 POST {{baseUrl}}/convert
 Content-Type: application/json
 

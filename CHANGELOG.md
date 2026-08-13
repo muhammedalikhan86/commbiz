@@ -5,6 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] — 2026-08-14
+
+### Added
+
+#### Self-Balancing Record Support
+- **F-014:** Self-balancing (contra) detail record before trailer; minimum batch size reduced from 2 to 1
+  - Supports single-instruction Direct Entry batches (previously rejected)
+  - Every successful conversion now includes an additional self-balancing detail record before the trailer
+  - Net total of all instructions balanced to zero in the self-balancing record
+  - Output content (byte-for-byte) changes; JSON response shape remains unchanged
+  - No breaking changes to request or response contracts
+
+### Modules/Files Modified
+- `src/CommBiz.Api/Features/DirectEntry/`
+  - `DirectEntryValidator.cs` — Updated batch size minimum from 2 to 1
+  - `DirectEntryTrailerRecordMapper.cs` — Updated to accommodate self-balancing record
+  - `DirectEntrySelfBalancingRecordMapper.cs` [new] — Maps contra record with net-zero totals
+  - `DirectEntryAmountTotals.cs` [new] — Calculates and stores credit/debit aggregates
+  - `ConvertDirectEntryBatchCommand.cs` — Orchestrates self-balancing record insertion
+  
+- `tests/CommBiz.Api.Tests/`
+  - `DirectEntryValidatorTests.cs` — Updated to verify single-instruction success
+  - `DirectEntryTrailerRecordMapperTests.cs` — Updated for self-balancing record position
+  - `DirectEntrySelfBalancingRecordMapperTests.cs` [new] — Unit tests for contra mapping
+  - `ConvertDirectEntryBatchHandlerTests.cs` — Updated integration tests
+
+### Breaking Changes
+None — behavior change is backwards-compatible; single-instruction batches now succeed instead of failing.
+
+### Test Coverage
+**79 passing tests** (verified via `dotnet test`, 0 failed, 0 skipped):
+
+1. **Happy Path — Multi-Instruction Batch with Self-Balancing Record**
+   - POST valid 2+ instruction Direct Entry batch to `POST /convert`
+   - Verify response includes self-balancing detail record immediately before trailer
+   - Confirm self-balancing record net total is zero (credit_sum == debit_sum or vice versa)
+   - Validate fixed-width text output embedding in JSON response
+
+2. **Edge Case — Single-Instruction Batch Success**
+   - POST batch with exactly 1 instruction (previously rejected at minimum-2 threshold)
+   - Verify request now succeeds and includes self-balancing record
+   - Confirm conversion pipeline handles minimal valid batch correctly
+
+3. **Regression-Sensitive — Zero-Instruction Batch Still Rejected**
+   - POST batch with zero instructions
+   - Verify request is rejected with clear validation error (minimum is now 1, not 0)
+   - Confirm minimum batch size validation remains in place
+
 ## [1.0.0] — 2026-08-13
 
 ### Added

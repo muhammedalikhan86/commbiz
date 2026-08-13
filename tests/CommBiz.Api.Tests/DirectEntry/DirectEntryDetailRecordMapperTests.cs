@@ -1,6 +1,6 @@
 using CommBiz.Api.Features.DirectEntry;
 
-namespace CommBiz.Api.Tests;
+namespace CommBiz.Api.Tests.DirectEntry;
 
 public class DirectEntryDetailRecordMapperTests
 {

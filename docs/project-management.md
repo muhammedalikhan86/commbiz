@@ -2,10 +2,10 @@
 
 > Status: DRAFT
 > Tranche: v1
-> Version: v3
-> Last updated: 2026-08-13
-> PRD: docs/prd.md (built against v6)
-> Architecture: docs/architecture.md (built against v5)
+> Version: v6
+> Last updated: 2026-08-14
+> PRD: docs/prd.md (built against v7)
+> Architecture: docs/architecture.md (built against v6)
 
 ## Phases & Milestones
 
@@ -23,15 +23,16 @@
 | F-002 | Wire up Wolverine as the in-process command/handler pipeline | 1 | Must | Done | Wolverine is registered; a request flows end to end from the HTTP endpoint to a handler via Wolverine |
 | F-003 | Implement the Direct Entry request/response contract (accept an array of payment instructions; return JSON with converted text or validation errors) | 1 | Must | Done | `POST /convert` accepts a plain JSON array of payment instructions in Shaw and Partners' native payload shape (`paymentTypeCode`, `accountNo`, `sourceBank*`, `paymentDate`, `amount`, `createBy`, etc.); returns the converted text inline in a JSON response on success |
 | F-004 | Implement the Payment Type Router (dispatch by payment type; reject the whole batch if any instruction's type isn't supported yet) | 1 | Must | Done | A batch containing any instruction whose `paymentTypeCode` isn't `"DE"` (case-insensitive) is rejected in full, per FR-006 |
-| F-005 | Implement Direct Entry validation rules (BSB format, account number rules, amount format, mandatory fields, etc., per the Direct Entry spec) | 1 | Must | Done | Every field rule applicable to the upstream payload's fields is enforced (`sourceBankBSB` format, `sourceBankAccountNo` rules, `amount` bounds, `accountNo` presence) plus the minimum-2-instruction structural rule; an invalid batch is rejected in full with a reason per invalid instruction, per FR-002/FR-003 |
+| F-005 | Implement Direct Entry validation rules (BSB format, account number rules, amount format, mandatory fields, etc., per the Direct Entry spec) | 1 | Must | Done | Every field rule applicable to the upstream payload's fields is enforced (`sourceBankBSB` format, `sourceBankAccountNo` rules, `amount` bounds, `accountNo` presence) plus the minimum-1-instruction structural rule (reduced from 2, per F-014); an invalid batch is rejected in full with a reason per invalid instruction, per FR-002/FR-003 |
 | F-006 | Implement Direct Entry detail record mapping (manual mapping, no AutoMapper) | 1 | Must | Done | Each valid instruction maps to a detail record with correct field positions, combining per-instruction payload fields (BSB, account, amount) with organisation-level constants sourced from Direct Entry Configuration (indicator, transaction code, title, lodgement reference, trace BSB/account, remitter name, withholding tax) |
 | F-007 | Implement Direct Entry header and trailer record assembly, including self-balancing totals | 1 | Must | Done | Header record populates from Direct Entry Configuration plus the earliest instruction's payment date; trailer totals (credit, debit, net, record count) reconcile against the detail records |
 | F-008 | Assemble the final fixed-width Direct Entry file content (120-character, CRLF-terminated records) and return it as text in the JSON response | 1 | Must | Done | Output matches the Direct Entry spec's structural rules for a valid batch, per FR-004 and ADR-008 |
+| F-014 | Add a self-balancing (contra) detail record before the trailer record, and reduce the minimum batch size from 2 to 1 payment instruction | 1 | Must | Done | A self-balancing detail record is generated for every conversion, posting the batch's total amount (in cents, computed identically to the trailer's existing per-instruction-cents-then-sum total — see PM-005) against the configured settlement account (`TraceAccountBsb`/`TraceAccountAccNo`), in the transaction direction opposite the batch's configured `TransactionCode`, positioned immediately before the trailer record; the trailer's totals (credit, debit, net, record count) include this record so net total is always zero and the file is fully self-balancing; a batch containing as few as 1 valid instruction is accepted (previously rejected below 2), since the self-balancing record itself satisfies the Direct Entry spec's minimum-2-detail-record rule, per FR-005/FR-007/FR-008 |
 | F-009 | Integrate Shaw.Diagnostics logging (internal NuGet feed, v2.0.0) with redaction of sensitive payment fields | 2 | Must | Planned | Logs are emitted via Shaw.Diagnostics; no account numbers, amounts, or names appear in plaintext logs, per NFR-002/ADR-006 |
 | F-010 | Confirm and document the trusted internal-only deployment boundary (no application-level auth) | 2 | Must | Planned | Deployment network boundary documented; service runs without app-level auth controls, per NFR-003 |
 | F-011 | Define and validate batch size/performance targets | 2 | Should | Planned | Target batch size and latency confirmed (resolves Architecture A4) and validated under representative load |
 | F-012 | Kestrel-only hosting/runtime configuration (no Docker, no database) | 3 | Must | Planned | Service runs directly on Kestrel in the target environment with no container runtime and no database dependency, per ADR-005 |
-| F-013 | End-to-end test coverage for Direct Entry conversion (happy path and validation-failure paths) | 3 | Must | Planned | Automated tests cover: a valid batch converts correctly; a batch with one invalid instruction is rejected in full with reasons; a batch with an unsupported payment type is rejected |
+| F-013 | End-to-end test coverage for Direct Entry conversion (happy path and validation-failure paths) | 3 | Must | Planned | Automated tests cover: a valid batch converts correctly; a batch with one invalid instruction is rejected in full with reasons; a batch with an unsupported payment type is rejected; a single-instruction batch converts correctly, with a self-balancing detail record added and the file's trailer totals reconciling to zero net, per F-014 |
 
 ## Dependencies
 
@@ -44,6 +45,7 @@
 | F-006 | F-005 | F-007 | Needs valid instructions before mapping |
 | F-007 | F-006 | F-008 | Needs detail records before totals can be computed |
 | F-008 | F-007 | F-013 | Completes the core conversion capability |
+| F-014 | F-005, F-007 | F-013 | Amends already-Done Phase 1 work (validator's minimum-count rule, trailer assembly) per PRD v7's self-balancing requirement; must land before F-013's E2E tests are finalised |
 | F-009 | F-001 | — | Independent of the conversion logic itself |
 | F-010 | F-001 | — | Independent of the conversion logic itself |
 | F-011 | F-008 | — | Needs a working conversion path to measure against |
@@ -65,6 +67,13 @@
 | PM-001 | Future-tranche candidates from the document stash: BPAY (BPay Payments spec) and International/Priority Payments (MT101 spec) look like clear candidates for Tranche v2+, each converting to their own CommBank format. BAI2 and the DELIST CSV spec appear to be account-information/reporting formats rather than outbound payment types analogous to Direct Entry — confirm whether either is actually in scope before planning a tranche around them. BTRS Enriched and the Status Files/Naming Conventions spec relate to bank return/status reporting, which the PRD already excludes permanently — flagged here only so they aren't mistaken for a future payment-type tranche. | User | Before Tranche v2 planning |
 | PM-002 | Architecture Open Question A4 (expected/maximum batch size and target conversion latency) is still open — feeds directly into F-011's acceptance criteria. | User | Before Phase 2 completion |
 | PM-003 | `/convert` request/response contract was reshaped to match the real upstream payload (`paymentTypeCode`, `accountNo`, `sourceBank*`, `amount`, etc.) instead of the original Direct-Entry-field-shaped DTO; conversion rules are now sourced exclusively from `appsettings.json`'s `DirectEntry` section (`DirectEntrySettings` carries no hardcoded defaults, avoiding duplicated-value drift), including the confirmed `UserIdentificationNumber` = `"301500"`. Still open: `DescriptionOfEntriesOnFile` = `"ONLINEPAYMENTS"` (14 chars) exceeds the Header spec's 12-char field width and is silently truncated to `"ONLINEPAYMEN"` — needs a confirmed shorter value. Also open: header `DateToBeProcessed` currently defaults to the earliest instruction's `PaymentDate` when a batch spans multiple dates — confirm whether mixed dates should instead be rejected or split into separate files. HTTP status code for rejections (200 OK + `Success:false` envelope vs. 4xx) is still unresolved. `docs/test-cases.md`, `docs/handoff.md`, and `docs/testing/phase-1-direct-entry-conversion-core.md` still describe the pre-reshape contract (old field names, old `/direct-entry/convert` path, removed `/diagnostics/ping` endpoint, stale test count) and need a follow-up rewrite pass. | User | Before Phase 3 (F-013 E2E tests) / before production use |
+| PM-004 | F-014's self-balancing detail record reuses existing `DirectEntrySettings` fields rather than introducing new configuration: its account (position 2-17) is `TraceAccountBsb`/`TraceAccountAccNo`; its Title, Lodgement Reference, Trace BSB/Account (81-96, self-referencing, consistent with existing detail records), Name of Remitter, and Indicator (`"N"`) reuse the same static config/constants regular detail records already use; its Transaction Code is the inverse of `settings.TransactionCode` (credit code `"50"` if configured as debit `"13"`, or vice versa); its Amount is the batch's total (sum of all real detail amounts, in cents); Withholding Tax is zero. This is a design decision recorded here to guide implementation, not an open question. |
+
+## Resolved Items
+
+| ID | Item | Resolution |
+|----|------|------------|
+| PM-005 | F-014's self-balancing Amount must be computed as the exact same cents total the trailer's credit/debit totals already use (`instructions.Sum(instruction => AmountToCents(instruction.Amount))` — round each instruction to cents first, then sum), not a separate `Math.Round(instructions.Sum(i => i.Amount) * 100m)` recomputed from the decimal amounts. | Resolved — implemented as specified: the shared round-then-sum cents total is factored into one place consumed by both the self-balancing mapper and the trailer mapper. Verified by the F-014 test suite (79 tests passing, 0 vulnerabilities); trailer net total reconciles to zero on every conversion, confirmed by Integration Agent and Reviewer-Integration PASS verdicts. |
 
 ## Version History
 | Version | Date | Change | Triggered By |
@@ -72,3 +81,6 @@
 | v1 | 2026-08-13 | Initial draft | — |
 | v2 | 2026-08-13 | Phase 1 marked Done — all Phase 1 features (F-001–F-008) passed review | Reviewer PASS verdicts on F-001–F-008 |
 | v3 | 2026-08-13 | Updated F-003–F-008 Acceptance Criteria to reflect the reshaped `/convert` contract (real upstream payload fields, config-sourced Direct Entry constants); refreshed PM-003 to record the confirmed `UserIdentificationNumber` and settings-duplication cleanup, and to flag remaining stale docs (test-cases.md, handoff.md, test runbook) | Post-implementation governance alignment |
+| v4 | 2026-08-13 | Added F-014 (self-balancing contra detail record; minimum batch size reduced from 2 to 1) per PRD v7/architecture v6; updated F-013's acceptance criteria and the Dependencies table; recorded the contra record's field-reuse design decision as PM-004 and its amount-computation precision requirement as PM-005 (must reuse the trailer's exact round-then-sum cents total, not a separately rounded recomputation); annotated Phase 1 as amended | User requirement change |
+| v5 | 2026-08-14 | F-014 marked Done — Reviewer PASS verdict (first pass, no issues); Phase 1 fully complete again | Reviewer PASS verdict on F-014 |
+| v6 | 2026-08-14 | Confirmed F-005's Acceptance Criteria correctly reflects the Integration Agent's minimum-2→minimum-1 drift fix; resolved and closed PM-005 (amount-computation precision) into a new Resolved Items section, now implemented and verified by the F-014 test suite (79 tests passing, 0 vulnerabilities); confirmed no Tranche boundary applies (Phase 1 Done, Phases 2/3 still Planned) | Integration Agent PASS, Reviewer-Integration PASS on F-014 |

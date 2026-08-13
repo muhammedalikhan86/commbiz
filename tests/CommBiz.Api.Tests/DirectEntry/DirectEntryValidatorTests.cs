@@ -1,6 +1,6 @@
 using CommBiz.Api.Features.DirectEntry;
 
-namespace CommBiz.Api.Tests;
+namespace CommBiz.Api.Tests.DirectEntry;
 
 public class DirectEntryValidatorTests
 {
@@ -33,14 +33,10 @@ public class DirectEntryValidatorTests
             Amount: 7500.0m,
             CreateBy: "James Harris");
 
-    private static IReadOnlyList<PaymentInstructionRequest> BatchWith(params PaymentInstructionRequest[] instructions)
-    {
-        // Field-focused tests below only care about a single instruction's data; pad up to F-008's
-        // minimum-2 rule with extra valid instructions so those tests aren't tripped by that rule.
-        return instructions.Length >= 2
-            ? instructions
-            : [.. instructions, .. Enumerable.Repeat(ValidInstruction(), 2 - instructions.Length)];
-    }
+    // F-014 dropped the request-level minimum to 1, so field-focused tests below can use a single
+    // instruction directly without needing padding to satisfy a higher minimum-count rule.
+    private static IReadOnlyList<PaymentInstructionRequest> BatchWith(params PaymentInstructionRequest[] instructions) =>
+        instructions;
 
     private static void AssertValid(IReadOnlyList<PaymentInstructionRequest> instructions) =>
         Assert.Null(DirectEntryValidator.Validate(instructions));
@@ -134,7 +130,8 @@ public class DirectEntryValidatorTests
     public void AccountNo_populated_is_valid() =>
         AssertValid(BatchWith(ValidInstruction() with { AccountNo = "S1605677" }));
 
-    // --- Minimum instruction count (F-008): spec requires at least 2 detail records ---
+    // --- Minimum instruction count (F-014): self-balancing record guarantees the output's own
+    // >=2 detail record structural rule, so the request-level minimum is now 1 payment instruction ---
 
     private static IReadOnlyList<PaymentInstructionRequest> BatchWithCount(int count) =>
         Enumerable.Repeat(ValidInstruction(), count).ToArray();
@@ -145,17 +142,12 @@ public class DirectEntryValidatorTests
         var errors = DirectEntryValidator.Validate(BatchWithCount(0));
 
         Assert.NotNull(errors);
-        Assert.Contains(errors, e => e.Index == -1 && e.Reason.Contains("at least 2"));
+        Assert.Contains(errors, e => e.Index == -1 && e.Reason.Contains("at least 1"));
     }
 
     [Fact]
-    public void One_instruction_is_rejected_with_minimum_count_reason()
-    {
-        var errors = DirectEntryValidator.Validate(BatchWithCount(1));
-
-        Assert.NotNull(errors);
-        Assert.Contains(errors, e => e.Index == -1 && e.Reason.Contains("at least 2"));
-    }
+    public void One_instruction_is_not_rejected_on_minimum_count_ground() =>
+        AssertValid(BatchWithCount(1)); // fully valid data otherwise -> no errors at all
 
     [Fact]
     public void Two_instructions_are_not_rejected_on_minimum_count_ground() =>

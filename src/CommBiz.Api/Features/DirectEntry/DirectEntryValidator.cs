@@ -8,8 +8,9 @@ public static class DirectEntryValidator
     // Sentinel Index for batch-header-level errors (not tied to a specific instruction).
     private const int HeaderErrorIndex = -1;
 
-    // Direct Entry spec §1: "at least 2 detail records" per file.
-    private const int MinimumInstructionCount = 2;
+    // Direct Entry spec §1 requires >=2 detail records per file; the self-balancing record (F-014) now
+    // guarantees that structurally, so the request-level minimum drops to 1 payment instruction.
+    private const int MinimumInstructionCount = 1;
 
     private const int MaxAccountNumberLength = 9;
     private const decimal MaxAmount = 99_999_999.99m;
@@ -23,7 +24,7 @@ public static class DirectEntryValidator
             errors ??= [];
             errors.Add(new PaymentInstructionError(
                 HeaderErrorIndex,
-                $"Payment file must contain at least {MinimumInstructionCount} detail records " +
+                $"Payment file must contain at least {MinimumInstructionCount} payment instruction(s) " +
                 $"(found {instructions.Count})."));
         }
 

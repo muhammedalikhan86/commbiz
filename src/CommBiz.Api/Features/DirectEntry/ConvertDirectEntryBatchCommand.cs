@@ -24,10 +24,12 @@ public static class ConvertDirectEntryBatchHandler
         var detailRecords = string.Concat(
             instructions.Select(instruction => DirectEntryDetailRecordMapper.Map(instruction, settings) + "\r\n"));
 
-        // Header + Details (F-006, unchanged) + Trailer (F-007); final short-form nuances are F-008's job.
+        // Header + Details (F-006) + self-balancing contra record (F-014, immediately before the
+        // trailer, never interleaved with real details) + Trailer (F-007).
         var convertedText =
             DirectEntryHeaderRecordMapper.Map(instructions, settings) + "\r\n" +
             detailRecords +
+            DirectEntrySelfBalancingRecordMapper.Map(instructions, settings) + "\r\n" +
             DirectEntryTrailerRecordMapper.Map(instructions, settings) + "\r\n";
 
         return new ConvertDirectEntryBatchResponse(true, convertedText, null);

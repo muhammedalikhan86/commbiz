@@ -1,6 +1,6 @@
 using CommBiz.Api.Features.DirectEntry;
 
-namespace CommBiz.Api.Tests;
+namespace CommBiz.Api.Tests.DirectEntry;
 
 public class ConvertDirectEntryBatchHandlerTests
 {
@@ -107,11 +107,23 @@ public class ConvertDirectEntryBatchHandlerTests
         Assert.False(result.Success);
         Assert.Null(result.ConvertedText);
         Assert.NotNull(result.Errors);
-        Assert.Contains(result.Errors, e => e.Index == -1 && e.Reason.Contains("at least 2"));
+        Assert.Contains(result.Errors, e => e.Index == -1 && e.Reason.Contains("at least 1"));
     }
 
     [Fact]
-    public void Valid_batch_converted_text_is_header_plus_the_mapped_detail_records_plus_trailer()
+    public void Single_instruction_batch_is_accepted_as_the_new_minimum()
+    {
+        var command = CommandWith([Instruction("DE")]);
+
+        var result = ConvertDirectEntryBatchHandler.Handle(command, Settings);
+
+        Assert.True(result.Success);
+        Assert.False(string.IsNullOrEmpty(result.ConvertedText));
+        Assert.Null(result.Errors);
+    }
+
+    [Fact]
+    public void Valid_batch_converted_text_is_header_plus_the_mapped_detail_records_plus_self_balancing_plus_trailer()
     {
         var first = Instruction("DE");
         var second = Instruction("DE");
@@ -124,6 +136,7 @@ public class ConvertDirectEntryBatchHandlerTests
             DirectEntryHeaderRecordMapper.Map(command.Instructions, Settings) + "\r\n" +
             DirectEntryDetailRecordMapper.Map(first, Settings) + "\r\n" +
             DirectEntryDetailRecordMapper.Map(second, Settings) + "\r\n" +
+            DirectEntrySelfBalancingRecordMapper.Map(command.Instructions, Settings) + "\r\n" +
             DirectEntryTrailerRecordMapper.Map(command.Instructions, Settings) + "\r\n";
         Assert.Equal(expected, result.ConvertedText);
     }
@@ -142,7 +155,28 @@ public class ConvertDirectEntryBatchHandlerTests
             DirectEntryHeaderRecordMapper.Map(command.Instructions, Settings) + "\r\n" +
             DirectEntryDetailRecordMapper.Map(first, Settings) + "\r\n" +
             DirectEntryDetailRecordMapper.Map(second, Settings) + "\r\n" +
+            DirectEntrySelfBalancingRecordMapper.Map(command.Instructions, Settings) + "\r\n" +
             DirectEntryTrailerRecordMapper.Map(command.Instructions, Settings) + "\r\n";
         Assert.Equal(expected, result.ConvertedText);
+    }
+
+    [Fact]
+    public void Self_balancing_record_is_positioned_immediately_before_the_trailer_after_all_real_details()
+    {
+        var command = CommandWith([Instruction("DE"), Instruction("DE"), Instruction("DE")]);
+
+        var result = ConvertDirectEntryBatchHandler.Handle(command, Settings);
+
+        Assert.True(result.Success);
+        var lines = result.ConvertedText!.Split("\r\n");
+        var recordLines = lines[..^1]; // trailing empty entry from the final CRLF, not a record
+
+        Assert.Equal(6, recordLines.Length); // 1 header + 3 details + 1 self-balancing + 1 trailer
+        Assert.Equal("0", recordLines[0][0..1]); // header
+        Assert.Equal("1", recordLines[1][0..1]); // detail
+        Assert.Equal("1", recordLines[2][0..1]); // detail
+        Assert.Equal("1", recordLines[3][0..1]); // detail
+        Assert.Equal("1", recordLines[4][0..1]); // self-balancing
+        Assert.Equal("7", recordLines[5][0..1]); // trailer
     }
 }

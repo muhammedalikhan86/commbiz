@@ -1,9 +1,9 @@
 # Test Cases: Shaw and Partners → CommBank Payment File Conversion Service
 
 > Status: DRAFT
-> Version: v1
+> Version: v2
 > Last updated: 2026-08-13
-> Source: docs/project-management.md (Feature Backlog), docs/architecture.md (FR-001–FR-006),
+> Source: docs/project-management.md (Feature Backlog), docs/architecture.md (FR-001–FR-008),
 > docs/stash/Direct Entry - File Specification CommBiz.md
 
 Each scenario below is intended to be directly executable as an integration/E2E test against the
@@ -54,11 +54,21 @@ running Minimal API host. Field values reference the Direct Entry spec's Sample 
 | TC-017 | Trailer self-balancing — credit only | Convert a batch of only credit transactions | Trailer: net total = credit total; debit total = `0000000000`; record count matches detail count |
 | TC-018 | Trailer self-balancing — mixed credit/debit (regression-sensitive) | Convert a batch with both credit and debit transaction codes | Trailer: net = credit − debit (unsigned); credit total = sum of credit detail amounts; debit total = sum of debit detail amounts; BSB placeholder `999-999` |
 
+### F-014 — Self-balancing (contra) detail record
+
+| ID | Scenario | Steps | Expected Result |
+|----|----------|-------|------------------|
+| TC-028 | Single-instruction batch now converts successfully (regression-sensitive) | POST a batch of exactly 1 valid Direct Entry instruction | 200 OK; output contains 1 header + 1 real detail + 1 self-balancing detail + 1 trailer record; previously rejected under the old minimum-2 rule |
+| TC-029 | Zero-instruction batch is still rejected | POST an empty batch | 4xx; batch rejected; reason cites the minimum-1-instruction rule |
+| TC-030 | Self-balancing detail record fields per spec | Convert any valid batch; inspect the detail record immediately before the trailer | Record type `1`; account (pos 2-17) is the configured settlement account (`TraceAccountBsb`/`TraceAccountAccNo`); Transaction Code (pos 19-20) is the inverse of the batch's configured `TransactionCode`; Amount (pos 21-30) equals the sum of all real detail record amounts, in cents; Withholding Tax (pos 113-120) is zero |
+| TC-031 | Self-balancing record positioned immediately before the trailer (regression-sensitive) | Convert a batch of 3+ valid instructions | Output order is: header, 1 detail record per instruction, then the self-balancing detail record, then the trailer — never after the trailer or interleaved with real details |
+| TC-032 | Trailer reconciles to zero net once the self-balancing record is included (regression-sensitive) | Convert any valid batch; inspect trailer | Net total = `0000000000`; credit total = debit total = sum of real detail amounts; File (User) Count of Record Type 1 includes the self-balancing record (real instruction count + 1) |
+
 ### F-008 — Final file assembly
 
 | ID | Scenario | Steps | Expected Result |
 |----|----------|-------|------------------|
-| TC-019 | Full file structural validation (happy path, E2E) | Convert a batch of 2+ valid instructions | Output: 1 header + N detail + 1 trailer records; each record exactly 120 characters (or 80 with trailing optional fields dropped, per spec); every record CRLF-terminated; matches Sample File structure in the Direct Entry spec |
+| TC-019 | Full file structural validation (happy path, E2E) | Convert a batch of 2+ valid instructions | Output: 1 header + N detail + 1 self-balancing detail + 1 trailer records; each record exactly 120 characters (or 80 with trailing optional fields dropped, per spec); every record CRLF-terminated; matches Sample File structure in the Direct Entry spec |
 | TC-020 | Response contract on success | Convert a valid batch | JSON response contains converted text inline (no download link, per ADR-008) and a success indicator |
 
 ## Phase 2 — Cross-Cutting Concerns (F-009, F-010, F-011)
@@ -82,3 +92,4 @@ running Minimal API host. Field values reference the Direct Entry spec's Sample 
 | Version | Date | Change | Triggered By |
 |---------|------|--------|---------------|
 | v1 | 2026-08-13 | Initial draft, derived from PMBook Feature Backlog and Direct Entry spec | Orchestrator Step 0.0 |
+| v2 | 2026-08-13 | Added F-014 scenarios (self-balancing contra detail record, minimum batch size reduced to 1); updated TC-019 to expect the self-balancing detail record in the output | User requirement change |

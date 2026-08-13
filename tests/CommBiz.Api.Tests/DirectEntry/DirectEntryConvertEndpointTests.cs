@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 
-namespace CommBiz.Api.Tests;
+namespace CommBiz.Api.Tests.DirectEntry;
 
 public class DirectEntryConvertEndpointTests(WebApplicationFactory<Program> factory)
     : IClassFixture<WebApplicationFactory<Program>>
@@ -48,7 +48,6 @@ public class DirectEntryConvertEndpointTests(WebApplicationFactory<Program> fact
 
     private static List<PaymentInstructionRequest> WellFormedBatch(
         IReadOnlyList<PaymentInstructionRequest>? instructions = null) =>
-        // F-008: the spec requires at least 2 detail records, so the default batch has 2.
         [.. instructions ?? [ValidInstruction("S1605677"), ValidInstruction("S1605678")]];
 
     [Fact]
@@ -79,7 +78,27 @@ public class DirectEntryConvertEndpointTests(WebApplicationFactory<Program> fact
         Assert.False(result.Success);
         Assert.Null(result.ConvertedText);
         Assert.NotNull(result.Errors);
-        Assert.Contains(result.Errors, e => e.Index == -1 && e.Reason.Contains("at least 2"));
+        Assert.Contains(result.Errors, e => e.Index == -1 && e.Reason.Contains("at least 1"));
+    }
+
+    [Fact]
+    public async Task Single_instruction_batch_is_accepted_as_the_new_minimum()
+    {
+        var client = CreateClient();
+
+        var response = await client.PostAsJsonAsync("/convert", WellFormedBatch([ValidInstruction()]));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var result = await response.Content.ReadFromJsonAsync<ConvertDirectEntryBatchResponse>();
+        Assert.NotNull(result);
+        Assert.True(result.Success);
+        Assert.NotNull(result.ConvertedText);
+
+        var lines = result.ConvertedText.Split("\r\n");
+        var recordLines = lines[..^1];
+
+        Assert.Equal(4, recordLines.Length); // 1 header + 1 detail + 1 self-balancing + 1 trailer
+        Assert.Equal(['0', '1', '1', '7'], recordLines.Select(line => line[0]));
     }
 
     [Fact]
@@ -107,8 +126,8 @@ public class DirectEntryConvertEndpointTests(WebApplicationFactory<Program> fact
         Assert.Equal(string.Empty, lines[^1]);
         var recordLines = lines[..^1];
 
-        Assert.Equal(5, recordLines.Length); // 1 header + 3 details + 1 trailer
+        Assert.Equal(6, recordLines.Length); // 1 header + 3 details + 1 self-balancing + 1 trailer
         Assert.All(recordLines, line => Assert.Equal(120, line.Length));
-        Assert.Equal(['0', '1', '1', '1', '7'], recordLines.Select(line => line[0]));
+        Assert.Equal(['0', '1', '1', '1', '1', '7'], recordLines.Select(line => line[0]));
     }
 }

@@ -1,60 +1,8 @@
 {
   "directed": false,
   "multigraph": false,
-  "graph": {
-    "hyperedges": [
-      {
-        "id": "vertical_slice_pattern",
-        "label": "Vertical Slice Implementation",
-        "nodes": [
-          "direct_entry_slice",
-          "vertical_slice_arch",
-          "convert_direct_entry_command",
-          "batch_request_model",
-          "batch_response_model"
-        ],
-        "relation": "implement",
-        "confidence": "EXTRACTED",
-        "confidence_score": 1.0
-      },
-      {
-        "id": "direct_entry_processing_flow",
-        "label": "Direct Entry Processing Pipeline",
-        "nodes": [
-          "batch_request_model",
-          "payment_type_router",
-          "direct_entry_validator",
-          "detail_record_mapper",
-          "header_record_mapper",
-          "trailer_record_mapper",
-          "fixed_width_assembly",
-          "batch_response_model"
-        ],
-        "relation": "participate_in",
-        "confidence": "INFERRED",
-        "confidence_score": 0.85
-      }
-    ]
-  },
+  "graph": {},
   "nodes": [
-    {
-      "label": "ConvertDirectEntryBatchRequest",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchRequest.cs",
-      "source_location": "L5",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_convertdirectentrybatchrequest",
-      "community": 0,
-      "norm_label": "convertdirectentrybatchrequest"
-    },
     {
       "label": "PaymentInstructionRequest",
       "file_type": "code",
@@ -69,14 +17,14 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "id": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_paymentinstructionrequest",
-      "community": 0,
-      "norm_label": "paymentinstructionrequest"
+      "community": 1,
+      "norm_label": "paymentinstructionrequest",
+      "id": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_paymentinstructionrequest"
     },
     {
-      "label": "DirectEntryDetailRecordMapper",
+      "label": "DirectEntryAmountTotals",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_file": "Features/DirectEntry/DirectEntryAmountTotals.cs",
       "source_location": "L6",
       "metadata": {
         "namespace": "CommBiz.Api.Features.DirectEntry",
@@ -87,15 +35,15 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "id": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper",
-      "community": 0,
-      "norm_label": "directentrydetailrecordmapper"
+      "id": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals",
+      "community": 1,
+      "norm_label": "directentryamounttotals"
     },
     {
-      "label": "DirectEntryHeaderRecordMapper",
+      "label": "DirectEntrySelfBalancingRecordMapper",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
-      "source_location": "L5",
+      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
+      "source_location": "L7",
       "metadata": {
         "namespace": "CommBiz.Api.Features.DirectEntry",
         "scope_chain": [
@@ -105,135 +53,9 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "id": "features_directentry_directentryheaderrecordmapper_commbiz_api_features_directentry_directentryheaderrecordmapper",
-      "community": 0,
-      "norm_label": "directentryheaderrecordmapper"
-    },
-    {
-      "label": "DirectEntryTrailerRecordMapper",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
-      "source_location": "L6",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_directentry_directentrytrailerrecordmapper_commbiz_api_features_directentry_directentrytrailerrecordmapper",
-      "community": 0,
-      "norm_label": "directentrytrailerrecordmapper"
-    },
-    {
-      "label": "ConvertDirectEntryBatchCommand",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "source_location": "L3",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchcommand",
-      "community": 2,
-      "norm_label": "convertdirectentrybatchcommand"
-    },
-    {
-      "label": "ConvertDirectEntryBatchHandler",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "source_location": "L5",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchhandler",
-      "community": 2,
-      "norm_label": "convertdirectentrybatchhandler"
-    },
-    {
-      "label": "ConvertDirectEntryBatchResponse",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchResponse.cs",
-      "source_location": "L5",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_directentry_convertdirectentrybatchresponse_commbiz_api_features_directentry_convertdirectentrybatchresponse",
-      "community": 2,
-      "norm_label": "convertdirectentrybatchresponse"
-    },
-    {
-      "label": "PaymentInstructionError",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchResponse.cs",
-      "source_location": "L10",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_directentry_convertdirectentrybatchresponse_commbiz_api_features_directentry_paymentinstructionerror",
-      "community": 2,
-      "norm_label": "paymentinstructionerror"
-    },
-    {
-      "label": "PaymentTypeRouter",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/PaymentTypeRouter.cs",
-      "source_location": "L5",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_directentry_paymenttyperouter_commbiz_api_features_directentry_paymenttyperouter",
-      "community": 2,
-      "norm_label": "paymenttyperouter"
-    },
-    {
-      "label": "DirectEntryValidator",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L6",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator",
-      "community": 3,
-      "norm_label": "directentryvalidator"
+      "id": "features_directentry_directentryselfbalancingrecordmapper_commbiz_api_features_directentry_directentryselfbalancingrecordmapper",
+      "community": 1,
+      "norm_label": "directentryselfbalancingrecordmapper"
     },
     {
       "label": "PingCommand",
@@ -249,9 +71,9 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "id": "features_diagnostics_ping_commbiz_api_features_diagnostics_pingcommand",
-      "community": 5,
-      "norm_label": "pingcommand"
+      "community": 16,
+      "norm_label": "pingcommand",
+      "id": "features_diagnostics_ping_commbiz_api_features_diagnostics_pingcommand"
     },
     {
       "label": "PingHandler",
@@ -267,9 +89,9 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "id": "features_diagnostics_ping_commbiz_api_features_diagnostics_pinghandler",
-      "community": 5,
-      "norm_label": "pinghandler"
+      "community": 17,
+      "norm_label": "pinghandler",
+      "id": "features_diagnostics_ping_commbiz_api_features_diagnostics_pinghandler"
     },
     {
       "label": "PingResult",
@@ -285,9 +107,45 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "id": "features_diagnostics_ping_commbiz_api_features_diagnostics_pingresult",
-      "community": 5,
-      "norm_label": "pingresult"
+      "community": 19,
+      "norm_label": "pingresult",
+      "id": "features_diagnostics_ping_commbiz_api_features_diagnostics_pingresult"
+    },
+    {
+      "label": "DirectEntryTrailerRecordMapper",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
+      "source_location": "L6",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "directentrytrailerrecordmapper",
+      "id": "features_directentry_directentrytrailerrecordmapper_commbiz_api_features_directentry_directentrytrailerrecordmapper"
+    },
+    {
+      "label": "PaymentTypeRouter",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/PaymentTypeRouter.cs",
+      "source_location": "L5",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "paymenttyperouter",
+      "id": "features_directentry_paymenttyperouter_commbiz_api_features_directentry_paymenttyperouter"
     },
     {
       "label": "Program",
@@ -300,14 +158,104 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "id": "program_program",
-      "community": 5,
-      "norm_label": "program"
+      "community": 2,
+      "norm_label": "program",
+      "id": "program_program"
     },
     {
-      "label": ".Map()",
+      "label": "ConvertDirectEntryBatchRequest",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchRequest.cs",
+      "source_location": "L5",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 20,
+      "norm_label": "convertdirectentrybatchrequest",
+      "id": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_convertdirectentrybatchrequest"
+    },
+    {
+      "label": "DirectEntryValidator",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L6",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "directentryvalidator",
+      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator"
+    },
+    {
+      "label": "ConvertDirectEntryBatchCommand",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
+      "source_location": "L3",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "convertdirectentrybatchcommand",
+      "id": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchcommand"
+    },
+    {
+      "label": "ConvertDirectEntryBatchHandler",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
+      "source_location": "L5",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "convertdirectentrybatchhandler",
+      "id": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchhandler"
+    },
+    {
+      "label": "ConvertDirectEntryBatchResponse",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchResponse.cs",
+      "source_location": "L5",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "convertdirectentrybatchresponse",
+      "id": "features_directentry_convertdirectentrybatchresponse_commbiz_api_features_directentry_convertdirectentrybatchresponse"
+    },
+    {
+      "label": "PaymentInstructionError",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchResponse.cs",
       "source_location": "L10",
       "metadata": {
         "namespace": "CommBiz.Api.Features.DirectEntry",
@@ -316,15 +264,70 @@
         ]
       },
       "_callable": true,
+      "_callable_class": true,
       "_origin": "ast",
-      "id": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_map",
-      "community": 0,
-      "norm_label": ".map()"
+      "community": 4,
+      "norm_label": "paymentinstructionerror",
+      "id": "features_directentry_convertdirectentrybatchresponse_commbiz_api_features_directentry_paymentinstructionerror"
     },
     {
-      "label": ".Map()",
+      "label": "DirectEntryHeaderRecordMapper",
       "file_type": "code",
       "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
+      "source_location": "L5",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "directentryheaderrecordmapper",
+      "id": "features_directentry_directentryheaderrecordmapper_commbiz_api_features_directentry_directentryheaderrecordmapper"
+    },
+    {
+      "label": "DirectEntrySettings",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntrySettings.cs",
+      "source_location": "L5",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "features_directentry_directentrysettings_commbiz_api_features_directentry_directentrysettings",
+      "community": 5,
+      "norm_label": "directentrysettings"
+    },
+    {
+      "label": "DirectEntryDetailRecordMapper",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L6",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "directentrydetailrecordmapper",
+      "id": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper"
+    },
+    {
+      "label": ".AmountToCents()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryAmountTotals.cs",
       "source_location": "L11",
       "metadata": {
         "namespace": "CommBiz.Api.Features.DirectEntry",
@@ -334,8 +337,59 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "id": "features_directentry_directentryheaderrecordmapper_commbiz_api_features_directentry_directentryheaderrecordmapper_map",
-      "community": 0,
+      "id": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals_amounttocents",
+      "community": 1,
+      "norm_label": ".amounttocents()"
+    },
+    {
+      "label": ".SumAmountInCents()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryAmountTotals.cs",
+      "source_location": "L8",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "id": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals_sumamountincents",
+      "community": 1,
+      "norm_label": ".sumamountincents()"
+    },
+    {
+      "label": ".FixedWidth()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
+      "source_location": "L37",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "id": "features_directentry_directentryselfbalancingrecordmapper_commbiz_api_features_directentry_directentryselfbalancingrecordmapper_fixedwidth",
+      "community": 1,
+      "norm_label": ".fixedwidth()"
+    },
+    {
+      "label": ".Map()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
+      "source_location": "L14",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "id": "features_directentry_directentryselfbalancingrecordmapper_commbiz_api_features_directentry_directentryselfbalancingrecordmapper_map",
+      "community": 1,
       "norm_label": ".map()"
     },
     {
@@ -351,145 +405,9 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "id": "features_directentry_directentrytrailerrecordmapper_commbiz_api_features_directentry_directentrytrailerrecordmapper_map",
-      "community": 0,
-      "norm_label": ".map()"
-    },
-    {
-      "label": ".Handle()",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "source_location": "L7",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchhandler_handle",
-      "community": 2,
-      "norm_label": ".handle()"
-    },
-    {
-      "label": ".FindUnsupportedPaymentTypes()",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/PaymentTypeRouter.cs",
-      "source_location": "L9",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_directentry_paymenttyperouter_commbiz_api_features_directentry_paymenttyperouter_findunsupportedpaymenttypes",
-      "community": 2,
-      "norm_label": ".findunsupportedpaymenttypes()"
-    },
-    {
-      "label": ".IsDigitsOnly()",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L172",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isdigitsonly",
-      "community": 3,
-      "norm_label": ".isdigitsonly()"
-    },
-    {
-      "label": ".IsValidAccountNumber()",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L146",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isvalidaccountnumber",
-      "community": 3,
-      "norm_label": ".isvalidaccountnumber()"
-    },
-    {
-      "label": ".IsValidBsb()",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L140",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isvalidbsb",
-      "community": 3,
-      "norm_label": ".isvalidbsb()"
-    },
-    {
-      "label": ".Validate()",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L28",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validate",
-      "community": 3,
-      "norm_label": ".validate()"
-    },
-    {
-      "label": ".ValidateHeader()",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L50",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateheader",
-      "community": 3,
-      "norm_label": ".validateheader()"
-    },
-    {
-      "label": ".ValidateInstruction()",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L79",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateinstruction",
-      "community": 3,
-      "norm_label": ".validateinstruction()"
+      "community": 1,
+      "norm_label": ".map()",
+      "id": "features_directentry_directentrytrailerrecordmapper_commbiz_api_features_directentry_directentrytrailerrecordmapper_map"
     },
     {
       "label": ".Handle()",
@@ -504,114 +422,264 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "id": "features_diagnostics_ping_commbiz_api_features_diagnostics_pinghandler_handle",
-      "community": 5,
-      "norm_label": ".handle()"
+      "community": 18,
+      "norm_label": ".handle()",
+      "id": "features_diagnostics_ping_commbiz_api_features_diagnostics_pinghandler_handle"
     },
     {
-      "label": "CommBiz.Api.Features.DirectEntry",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "source_location": "L1",
-      "type": "namespace",
-      "metadata": {
-        "kind": "csharp_namespace",
-        "namespace": "CommBiz.Api.Features.DirectEntry"
-      },
-      "_origin": "ast",
-      "id": "csharp_namespace:ecd6491f19b7590a",
-      "community": 0,
-      "norm_label": "commbiz.api.features.directentry"
-    },
-    {
-      "label": "ConvertDirectEntryBatchRequest.cs",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchRequest.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "features_directentry_convertdirectentrybatchrequest",
-      "community": 0,
-      "norm_label": "convertdirectentrybatchrequest.cs"
-    },
-    {
-      "label": "DirectEntryDetailRecordMapper.cs",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "features_directentry_directentrydetailrecordmapper",
-      "community": 0,
-      "norm_label": "directentrydetailrecordmapper.cs"
-    },
-    {
-      "label": "string",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_directentry_directentrydetailrecordmapper_cs_string",
-      "community": 0,
-      "norm_label": "string"
-    },
-    {
-      "label": "DirectEntryHeaderRecordMapper.cs",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "features_directentry_directentryheaderrecordmapper",
-      "community": 0,
-      "norm_label": "directentryheaderrecordmapper.cs"
-    },
-    {
-      "label": "string",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_directentry_directentryheaderrecordmapper_cs_string",
-      "community": 0,
-      "norm_label": "string"
-    },
-    {
-      "label": "DirectEntryTrailerRecordMapper.cs",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "features_directentry_directentrytrailerrecordmapper",
-      "community": 0,
-      "norm_label": "directentrytrailerrecordmapper.cs"
-    },
-    {
-      "label": "IReadOnlyList",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_directentry_directentrytrailerrecordmapper_cs_ireadonlylist",
-      "community": 0,
-      "norm_label": "ireadonlylist"
-    },
-    {
-      "label": "string",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_directentry_directentrytrailerrecordmapper_cs_string",
-      "community": 0,
-      "norm_label": "string"
-    },
-    {
-      "label": "DirectEntryValidator.cs",
+      "label": ".IsDigitsOnly()",
       "file_type": "code",
       "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L1",
+      "source_location": "L172",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
       "_origin": "ast",
-      "id": "features_directentry_directentryvalidator",
-      "community": 0,
-      "norm_label": "directentryvalidator.cs"
+      "community": 21,
+      "norm_label": ".isdigitsonly()",
+      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isdigitsonly"
+    },
+    {
+      "label": ".IsValidBsb()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L140",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 22,
+      "norm_label": ".isvalidbsb()",
+      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isvalidbsb"
+    },
+    {
+      "label": ".ValidateHeader()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L50",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "norm_label": ".validateheader()",
+      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateheader"
+    },
+    {
+      "label": ".IsValidAccountNumber()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L146",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": ".isvalidaccountnumber()",
+      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isvalidaccountnumber"
+    },
+    {
+      "label": ".IsValidSourceBankBsb()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L66",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isvalidsourcebankbsb",
+      "community": 3,
+      "norm_label": ".isvalidsourcebankbsb()"
+    },
+    {
+      "label": ".Validate()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L28",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": ".validate()",
+      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validate"
+    },
+    {
+      "label": ".ValidateInstruction()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L79",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": ".validateinstruction()",
+      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateinstruction"
+    },
+    {
+      "label": ".Handle()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
+      "source_location": "L7",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": ".handle()",
+      "id": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchhandler_handle"
+    },
+    {
+      "label": ".FindUnsupportedPaymentTypes()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/PaymentTypeRouter.cs",
+      "source_location": "L9",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": ".findunsupportedpaymenttypes()",
+      "id": "features_directentry_paymenttyperouter_commbiz_api_features_directentry_paymenttyperouter_findunsupportedpaymenttypes"
+    },
+    {
+      "label": ".FixedWidth()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
+      "source_location": "L30",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "id": "features_directentry_directentryheaderrecordmapper_commbiz_api_features_directentry_directentryheaderrecordmapper_fixedwidth",
+      "community": 5,
+      "norm_label": ".fixedwidth()"
+    },
+    {
+      "label": ".Map()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
+      "source_location": "L11",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": ".map()",
+      "id": "features_directentry_directentryheaderrecordmapper_commbiz_api_features_directentry_directentryheaderrecordmapper_map"
+    },
+    {
+      "label": ".AmountToCents()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L31",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "id": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_amounttocents",
+      "community": 6,
+      "norm_label": ".amounttocents()"
+    },
+    {
+      "label": ".FixedWidth()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L35",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "id": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_fixedwidth",
+      "community": 6,
+      "norm_label": ".fixedwidth()"
+    },
+    {
+      "label": ".FormatBsb()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L29",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "id": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_formatbsb",
+      "community": 6,
+      "norm_label": ".formatbsb()"
+    },
+    {
+      "label": ".Map()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L10",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": ".map()",
+      "id": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_map"
     },
     {
       "label": "launchSettings.json",
@@ -619,9 +687,9 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "properties_launchsettings",
-      "community": 1,
-      "norm_label": "launchsettings.json"
+      "community": 0,
+      "norm_label": "launchsettings.json",
+      "id": "properties_launchsettings"
     },
     {
       "label": "ASPNETCORE_ENVIRONMENT",
@@ -629,9 +697,9 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "properties_launchsettings_environmentvariables_aspnetcore_environment",
-      "community": 1,
-      "norm_label": "aspnetcore_environment"
+      "community": 0,
+      "norm_label": "aspnetcore_environment",
+      "id": "properties_launchsettings_environmentvariables_aspnetcore_environment"
     },
     {
       "label": "applicationUrl",
@@ -639,9 +707,9 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "properties_launchsettings_http_applicationurl",
-      "community": 1,
-      "norm_label": "applicationurl"
+      "community": 0,
+      "norm_label": "applicationurl",
+      "id": "properties_launchsettings_http_applicationurl"
     },
     {
       "label": "commandName",
@@ -649,9 +717,9 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "properties_launchsettings_http_commandname",
-      "community": 1,
-      "norm_label": "commandname"
+      "community": 0,
+      "norm_label": "commandname",
+      "id": "properties_launchsettings_http_commandname"
     },
     {
       "label": "dotnetRunMessages",
@@ -659,9 +727,9 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "properties_launchsettings_http_dotnetrunmessages",
-      "community": 1,
-      "norm_label": "dotnetrunmessages"
+      "community": 0,
+      "norm_label": "dotnetrunmessages",
+      "id": "properties_launchsettings_http_dotnetrunmessages"
     },
     {
       "label": "environmentVariables",
@@ -669,9 +737,9 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L9",
       "_origin": "ast",
-      "id": "properties_launchsettings_http_environmentvariables",
-      "community": 1,
-      "norm_label": "environmentvariables"
+      "community": 0,
+      "norm_label": "environmentvariables",
+      "id": "properties_launchsettings_http_environmentvariables"
     },
     {
       "label": "launchBrowser",
@@ -679,9 +747,9 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L7",
       "_origin": "ast",
-      "id": "properties_launchsettings_http_launchbrowser",
-      "community": 1,
-      "norm_label": "launchbrowser"
+      "community": 0,
+      "norm_label": "launchbrowser",
+      "id": "properties_launchsettings_http_launchbrowser"
     },
     {
       "label": "applicationUrl",
@@ -689,9 +757,9 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L17",
       "_origin": "ast",
-      "id": "properties_launchsettings_https_applicationurl",
-      "community": 1,
-      "norm_label": "applicationurl"
+      "community": 0,
+      "norm_label": "applicationurl",
+      "id": "properties_launchsettings_https_applicationurl"
     },
     {
       "label": "commandName",
@@ -699,9 +767,9 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L14",
       "_origin": "ast",
-      "id": "properties_launchsettings_https_commandname",
-      "community": 1,
-      "norm_label": "commandname"
+      "community": 0,
+      "norm_label": "commandname",
+      "id": "properties_launchsettings_https_commandname"
     },
     {
       "label": "dotnetRunMessages",
@@ -709,9 +777,9 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L15",
       "_origin": "ast",
-      "id": "properties_launchsettings_https_dotnetrunmessages",
-      "community": 1,
-      "norm_label": "dotnetrunmessages"
+      "community": 0,
+      "norm_label": "dotnetrunmessages",
+      "id": "properties_launchsettings_https_dotnetrunmessages"
     },
     {
       "label": "environmentVariables",
@@ -719,9 +787,9 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L18",
       "_origin": "ast",
-      "id": "properties_launchsettings_https_environmentvariables",
-      "community": 1,
-      "norm_label": "environmentvariables"
+      "community": 0,
+      "norm_label": "environmentvariables",
+      "id": "properties_launchsettings_https_environmentvariables"
     },
     {
       "label": "launchBrowser",
@@ -729,9 +797,9 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L16",
       "_origin": "ast",
-      "id": "properties_launchsettings_https_launchbrowser",
-      "community": 1,
-      "norm_label": "launchbrowser"
+      "community": 0,
+      "norm_label": "launchbrowser",
+      "id": "properties_launchsettings_https_launchbrowser"
     },
     {
       "label": "profiles",
@@ -739,9 +807,9 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "properties_launchsettings_profiles",
-      "community": 1,
-      "norm_label": "profiles"
+      "community": 0,
+      "norm_label": "profiles",
+      "id": "properties_launchsettings_profiles"
     },
     {
       "label": "http",
@@ -749,9 +817,9 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L4",
       "_origin": "ast",
-      "id": "properties_launchsettings_profiles_http",
-      "community": 1,
-      "norm_label": "http"
+      "community": 0,
+      "norm_label": "http",
+      "id": "properties_launchsettings_profiles_http"
     },
     {
       "label": "https",
@@ -759,9 +827,9 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L13",
       "_origin": "ast",
-      "id": "properties_launchsettings_profiles_https",
-      "community": 1,
-      "norm_label": "https"
+      "community": 0,
+      "norm_label": "https",
+      "id": "properties_launchsettings_profiles_https"
     },
     {
       "label": "$schema",
@@ -769,39 +837,29 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L2",
       "_origin": "ast",
-      "id": "properties_launchsettings_schema",
+      "community": 0,
+      "norm_label": "$schema",
+      "id": "properties_launchsettings_schema"
+    },
+    {
+      "label": "ConvertDirectEntryBatchRequest.cs",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchRequest.cs",
+      "source_location": "L1",
+      "_origin": "ast",
       "community": 1,
-      "norm_label": "$schema"
+      "norm_label": "convertdirectentrybatchrequest.cs",
+      "id": "features_directentry_convertdirectentrybatchrequest"
     },
     {
-      "label": "ConvertDirectEntryBatchCommand.cs",
+      "label": "DirectEntryAmountTotals.cs",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
+      "source_file": "Features/DirectEntry/DirectEntryAmountTotals.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "features_directentry_convertdirectentrybatchcommand",
-      "community": 2,
-      "norm_label": "convertdirectentrybatchcommand.cs"
-    },
-    {
-      "label": "ConvertDirectEntryBatchResponse.cs",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchResponse.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "features_directentry_convertdirectentrybatchresponse",
-      "community": 2,
-      "norm_label": "convertdirectentrybatchresponse.cs"
-    },
-    {
-      "label": "PaymentTypeRouter.cs",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/PaymentTypeRouter.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "features_directentry_paymenttyperouter",
-      "community": 2,
-      "norm_label": "paymenttyperouter.cs"
+      "id": "features_directentry_directentryamounttotals",
+      "community": 1,
+      "norm_label": "directentryamounttotals.cs"
     },
     {
       "label": "IReadOnlyList",
@@ -809,8 +867,28 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "id": "features_directentry_paymenttyperouter_cs_ireadonlylist",
-      "community": 2,
+      "id": "features_directentry_directentryamounttotals_cs_ireadonlylist",
+      "community": 1,
+      "norm_label": "ireadonlylist"
+    },
+    {
+      "label": "DirectEntrySelfBalancingRecordMapper.cs",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "features_directentry_directentryselfbalancingrecordmapper",
+      "community": 1,
+      "norm_label": "directentryselfbalancingrecordmapper.cs"
+    },
+    {
+      "label": "IReadOnlyList",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "features_directentry_directentryselfbalancingrecordmapper_cs_ireadonlylist",
+      "community": 1,
       "norm_label": "ireadonlylist"
     },
     {
@@ -819,8 +897,8 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "id": "features_directentry_paymenttyperouter_cs_string",
-      "community": 2,
+      "id": "features_directentry_directentryselfbalancingrecordmapper_cs_string",
+      "community": 1,
       "norm_label": "string"
     },
     {
@@ -829,49 +907,9 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "id": "features_directentry_directentryvalidator_cs_ireadonlylist",
-      "community": 3,
-      "norm_label": "ireadonlylist"
-    },
-    {
-      "label": "string",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_directentry_directentryvalidator_cs_string",
-      "community": 3,
-      "norm_label": "string"
-    },
-    {
-      "label": "IEnumerable",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "ienumerable",
-      "community": 3,
-      "norm_label": "ienumerable"
-    },
-    {
-      "label": "int",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "int",
-      "community": 3,
-      "norm_label": "int"
-    },
-    {
-      "label": "long",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "long",
-      "community": 3,
-      "norm_label": "long"
+      "community": 1,
+      "norm_label": "ireadonlylist",
+      "id": "features_directentry_directentrytrailerrecordmapper_cs_ireadonlylist"
     },
     {
       "label": "CommBiz.Api.Features.Diagnostics",
@@ -884,9 +922,9 @@
         "namespace": "CommBiz.Api.Features.Diagnostics"
       },
       "_origin": "ast",
-      "id": "csharp_namespace:ba6fafb2c2187a51",
-      "community": 5,
-      "norm_label": "commbiz.api.features.diagnostics"
+      "community": 11,
+      "norm_label": "commbiz.api.features.diagnostics",
+      "id": "csharp_namespace:ba6fafb2c2187a51"
     },
     {
       "label": "Ping.cs",
@@ -894,9 +932,74 @@
       "source_file": "Features/Diagnostics/Ping.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "features_diagnostics_ping",
-      "community": 5,
-      "norm_label": "ping.cs"
+      "community": 15,
+      "norm_label": "ping.cs",
+      "id": "features_diagnostics_ping"
+    },
+    {
+      "label": "CommBiz.Api.Features.DirectEntry",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
+      "source_location": "L1",
+      "type": "namespace",
+      "metadata": {
+        "kind": "csharp_namespace",
+        "namespace": "CommBiz.Api.Features.DirectEntry"
+      },
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "commbiz.api.features.directentry",
+      "id": "csharp_namespace:ecd6491f19b7590a"
+    },
+    {
+      "label": "DirectEntryDetailRecordMapper.cs",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "directentrydetailrecordmapper.cs",
+      "id": "features_directentry_directentrydetailrecordmapper"
+    },
+    {
+      "label": "DirectEntryTrailerRecordMapper.cs",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "directentrytrailerrecordmapper.cs",
+      "id": "features_directentry_directentrytrailerrecordmapper"
+    },
+    {
+      "label": "string",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "string",
+      "id": "features_directentry_directentrytrailerrecordmapper_cs_string"
+    },
+    {
+      "label": "PaymentTypeRouter.cs",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/PaymentTypeRouter.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "paymenttyperouter.cs",
+      "id": "features_directentry_paymenttyperouter"
+    },
+    {
+      "label": "string",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "string",
+      "id": "features_directentry_paymenttyperouter_cs_string"
     },
     {
       "label": "Program.cs",
@@ -904,9 +1007,159 @@
       "source_file": "Program.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "program",
+      "community": 2,
+      "norm_label": "program.cs",
+      "id": "program"
+    },
+    {
+      "label": "string",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 24,
+      "norm_label": "string",
+      "id": "features_directentry_directentryvalidator_cs_string"
+    },
+    {
+      "label": "long",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 28,
+      "norm_label": "long",
+      "id": "long"
+    },
+    {
+      "label": "decimal",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "decimal",
+      "community": 3,
+      "norm_label": "decimal"
+    },
+    {
+      "label": "DirectEntryValidator.cs",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "directentryvalidator.cs",
+      "id": "features_directentry_directentryvalidator"
+    },
+    {
+      "label": "IReadOnlyList",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "ireadonlylist",
+      "id": "features_directentry_directentryvalidator_cs_ireadonlylist"
+    },
+    {
+      "label": "IEnumerable",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "ienumerable",
+      "id": "ienumerable"
+    },
+    {
+      "label": "int",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "int",
+      "id": "int"
+    },
+    {
+      "label": "ConvertDirectEntryBatchCommand.cs",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "convertdirectentrybatchcommand.cs",
+      "id": "features_directentry_convertdirectentrybatchcommand"
+    },
+    {
+      "label": "ConvertDirectEntryBatchResponse.cs",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchResponse.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "convertdirectentrybatchresponse.cs",
+      "id": "features_directentry_convertdirectentrybatchresponse"
+    },
+    {
+      "label": "IReadOnlyList",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "ireadonlylist",
+      "id": "features_directentry_paymenttyperouter_cs_ireadonlylist"
+    },
+    {
+      "label": "DirectEntryHeaderRecordMapper.cs",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
+      "source_location": "L1",
+      "_origin": "ast",
       "community": 5,
-      "norm_label": "program.cs"
+      "norm_label": "directentryheaderrecordmapper.cs",
+      "id": "features_directentry_directentryheaderrecordmapper"
+    },
+    {
+      "label": "IReadOnlyList",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "features_directentry_directentryheaderrecordmapper_cs_ireadonlylist",
+      "community": 5,
+      "norm_label": "ireadonlylist"
+    },
+    {
+      "label": "string",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "string",
+      "id": "features_directentry_directentryheaderrecordmapper_cs_string"
+    },
+    {
+      "label": "DirectEntrySettings.cs",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntrySettings.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "features_directentry_directentrysettings",
+      "community": 5,
+      "norm_label": "directentrysettings.cs"
+    },
+    {
+      "label": "string",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 6,
+      "norm_label": "string",
+      "id": "features_directentry_directentrydetailrecordmapper_cs_string"
     },
     {
       "label": "CommBiz.Api.csproj",
@@ -914,9 +1167,9 @@
       "source_file": "CommBiz.Api.csproj",
       "source_location": null,
       "_origin": "ast",
-      "id": "commbiz_api",
-      "community": 6,
-      "norm_label": "commbiz.api.csproj"
+      "community": 7,
+      "norm_label": "commbiz.api.csproj",
+      "id": "commbiz_api"
     },
     {
       "label": "WolverineFx (6.26.0)",
@@ -924,9 +1177,9 @@
       "source_file": "CommBiz.Api.csproj",
       "source_location": null,
       "_origin": "ast",
-      "id": "nuget_wolverinefx",
-      "community": 6,
-      "norm_label": "wolverinefx (6.26.0)"
+      "community": 7,
+      "norm_label": "wolverinefx (6.26.0)",
+      "id": "nuget_wolverinefx"
     },
     {
       "label": "WolverineFx.RuntimeCompilation (6.26.0)",
@@ -934,9 +1187,9 @@
       "source_file": "CommBiz.Api.csproj",
       "source_location": null,
       "_origin": "ast",
-      "id": "nuget_wolverinefx_runtimecompilation",
-      "community": 6,
-      "norm_label": "wolverinefx.runtimecompilation (6.26.0)"
+      "community": 7,
+      "norm_label": "wolverinefx.runtimecompilation (6.26.0)",
+      "id": "nuget_wolverinefx_runtimecompilation"
     },
     {
       "label": "net10.0",
@@ -944,9 +1197,9 @@
       "source_file": "CommBiz.Api.csproj",
       "source_location": null,
       "_origin": "ast",
-      "id": "framework_net10_0",
-      "community": 6,
-      "norm_label": "net10.0"
+      "community": 7,
+      "norm_label": "net10.0",
+      "id": "framework_net10_0"
     },
     {
       "label": "Microsoft.NET.Sdk.Web",
@@ -954,114 +1207,114 @@
       "source_file": "CommBiz.Api.csproj",
       "source_location": null,
       "_origin": "ast",
-      "id": "sdk_microsoft_net_sdk_web",
-      "community": 6,
-      "norm_label": "microsoft.net.sdk.web"
-    },
-    {
-      "label": "ConvertDirectEntryBatchRequest",
-      "file_type": "code",
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchRequest.cs",
-      "id": "batch_request_model",
-      "community": 4,
-      "norm_label": "convertdirectentrybatchrequest"
-    },
-    {
-      "label": "ConvertDirectEntryBatchResponse",
-      "file_type": "code",
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchResponse.cs",
-      "id": "batch_response_model",
-      "community": 4,
-      "norm_label": "convertdirectentrybatchresponse"
+      "community": 7,
+      "norm_label": "microsoft.net.sdk.web",
+      "id": "sdk_microsoft_net_sdk_web"
     },
     {
       "label": "ConvertDirectEntryBatchCommand",
       "file_type": "code",
       "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "id": "convert_direct_entry_command",
-      "community": 4,
-      "norm_label": "convertdirectentrybatchcommand"
+      "community": 10,
+      "norm_label": "convertdirectentrybatchcommand",
+      "id": "convert_direct_entry_command"
     },
     {
       "label": "Detail Record Mapper",
       "file_type": "code",
       "source_file": "src/CommBiz.Api/Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
-      "id": "detail_record_mapper",
-      "community": 4,
-      "norm_label": "detail record mapper"
-    },
-    {
-      "label": "Direct Entry Validator",
-      "file_type": "code",
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/DirectEntryValidator.cs",
-      "id": "direct_entry_validator",
-      "community": 4,
-      "norm_label": "direct entry validator"
-    },
-    {
-      "label": "Header Record Mapper",
-      "file_type": "code",
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
-      "id": "header_record_mapper",
-      "community": 4,
-      "norm_label": "header record mapper"
-    },
-    {
-      "label": "Kestrel Minimal API Host",
-      "file_type": "code",
-      "source_file": "src/CommBiz.Api/Program.cs",
-      "id": "kestrel_host",
-      "community": 4,
-      "norm_label": "kestrel minimal api host"
-    },
-    {
-      "label": "Payment Type Router",
-      "file_type": "code",
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/PaymentTypeRouter.cs",
-      "id": "payment_type_router",
-      "community": 4,
-      "norm_label": "payment type router"
-    },
-    {
-      "label": "Trailer Record Mapper",
-      "file_type": "code",
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
-      "id": "trailer_record_mapper",
-      "community": 4,
-      "norm_label": "trailer record mapper"
-    },
-    {
-      "label": "Fixed-Width File Assembly",
-      "file_type": "rationale",
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/README.md",
-      "id": "fixed_width_assembly",
-      "community": 4,
-      "norm_label": "fixed-width file assembly"
-    },
-    {
-      "label": "Wolverine CQRS",
-      "file_type": "rationale",
-      "source_file": "src/CommBiz.Api/Program.cs",
-      "id": "wolverine_cqrs",
-      "community": 4,
-      "norm_label": "wolverine cqrs"
+      "community": 12,
+      "norm_label": "detail record mapper",
+      "id": "detail_record_mapper"
     },
     {
       "label": "Direct Entry Vertical Slice",
       "file_type": "rationale",
       "source_file": "src/CommBiz.Api/Features/DirectEntry/README.md",
       "source_location": null,
-      "id": "direct_entry_slice",
-      "community": 7,
-      "norm_label": "direct entry vertical slice"
+      "community": 13,
+      "norm_label": "direct entry vertical slice",
+      "id": "direct_entry_slice"
+    },
+    {
+      "label": "Direct Entry Validator",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/DirectEntryValidator.cs",
+      "community": 14,
+      "norm_label": "direct entry validator",
+      "id": "direct_entry_validator"
+    },
+    {
+      "label": "Fixed-Width File Assembly",
+      "file_type": "rationale",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/README.md",
+      "community": 25,
+      "norm_label": "fixed-width file assembly",
+      "id": "fixed_width_assembly"
+    },
+    {
+      "label": "Header Record Mapper",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
+      "community": 26,
+      "norm_label": "header record mapper",
+      "id": "header_record_mapper"
+    },
+    {
+      "label": "Kestrel Minimal API Host",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Program.cs",
+      "community": 27,
+      "norm_label": "kestrel minimal api host",
+      "id": "kestrel_host"
+    },
+    {
+      "label": "Payment Type Router",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/PaymentTypeRouter.cs",
+      "community": 29,
+      "norm_label": "payment type router",
+      "id": "payment_type_router"
+    },
+    {
+      "label": "Trailer Record Mapper",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
+      "community": 30,
+      "norm_label": "trailer record mapper",
+      "id": "trailer_record_mapper"
     },
     {
       "label": "Vertical Slice Architecture",
       "file_type": "rationale",
       "source_file": "src/CommBiz.Api/Features/DirectEntry/README.md",
-      "id": "vertical_slice_arch",
-      "community": 7,
-      "norm_label": "vertical slice architecture"
+      "community": 31,
+      "norm_label": "vertical slice architecture",
+      "id": "vertical_slice_arch"
+    },
+    {
+      "label": "Wolverine CQRS",
+      "file_type": "rationale",
+      "source_file": "src/CommBiz.Api/Program.cs",
+      "community": 32,
+      "norm_label": "wolverine cqrs",
+      "id": "wolverine_cqrs"
+    },
+    {
+      "label": "ConvertDirectEntryBatchRequest",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchRequest.cs",
+      "community": 8,
+      "norm_label": "convertdirectentrybatchrequest",
+      "id": "batch_request_model"
+    },
+    {
+      "label": "ConvertDirectEntryBatchResponse",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchResponse.cs",
+      "community": 9,
+      "norm_label": "convertdirectentrybatchresponse",
+      "id": "batch_response_model"
     }
   ],
   "links": [
@@ -1071,7 +1324,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "source_location": "L11",
+      "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchhandler_handle",
@@ -1083,7 +1336,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "source_location": "L17",
+      "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchhandler_handle",
@@ -1093,20 +1346,104 @@
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L32",
+      "source_file": "Features/DirectEntry/DirectEntryAmountTotals.cs",
+      "source_location": "L9",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validate",
-      "target": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateheader",
+      "source": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals_sumamountincents",
+      "target": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals_amounttocents",
       "confidence_score": 1.0
     },
     {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_map",
+      "target": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_formatbsb",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_map",
+      "target": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_amounttocents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_map",
+      "target": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_fixedwidth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentryheaderrecordmapper_commbiz_api_features_directentry_directentryheaderrecordmapper_map",
+      "target": "features_directentry_directentryheaderrecordmapper_commbiz_api_features_directentry_directentryheaderrecordmapper_fixedwidth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentryselfbalancingrecordmapper_commbiz_api_features_directentry_directentryselfbalancingrecordmapper_map",
+      "target": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals_sumamountincents"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
+      "source_location": "L28",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentryselfbalancingrecordmapper_commbiz_api_features_directentry_directentryselfbalancingrecordmapper_map",
+      "target": "features_directentry_directentryselfbalancingrecordmapper_commbiz_api_features_directentry_directentryselfbalancingrecordmapper_fixedwidth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentrytrailerrecordmapper_commbiz_api_features_directentry_directentrytrailerrecordmapper_map",
+      "target": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals_sumamountincents"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L40",
+      "source_location": "L33",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validate",
@@ -1118,23 +1455,11 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L57",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateheader",
-      "target": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isdigitsonly",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L81",
+      "source_location": "L50",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateinstruction",
-      "target": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isvalidbsb",
+      "target": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isvalidsourcebankbsb",
       "confidence_score": 1.0
     },
     {
@@ -1142,7 +1467,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L91",
+      "source_location": "L55",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateinstruction",
@@ -1153,7 +1478,22 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L20",
+      "source_location": "L16",
+      "weight": 1.0,
+      "context": "field",
+      "metadata": {
+        "ref_token": "decimal"
+      },
+      "_origin": "ast",
+      "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator",
+      "target": "decimal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L15",
       "weight": 1.0,
       "context": "field",
       "metadata": {
@@ -1167,23 +1507,8 @@
     {
       "relation": "references",
       "confidence": "EXTRACTED",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L22",
-      "weight": 1.0,
-      "context": "field",
-      "metadata": {
-        "ref_token": "long"
-      },
-      "_origin": "ast",
-      "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator",
-      "target": "long",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
-      "source_location": "L8",
+      "source_location": "L12",
       "weight": 1.0,
       "context": "field",
       "metadata": {
@@ -1198,7 +1523,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
-      "source_location": "L9",
+      "source_location": "L8",
       "weight": 1.0,
       "context": "field",
       "metadata": {
@@ -1212,8 +1537,23 @@
     {
       "relation": "references",
       "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "context": "field",
+      "metadata": {
+        "ref_token": "string"
+      },
+      "_origin": "ast",
+      "source": "features_directentry_directentryselfbalancingrecordmapper_commbiz_api_features_directentry_directentryselfbalancingrecordmapper",
+      "target": "features_directentry_directentryselfbalancingrecordmapper_cs_string",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
-      "source_location": "L13",
+      "source_location": "L11",
       "weight": 1.0,
       "context": "field",
       "metadata": {
@@ -1222,21 +1562,6 @@
       "_origin": "ast",
       "source": "features_directentry_directentrytrailerrecordmapper_commbiz_api_features_directentry_directentrytrailerrecordmapper",
       "target": "features_directentry_directentrytrailerrecordmapper_cs_string",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L25",
-      "weight": 1.0,
-      "context": "field",
-      "metadata": {
-        "ref_token": "string"
-      },
-      "_origin": "ast",
-      "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator",
-      "target": "features_directentry_directentryvalidator_cs_string",
       "confidence_score": 1.0
     },
     {
@@ -1258,7 +1583,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L28",
+      "source_location": "L18",
       "weight": 1.0,
       "context": "generic_arg",
       "metadata": {
@@ -1287,8 +1612,53 @@
     {
       "relation": "references",
       "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryAmountTotals.cs",
+      "source_location": "L8",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "metadata": {
+        "ref_token": "PaymentInstructionRequest"
+      },
+      "_origin": "ast",
+      "source": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals_sumamountincents",
+      "target": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_paymentinstructionrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "metadata": {
+        "ref_token": "PaymentInstructionRequest"
+      },
+      "_origin": "ast",
+      "source": "features_directentry_directentryheaderrecordmapper_commbiz_api_features_directentry_directentryheaderrecordmapper_map",
+      "target": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_paymentinstructionrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "metadata": {
+        "ref_token": "PaymentInstructionRequest"
+      },
+      "_origin": "ast",
+      "source": "features_directentry_directentryselfbalancingrecordmapper_commbiz_api_features_directentry_directentryselfbalancingrecordmapper_map",
+      "target": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_paymentinstructionrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
-      "source_location": "L15",
+      "source_location": "L13",
       "weight": 1.0,
       "context": "generic_arg",
       "metadata": {
@@ -1296,6 +1666,21 @@
       },
       "_origin": "ast",
       "source": "features_directentry_directentrytrailerrecordmapper_commbiz_api_features_directentry_directentrytrailerrecordmapper_map",
+      "target": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_paymentinstructionrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L18",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "metadata": {
+        "ref_token": "PaymentInstructionRequest"
+      },
+      "_origin": "ast",
+      "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validate",
       "target": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_paymentinstructionrequest",
       "confidence_score": 1.0
     },
@@ -1320,23 +1705,6 @@
       "confidence": "EXTRACTED",
       "source_file": "Program.cs",
       "source_location": "L1",
-      "weight": 1.0,
-      "metadata": {
-        "using_kind": "namespace",
-        "target_fqn": "CommBiz.Api.Features.Diagnostics",
-        "scope_kind": "file"
-      },
-      "_origin": "ast",
-      "source": "program",
-      "target": "csharp_namespace:ba6fafb2c2187a51",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "Program.cs",
-      "source_location": "L2",
       "weight": 1.0,
       "metadata": {
         "using_kind": "namespace",
@@ -1366,53 +1734,128 @@
     {
       "relation": "references",
       "confidence": "EXTRACTED",
-      "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
-      "source_location": "L11",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
+      "source_location": "L7",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
-        "ref_token": "ConvertDirectEntryBatchRequest"
+        "ref_token": "DirectEntrySettings"
+      },
+      "_origin": "ast",
+      "source": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchhandler_handle",
+      "target": "features_directentry_directentrysettings_commbiz_api_features_directentry_directentrysettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "DirectEntrySettings"
+      },
+      "_origin": "ast",
+      "source": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_map",
+      "target": "features_directentry_directentrysettings_commbiz_api_features_directentry_directentrysettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "DirectEntrySettings"
       },
       "_origin": "ast",
       "source": "features_directentry_directentryheaderrecordmapper_commbiz_api_features_directentry_directentryheaderrecordmapper_map",
-      "target": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_convertdirectentrybatchrequest",
+      "target": "features_directentry_directentrysettings_commbiz_api_features_directentry_directentrysettings",
       "confidence_score": 1.0
     },
     {
       "relation": "references",
       "confidence": "EXTRACTED",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L28",
+      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
+      "source_location": "L14",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
-        "ref_token": "ConvertDirectEntryBatchRequest"
+        "ref_token": "DirectEntrySettings"
       },
       "_origin": "ast",
-      "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validate",
-      "target": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_convertdirectentrybatchrequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L50",
-      "weight": 1.0,
-      "context": "parameter_type",
-      "metadata": {
-        "ref_token": "ConvertDirectEntryBatchRequest"
-      },
-      "_origin": "ast",
-      "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateheader",
-      "target": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_convertdirectentrybatchrequest",
+      "source": "features_directentry_directentryselfbalancingrecordmapper_commbiz_api_features_directentry_directentryselfbalancingrecordmapper_map",
+      "target": "features_directentry_directentrysettings_commbiz_api_features_directentry_directentrysettings",
       "confidence_score": 1.0
     },
     {
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
-      "source_location": "L15",
+      "source_location": "L13",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "DirectEntrySettings"
+      },
+      "_origin": "ast",
+      "source": "features_directentry_directentrytrailerrecordmapper_commbiz_api_features_directentry_directentrytrailerrecordmapper_map",
+      "target": "features_directentry_directentrysettings_commbiz_api_features_directentry_directentrysettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryAmountTotals.cs",
+      "source_location": "L8",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "IReadOnlyList"
+      },
+      "_origin": "ast",
+      "source": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals_sumamountincents",
+      "target": "features_directentry_directentryamounttotals_cs_ireadonlylist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "IReadOnlyList"
+      },
+      "_origin": "ast",
+      "source": "features_directentry_directentryheaderrecordmapper_commbiz_api_features_directentry_directentryheaderrecordmapper_map",
+      "target": "features_directentry_directentryheaderrecordmapper_cs_ireadonlylist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "IReadOnlyList"
+      },
+      "_origin": "ast",
+      "source": "features_directentry_directentryselfbalancingrecordmapper_commbiz_api_features_directentry_directentryselfbalancingrecordmapper_map",
+      "target": "features_directentry_directentryselfbalancingrecordmapper_cs_ireadonlylist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
+      "source_location": "L13",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -1427,7 +1870,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
-      "source_location": "L10",
+      "source_location": "L14",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -1442,7 +1885,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L79",
+      "source_location": "L43",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -1451,21 +1894,6 @@
       "_origin": "ast",
       "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateinstruction",
       "target": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_paymentinstructionrequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "source_file": "Features/Diagnostics/Ping.cs",
-      "source_location": "L10",
-      "weight": 1.0,
-      "context": "parameter_type",
-      "metadata": {
-        "ref_token": "PingCommand"
-      },
-      "_origin": "ast",
-      "source": "features_diagnostics_ping_commbiz_api_features_diagnostics_pinghandler_handle",
-      "target": "features_diagnostics_ping_commbiz_api_features_diagnostics_pingcommand",
       "confidence_score": 1.0
     },
     {
@@ -1487,22 +1915,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L50",
-      "weight": 1.0,
-      "context": "return_type",
-      "metadata": {
-        "ref_token": "IEnumerable"
-      },
-      "_origin": "ast",
-      "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateheader",
-      "target": "ienumerable",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L79",
+      "source_location": "L43",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -1517,7 +1930,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L28",
+      "source_location": "L18",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -1541,65 +1954,6 @@
       "_origin": "ast",
       "source": "features_directentry_paymenttyperouter_commbiz_api_features_directentry_paymenttyperouter_findunsupportedpaymenttypes",
       "target": "features_directentry_paymenttyperouter_cs_ireadonlylist",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "source_file": "Features/Diagnostics/Ping.cs",
-      "source_location": "L10",
-      "weight": 1.0,
-      "context": "return_type",
-      "metadata": {
-        "ref_token": "PingResult"
-      },
-      "_origin": "ast",
-      "source": "features_diagnostics_ping_commbiz_api_features_diagnostics_pinghandler_handle",
-      "target": "features_diagnostics_ping_commbiz_api_features_diagnostics_pingresult",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "Features/Diagnostics/Ping.cs",
-      "source_location": "L1",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "features_diagnostics_ping",
-      "target": "csharp_namespace:ba6fafb2c2187a51",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "Features/Diagnostics/Ping.cs",
-      "source_location": "L4",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "features_diagnostics_ping",
-      "target": "features_diagnostics_ping_commbiz_api_features_diagnostics_pingcommand",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "Features/Diagnostics/Ping.cs",
-      "source_location": "L6",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "features_diagnostics_ping",
-      "target": "features_diagnostics_ping_commbiz_api_features_diagnostics_pingresult",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "Features/Diagnostics/Ping.cs",
-      "source_location": "L8",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "features_diagnostics_ping",
-      "target": "features_diagnostics_ping_commbiz_api_features_diagnostics_pinghandler",
       "confidence_score": 1.0
     },
     {
@@ -1650,22 +2004,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/ConvertDirectEntryBatchRequest.cs",
-      "source_location": "L13",
+      "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_directentry_convertdirectentrybatchrequest",
       "target": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_paymentinstructionrequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchRequest.cs",
-      "source_location": "L5",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "features_directentry_convertdirectentrybatchrequest",
-      "target": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_convertdirectentrybatchrequest",
       "confidence_score": 1.0
     },
     {
@@ -1699,6 +2042,28 @@
       "_origin": "ast",
       "source": "features_directentry_convertdirectentrybatchresponse",
       "target": "features_directentry_convertdirectentrybatchresponse_commbiz_api_features_directentry_convertdirectentrybatchresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryAmountTotals.cs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentryamounttotals",
+      "target": "csharp_namespace:ecd6491f19b7590a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryAmountTotals.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentryamounttotals",
+      "target": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals",
       "confidence_score": 1.0
     },
     {
@@ -1748,6 +2113,50 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentryselfbalancingrecordmapper",
+      "target": "csharp_namespace:ecd6491f19b7590a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentryselfbalancingrecordmapper",
+      "target": "features_directentry_directentryselfbalancingrecordmapper_commbiz_api_features_directentry_directentryselfbalancingrecordmapper",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntrySettings.cs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentrysettings",
+      "target": "csharp_namespace:ecd6491f19b7590a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntrySettings.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentrysettings",
+      "target": "features_directentry_directentrysettings_commbiz_api_features_directentry_directentrysettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
       "source_location": "L1",
       "weight": 1.0,
@@ -1760,7 +2169,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
-      "source_location": "L6",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_directentry_directentrytrailerrecordmapper",
@@ -1815,7 +2224,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "Program.cs",
-      "source_location": "L22",
+      "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
       "source": "program",
@@ -2021,17 +2430,6 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
-      "source_file": "Features/Diagnostics/Ping.cs",
-      "source_location": "L10",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "features_diagnostics_ping_commbiz_api_features_diagnostics_pinghandler",
-      "target": "features_diagnostics_ping_commbiz_api_features_diagnostics_pinghandler_handle",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
       "source_location": "L7",
       "weight": 1.0,
@@ -2043,8 +2441,30 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryAmountTotals.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals",
+      "target": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals_amounttocents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryAmountTotals.cs",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals",
+      "target": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals_sumamountincents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
-      "source_location": "L10",
+      "source_location": "L14",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper",
@@ -2054,8 +2474,41 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper",
+      "target": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_formatbsb",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper",
+      "target": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_amounttocents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper",
+      "target": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_fixedwidth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
-      "source_location": "L11",
+      "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_directentry_directentryheaderrecordmapper_commbiz_api_features_directentry_directentryheaderrecordmapper",
@@ -2065,8 +2518,41 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentryheaderrecordmapper_commbiz_api_features_directentry_directentryheaderrecordmapper",
+      "target": "features_directentry_directentryheaderrecordmapper_commbiz_api_features_directentry_directentryheaderrecordmapper_fixedwidth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentryselfbalancingrecordmapper_commbiz_api_features_directentry_directentryselfbalancingrecordmapper",
+      "target": "features_directentry_directentryselfbalancingrecordmapper_commbiz_api_features_directentry_directentryselfbalancingrecordmapper_map",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentryselfbalancingrecordmapper_commbiz_api_features_directentry_directentryselfbalancingrecordmapper",
+      "target": "features_directentry_directentryselfbalancingrecordmapper_commbiz_api_features_directentry_directentryselfbalancingrecordmapper_fixedwidth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
-      "source_location": "L15",
+      "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_directentry_directentrytrailerrecordmapper_commbiz_api_features_directentry_directentrytrailerrecordmapper",
@@ -2077,40 +2563,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L140",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator",
-      "target": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isvalidbsb",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L146",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator",
-      "target": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isvalidaccountnumber",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L172",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator",
-      "target": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isdigitsonly",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L28",
+      "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator",
@@ -2121,22 +2574,33 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L50",
+      "source_location": "L43",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator",
-      "target": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateheader",
+      "target": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateinstruction",
       "confidence_score": 1.0
     },
     {
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L79",
+      "source_location": "L66",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator",
-      "target": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateinstruction",
+      "target": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isvalidsourcebankbsb",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L69",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator",
+      "target": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isvalidaccountnumber",
       "confidence_score": 1.0
     },
     {
@@ -2169,152 +2633,8 @@
       "source": "commbiz_api",
       "target": "sdk_microsoft_net_sdk_web",
       "confidence_score": 1.0
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/README.md",
-      "source": "direct_entry_slice",
-      "target": "vertical_slice_arch"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchRequest.cs",
-      "source": "batch_request_model",
-      "target": "convert_direct_entry_command"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "source": "convert_direct_entry_command",
-      "target": "batch_response_model"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.75,
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "source": "convert_direct_entry_command",
-      "target": "wolverine_cqrs"
-    },
-    {
-      "relation": "shares_data_with",
-      "confidence": "INFERRED",
-      "confidence_score": 0.75,
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/DirectEntryValidator.cs",
-      "source": "direct_entry_validator",
-      "target": "fixed_width_assembly"
-    },
-    {
-      "relation": "calls",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "source": "convert_direct_entry_command",
-      "target": "detail_record_mapper"
-    },
-    {
-      "relation": "calls",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "source": "convert_direct_entry_command",
-      "target": "direct_entry_validator"
-    },
-    {
-      "relation": "calls",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "source": "convert_direct_entry_command",
-      "target": "header_record_mapper"
-    },
-    {
-      "relation": "calls",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "source": "convert_direct_entry_command",
-      "target": "payment_type_router"
-    },
-    {
-      "relation": "calls",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "source": "convert_direct_entry_command",
-      "target": "trailer_record_mapper"
-    },
-    {
-      "relation": "participates_in",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
-      "source": "detail_record_mapper",
-      "target": "fixed_width_assembly"
-    },
-    {
-      "relation": "participates_in",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
-      "source": "header_record_mapper",
-      "target": "fixed_width_assembly"
-    },
-    {
-      "relation": "participates_in",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
-      "source": "trailer_record_mapper",
-      "target": "fixed_width_assembly"
-    },
-    {
-      "relation": "references",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "src/CommBiz.Api/Program.cs",
-      "source": "wolverine_cqrs",
-      "target": "kestrel_host"
     }
   ],
-  "hyperedges": [
-    {
-      "id": "vertical_slice_pattern",
-      "label": "Vertical Slice Implementation",
-      "nodes": [
-        "direct_entry_slice",
-        "vertical_slice_arch",
-        "convert_direct_entry_command",
-        "batch_request_model",
-        "batch_response_model"
-      ],
-      "relation": "implement",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0
-    },
-    {
-      "id": "direct_entry_processing_flow",
-      "label": "Direct Entry Processing Pipeline",
-      "nodes": [
-        "batch_request_model",
-        "payment_type_router",
-        "direct_entry_validator",
-        "detail_record_mapper",
-        "header_record_mapper",
-        "trailer_record_mapper",
-        "fixed_width_assembly",
-        "batch_response_model"
-      ],
-      "relation": "participate_in",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85
-    }
-  ],
-  "built_at_commit": "b0cbbe7e8469c971219c57ee2a5a0c8fb15d0d91"
+  "hyperedges": [],
+  "built_at_commit": "656739dd59ff5eba47fd369647bf2c99a4dd046f"
 }
