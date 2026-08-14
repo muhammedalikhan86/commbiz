@@ -1,68 +1,32 @@
 @baseUrl = http://localhost:5182
 
-### Valid batch: 2 real sample instructions. Every field satisfies the validation rules.
-### Expect: 200 OK, Success: true, ConvertedText populated (header + 2 details + self-balancing
-### contra record + trailer, per F-014), Errors: null.
-POST {{baseUrl}}/convert
-Content-Type: application/json
 
-[
-  {
-    "paymentTypeCode": "DE",
-    "accountNo": "S1605677",
-    "paymentSourceTypeCode": "CMA",
-    "sourceBankAccountName": "SOPHIA CLARK",
-    "sourceBankAccountNo": "111375004",
-    "sourceBankBSB": "015141",
-    "paymentDate": "2026-08-20T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
-    "amount": 7500.0,
-    "createBy": "James Harris"
-  },
-  {
-    "paymentTypeCode": "DE",
-    "accountNo": "S1605678",
-    "paymentSourceTypeCode": "CMA",
-    "sourceBankAccountName": "LIAM NGUYEN",
-    "sourceBankAccountNo": "222486115",
-    "sourceBankBSB": "063111",
-    "paymentDate": "2026-08-20T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
-    "amount": 12500.0,
-    "createBy": "James Harris"
-  }
-]
-
-### Only 1 instruction — F-014 reduced the minimum from 2 to 1, since the self-balancing contra
-### record the service now adds itself already satisfies the Direct Entry spec's minimum-2-detail-
-### record structural rule. The single instruction is fully valid, so the batch now succeeds.
-### Expect: 200 OK, Success: true, ConvertedText populated (header + 1 detail + self-balancing
-### contra record + trailer), Errors: null.
-POST {{baseUrl}}/convert
-Content-Type: application/json
-
-[
-  {
-    "paymentTypeCode": "DE",
-    "accountNo": "S1605677",
-    "paymentSourceTypeCode": "CMA",
-    "sourceBankAccountName": "SOPHIA CLARK",
-    "sourceBankAccountNo": "111375004",
-    "sourceBankBSB": "015141",
-    "paymentDate": "2026-08-20T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
-    "amount": 7500.0,
-    "createBy": "James Harris"
-  }
-]
-
-### Unsupported paymentTypeCode ("BPAY" instead of "DE") on instruction 0 — whole batch rejected
+### Unsupported paymentTypeCode ("XX") on instruction 0 — whole batch rejected
 ### in full. Only the paymentTypeCode is invalid; everything else matches the valid batch above so
 ### the failure is isolated. Expect: 200 OK, Success: false, Errors: ["Unsupported payment type
-### 'BPAY'."] tied to instruction index 0.
+### 'XX'."] tied to instruction index 0.
+POST {{baseUrl}}/convert
+Content-Type: application/json
+
+[
+  {
+    "paymentTypeCode": "XX",
+    "accountNo": "S1605677",
+    "paymentSourceTypeCode": "CMA",
+    "sourceBankAccountName": "SOPHIA CLARK",
+    "sourceBankAccountNo": "111375004",
+    "sourceBankBSB": "015141",
+    "paymentDate": "2026-08-20T10:00:00",
+    "sourceCurrency": "AUD",
+    "sourceAmount": 0.0,
+    "amount": 7500.0,
+    "createBy": "James Harris"
+  }
+]
+
+### Mixed paymentTypeCode (found 'BPAY', 'DE') — whole batch rejected
+### in full. Only the paymentTypeCode is invalid; everything else matches the valid batch above so
+### the failure is isolated. Expect: 200 OK, Success: false, Errors: ["Payment batch must not mix payment types (found 'BPAY', 'DE')."].
 POST {{baseUrl}}/convert
 Content-Type: application/json
 
