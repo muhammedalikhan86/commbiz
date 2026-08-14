@@ -2,7 +2,7 @@ namespace CommBiz.Api.Features.DirectEntry;
 
 // Detail Record mapping (F-006, architecture.md §3/§4 step 5; docs/stash/Direct Entry - File Specification
 // CommBiz.md §2): manual field concatenation only, per ADR-004 (no AutoMapper). Runs only on instructions
-// that already passed the F-004 router and F-005 validator.
+// that already passed the top-level Payment Type Router and the F-005 validator.
 public static class DirectEntryDetailRecordMapper
 {
     private const string RecordType = "1";

@@ -4,10 +4,12 @@ using CommBiz.Api.Features.DirectEntry;
 using CommBiz.Api.Features.Imt;
 using CommBiz.Api.Features.PaymentRouting;
 using Microsoft.Extensions.Options;
+using Scalar.AspNetCore;
 using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseWolverine();
+builder.Services.AddOpenApi();
 builder.Services.Configure<DirectEntrySettings>(builder.Configuration.GetSection("DirectEntry"));
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<DirectEntrySettings>>().Value);
 builder.Services.Configure<BPaySettings>(builder.Configuration.GetSection("BPay"));
@@ -17,12 +19,15 @@ builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<ImtSettings>>
 
 var app = builder.Build();
 
+app.MapOpenApi();
+app.MapScalarApiReference();
+
 app.MapGet("/health", () => Results.Ok(new { status = "Healthy" }));
 
 // F-015: endpoint is payment-type-agnostic (architecture.md §2) — it reads the raw batch and
 // hands it to the Payment Type Router, which decides what slice (if any) to dispatch to.
 app.MapPost("/convert", async (JsonElement body, IMessageBus bus) =>
-    await CommBiz.Api.Features.PaymentRouting.PaymentTypeRouter.RouteAndDispatchAsync(body, bus));
+    await PaymentTypeRouter.RouteAndDispatchAsync(body, bus));
 
 app.Run();
 

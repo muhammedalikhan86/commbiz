@@ -1,8 +1,8 @@
 namespace CommBiz.Api.Features.DirectEntry;
 
-// Direct Entry field-level validation (F-005, FR-002/FR-003, architecture.md §3): runs after the
-// F-004 Payment Type Router, on instructions that already passed routing. Any field failure,
-// anywhere in the batch, rejects the whole batch — no partial conversion.
+// Direct Entry field-level validation (F-005, FR-002/FR-003, architecture.md §3): runs on instructions
+// already guaranteed to be "DE"-only by the top-level Payment Type Router (Features/PaymentRouting).
+// Any field failure, anywhere in the batch, rejects the whole batch — no partial conversion.
 public static class DirectEntryValidator
 {
     // Sentinel Index for batch-header-level errors (not tied to a specific instruction).

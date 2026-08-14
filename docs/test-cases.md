@@ -23,8 +23,8 @@ running Minimal API host. Field values reference the Direct Entry spec's Sample 
 |----|----------|-------|------------------|
 | TC-002 | Happy path — single valid Direct Entry instruction | POST a batch of 1 valid Direct Entry instruction (BSB `062-000`, account `10001000`, indicator `N`, txn code `53`, amount `530000010050` cents pattern per sample, title `CLIENT COMPANY XYZ`, lodgement ref `INVOICE 123456`) | 200 OK; JSON response contains the converted file text inline; success indicator true |
 | TC-003 | Happy path — multiple valid instructions (regression-sensitive: totals) | POST a batch of 3+ valid instructions with mixed credit/debit transaction codes | 200 OK; converted file contains 1 header + 3 detail + 1 trailer record; trailer totals reconcile (net = credit − debit, counts match) |
-| TC-004 | Unsupported payment type rejects whole batch | POST a batch where one instruction declares a payment type other than Direct Entry (e.g. `BPAY`), alongside otherwise-valid Direct Entry instructions | 4xx response; entire batch rejected (no partial conversion); reason references the unsupported type, per FR-006 |
-| TC-005 | Mixed-type batch — all instructions must be same/supported type | POST a batch with only unsupported types | 4xx response; batch rejected; no output produced |
+| TC-004 | Mixed payment types in one batch rejects the whole batch | POST a batch mixing Direct Entry (`DE`) instructions with a different, otherwise-recognised payment type (e.g. `BPAY`) | 4xx response; entire batch rejected (no partial conversion); reason states the batch must not mix payment types, per FR-006 |
+| TC-005 | Unsupported payment type rejects whole batch | POST a batch where every instruction declares the same not-yet-wired payment type | 4xx response; batch rejected; reason references the unsupported type per instruction; no output produced |
 
 ### F-005 — Direct Entry validation rules
 

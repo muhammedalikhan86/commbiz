@@ -8,9 +8,14 @@
 > Source data: [docs/stash/Direct Entry - File Specification CommBiz.md](../stash/Direct%20Entry%20-%20File%20Specification%20CommBiz.md) §5 (Sample File)
 
 This runbook is a step-by-step manual verification guide for the full Direct Entry conversion
-pipeline: **Host (Kestrel) → Wolverine dispatch → Payment Type Router (F-004) → Validator (F-005) →
-Detail/Header/Self-balancing/Trailer mapping (F-006/F-007/F-014) → assembled response (F-008)**. Each
-section can be run independently against a locally running instance of the API.
+pipeline: **Host (Kestrel) → Wolverine dispatch → Payment Type Router (F-004/F-015, `Features/PaymentRouting`)
+→ Validator (F-005) → Detail/Header/Self-balancing/Trailer mapping (F-006/F-007/F-014) → assembled
+response (F-008)**. Each section can be run independently against a locally running instance of the
+API.
+
+> **Router note:** F-004's original routing check was DirectEntry-local; F-015 later centralized it
+> into the real top-level cross-slice router (`Features/PaymentRouting`), which now solely enforces
+> this rule for every payment type. The DirectEntry-local copy was redundant and has been removed.
 
 > **Contract note (v2):** this runbook was rewritten to match the actual current request/response
 > shape. The request body is a **plain JSON array** of payment instructions in Shaw and Partners'
@@ -161,8 +166,12 @@ baseline for every field-level check in F-006/F-007/F-014 below.
 
 ## F-004 — Payment Type Router: unsupported payment type rejects the whole batch — TC-004, TC-005
 
-Take the F-003 body and change the **first** instruction's `paymentTypeCode` to `"BPAY"` (anything
-other than `"DE"`, case-insensitively):
+The top-level router (`Features/PaymentRouting`) distinguishes two distinct batch-level rejections —
+mixing recognised types, and declaring only an unrecognised type — so there are two scenarios below
+instead of one.
+
+**TC-004 — mixed payment types:** take the F-003 body and change the **first** instruction's
+`paymentTypeCode` to `"BPAY"` (a recognised type, just not the same as the rest of the batch):
 
 ```powershell
 # ...same body as F-003, but instruction 0's paymentTypeCode = "BPAY"
@@ -176,16 +185,31 @@ Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
   "success": false,
   "convertedText": null,
   "errors": [
-    { "index": 0, "reason": "Unsupported payment type 'BPAY'." }
+    { "index": -1, "reason": "Payment batch must not mix payment types (found 'DE', 'BPAY')." }
   ]
 }
 ```
 Note the entire batch is rejected — the second (otherwise valid) instruction is **not** partially
-converted. `index` is the 0-based position of the offending instruction in the request array. If
-every instruction has an unsupported type (TC-005), every index is reported.
+converted.
 
-Router check runs **before** field validation (F-005) — an unsupported-type instruction with an
-otherwise-invalid `sourceBankBSB` will still only report the payment-type error, not both.
+**TC-005 — every instruction shares a single unsupported type:** POST a batch where every
+instruction's `paymentTypeCode` is the same not-yet-wired type (e.g. `"PP"`):
+
+```json
+{
+  "success": false,
+  "convertedText": null,
+  "errors": [
+    { "index": 0, "reason": "Unsupported payment type 'PP'." },
+    { "index": 1, "reason": "Unsupported payment type 'PP'." }
+  ]
+}
+```
+`index` is the 0-based position of each offending instruction in the request array — every index is
+reported since every instruction shares the unsupported type.
+
+Router check runs **before** any slice's own field validation (F-005) — a batch that fails routing is
+never forwarded to a slice's validator at all.
 
 ---
 

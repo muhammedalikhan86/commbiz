@@ -32,7 +32,7 @@ public class ImtRecordMapperTests
             DestinationBankSwiftCode: "CHASUS33",
             DestinationBankName: "NATIONAL FINANCIAL SERVICES",
             DestinationBankAddress: "640 5TH AVENUE NEW YORK NY 10019",
-            BeneficiaryAddress: "9101 Alta Drive, Unit 15, Las Vegas, NV 89145",
+            BeneficiaryAddress: "9101 Alta Drive, U15, Las Vegas, NV 89145",
             IntermediaryBankIBAN: null,
             IntermediaryBankSwiftCode: "CHASUS33",
             IntermediaryBankName: "CHASE MANHATTAN BANK (J.P. MORGAN CHASE & CO)",
@@ -126,7 +126,7 @@ public class ImtRecordMapperTests
     {
         var record = ImtRecordMapper.Map(ValidInstruction(), DebitAccountNumber);
 
-        Assert.Equal("9101 Alta Drive Unit 15 Las Vegas NV 89145", Fields(record)[19]);
+        Assert.Equal("9101 Alta Drive U15 Las Vegas NV 89145", Fields(record)[19]);
     }
 
     [Fact]

@@ -17,7 +17,7 @@ including the F-014 self-balancing amendment.**
   `createBy`); organisation-level constants (title, lodgement reference, trace BSB/account, remitter
   name, indicator, transaction code, withholding tax) are sourced from `appsettings.json`'s
   `DirectEntry` section via `DirectEntrySettings`, not the request
-- F-004 — Payment Type Router (whole-batch rejection on unsupported `paymentTypeCode`, case-insensitive `"DE"` match)
+- F-004 — Payment Type Router (whole-batch rejection on unsupported `paymentTypeCode`, case-insensitive `"DE"` match). Originally a DirectEntry-local check; removed once F-015 centralized this rule into the top-level cross-slice router (`Features/PaymentRouting`), which alone now enforces it
 - F-005 — Direct Entry field validation (BSB/account/indicator/transaction code/amount/mandatory field rules)
 - F-006 — Detail record mapping (120-char fixed-width Detail Record, manual mapping per [ADR-004](adr/ADR-004-manual-mapping-no-automapper.md))
 - F-007 — Header/Trailer record assembly with self-balancing totals (credit/debit/net/count reconciliation)

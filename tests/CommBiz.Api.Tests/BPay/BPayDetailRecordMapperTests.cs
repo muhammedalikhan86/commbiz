@@ -81,11 +81,13 @@ public class BPayDetailRecordMapperTests
     }
 
     [Fact]
-    public void Record_has_no_trailing_comma()
+    public void Record_ends_with_a_comma_since_field_25_discretionary_data_is_always_empty()
     {
+        // Confirmed against the spec's own sample records (§1.2): "50,,,,,,,,7334,,8923037123,,,130350,,,,,,,,,,,"
+        // ends in a comma too — field 25 being empty is what puts a trailing comma there, not a mapping bug.
         var record = BPayDetailRecordMapper.Map(ValidInstruction());
 
-        Assert.False(record.EndsWith(",", StringComparison.Ordinal));
+        Assert.EndsWith(",", record, StringComparison.Ordinal);
     }
 
     [Fact]

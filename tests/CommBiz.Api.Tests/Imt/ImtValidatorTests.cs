@@ -25,7 +25,7 @@ public class ImtValidatorTests
             DestinationBankSwiftCode: "CHASUS33",
             DestinationBankName: "NATIONAL FINANCIAL SERVICES",
             DestinationBankAddress: "640 5TH AVENUE NEW YORK NY 10019",
-            BeneficiaryAddress: "9101 Alta Drive, Unit 15, Las Vegas, NV 89145",
+            BeneficiaryAddress: "9101 Alta Drive, U15, Las Vegas, NV 89145",
             IntermediaryBankIBAN: null,
             IntermediaryBankSwiftCode: "CHASUS33",
             IntermediaryBankName: "CHASE MANHATTAN BANK",
@@ -257,7 +257,7 @@ public class ImtValidatorTests
 
     [Fact]
     public void BeneficiaryAddress_with_commas_is_sanitized_not_rejected() =>
-        AssertValid(BatchWith(ValidInstruction() with { BeneficiaryAddress = "9101 Alta Drive, Unit 15, Las Vegas, NV 89145" }));
+        AssertValid(BatchWith(ValidInstruction() with { BeneficiaryAddress = "9101 Alta Drive, U15, Las Vegas, NV 89145" }));
 
     [Fact]
     public void BeneficiaryAddress_blank_is_rejected() =>

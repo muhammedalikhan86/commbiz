@@ -47,10 +47,10 @@ public class ImtConvertEndpointTests(WebApplicationFactory<Program> factory)
             DestinationBankSWIFTCode = "CHASUS33",
             DestinationBankName = "NATIONAL FINANCIAL SERVICES",
             DestinationBankAddress = "640 5TH AVENUE NEW YORK NY 10019",
-            BeneficiaryAddress = "9101 Alta Drive, Unit 15, Las Vegas, NV 89145",
+            BeneficiaryAddress = "9101 Alta Drive, U15, Las Vegas, NV 89145",
             IntermediaryBankIBAN = (string?)null,
             IntermediaryBankSWIFTCode = "CHASUS33",
-            IntermediaryBankName = "CHASE MANHATTAN BANK (J.P. MORGAN CHASE & CO)",
+            IntermediaryBankName = "CHASE MANHATTAN BANK",
             IntermediaryBankAddress = "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005",
         };
 

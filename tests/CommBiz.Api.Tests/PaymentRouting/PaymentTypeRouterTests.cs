@@ -126,7 +126,19 @@ public class PaymentTypeRouterTests(WebApplicationFactory<Program> factory)
     public async Task A_bpay_batch_dispatches_to_the_bpay_slice_case_insensitively(string paymentTypeCode)
     {
         var client = CreateClient();
-        var batch = new object[] { new { PaymentTypeCode = paymentTypeCode } };
+        var batch = new object[]
+        {
+            new
+            {
+                PaymentTypeCode = paymentTypeCode,
+                AccountNo = "S1218937",
+                PaymentSourceTypeCode = "LEDGER",
+                PaymentDate = new DateTime(2026, 8, 11, 10, 0, 0),
+                Amount = 10000.00m,
+                BPayBillerCode = "488577",
+                BPayReference = "1202194308172118",
+            },
+        };
 
         var response = await client.PostAsJsonAsync("/convert", batch);
 

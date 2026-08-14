@@ -9,12 +9,8 @@ public static class ConvertDirectEntryBatchHandler
     {
         var instructions = command.Instructions;
 
-        var unsupportedTypeErrors = PaymentTypeRouter.FindUnsupportedPaymentTypes(instructions);
-        if (unsupportedTypeErrors is not null)
-        {
-            return new ConvertDirectEntryBatchResponse(false, null, unsupportedTypeErrors);
-        }
-
+        // Payment-type routing (unsupported/mixed types) is enforced once, at the batch level, by the
+        // top-level cross-slice router (Features/PaymentRouting) before this handler ever runs.
         var validationErrors = DirectEntryValidator.Validate(instructions);
         if (validationErrors is not null)
         {

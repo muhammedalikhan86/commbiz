@@ -181,22 +181,5 @@ public class DirectEntryValidatorTests
         Assert.Contains(errors, e => e.Reason.Contains("AccountNo"));
     }
 
-    [Fact]
-    public void F004_router_rejection_short_circuits_F005_validation()
-    {
-        // Invalid payment type AND an invalid field on the same instruction: only the router's
-        // error should surface — field validation must not run once routing has already rejected.
-        var command = new ConvertDirectEntryBatchCommand(
-            BatchWith(ValidInstruction() with { PaymentTypeCode = "BPAY", SourceBankBsb = "bad" }));
-
-        var result = ConvertDirectEntryBatchHandler.Handle(command, Settings);
-
-        Assert.False(result.Success);
-        Assert.Null(result.ConvertedText);
-        Assert.NotNull(result.Errors);
-        var error = Assert.Single(result.Errors);
-        Assert.Equal(0, error.Index);
-        Assert.Contains("Unsupported payment type", error.Reason);
-    }
 }
 
