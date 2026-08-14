@@ -1,6 +1,7 @@
 using System.Text.Json;
 using CommBiz.Api.Features.BPay;
 using CommBiz.Api.Features.DirectEntry;
+using CommBiz.Api.Features.Imt;
 using CommBiz.Api.Features.PaymentRouting;
 using Microsoft.Extensions.Options;
 using Wolverine;
@@ -11,6 +12,8 @@ builder.Services.Configure<DirectEntrySettings>(builder.Configuration.GetSection
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<DirectEntrySettings>>().Value);
 builder.Services.Configure<BPaySettings>(builder.Configuration.GetSection("BPay"));
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<BPaySettings>>().Value);
+builder.Services.Configure<ImtSettings>(builder.Configuration.GetSection("Imt"));
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<ImtSettings>>().Value);
 
 var app = builder.Build();
 

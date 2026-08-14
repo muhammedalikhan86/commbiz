@@ -93,3 +93,108 @@ Content-Type: application/json
     "createBy": "James Harris"
   }
 ]
+
+### IMT: blank Notes (Transaction Description, field 2) — Mandatory, everything else valid.
+### Expect: 200 OK, Success: false, Errors containing a "Notes" / "Transaction Description"
+### blank-rejection reason tied to index 0.
+POST {{baseUrl}}/convert
+Content-Type: application/json
+
+[
+  {
+    "paymentTypeCode": "TT",
+    "paymentSourceTypeCode": "LEDGER",
+    "sourceBankAccountName": null,
+    "sourceBankAccountNo": null,
+    "sourceBankBSB": null,
+    "destinationBankTypeCode": null,
+    "destinationBankAccountName": "SAMER MOHAMMED KIKI",
+    "destinationBankAccountNo": "658450191",
+    "paymentDate": "2026-08-18T10:00:00",
+    "sourceCurrency": "USD",
+    "sourceAmount": 588517.58,
+    "amount": 0.0,
+    "paymentReference": "TT-000001",
+    "notes": "",
+    "currency": null,
+    "destinationBankIBAN": null,
+    "destinationBankSWIFTCode": "CHASUS33",
+    "destinationBankName": "NATIONAL FINANCIAL SERVICES",
+    "destinationBankAddress": "640 5TH AVENUE NEW YORK NY 10019",
+    "beneficiaryAddress": "9101 Alta Drive, Unit 15, Las Vegas, NV 89145",
+    "intermediaryBankIBAN": null,
+    "intermediaryBankSWIFTCode": "CHASUS33",
+    "intermediaryBankName": "CHASE MANHATTAN BANK (J.P. MORGAN CHASE & CO)",
+    "intermediaryBankAddress": "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005"
+  }
+]
+
+### IMT: both Payment Amount (sourceAmount) and Debit Amount (amount) populated — fields 5/6 are
+### mutually exclusive, exactly one must be > 0. Expect: 200 OK, Success: false, Errors containing
+### an exactly-one-of-Payment-Amount/Debit-Amount rejection reason tied to index 0.
+POST {{baseUrl}}/convert
+Content-Type: application/json
+
+[
+  {
+    "paymentTypeCode": "TT",
+    "paymentSourceTypeCode": "LEDGER",
+    "sourceBankAccountName": null,
+    "sourceBankAccountNo": null,
+    "sourceBankBSB": null,
+    "destinationBankTypeCode": null,
+    "destinationBankAccountName": "SAMER MOHAMMED KIKI",
+    "destinationBankAccountNo": "658450191",
+    "paymentDate": "2026-08-18T10:00:00",
+    "sourceCurrency": "USD",
+    "sourceAmount": 588517.58,
+    "amount": 250.00,
+    "paymentReference": "TT-000001",
+    "notes": "10 bps on fx",
+    "currency": null,
+    "destinationBankIBAN": null,
+    "destinationBankSWIFTCode": "CHASUS33",
+    "destinationBankName": "NATIONAL FINANCIAL SERVICES",
+    "destinationBankAddress": "640 5TH AVENUE NEW YORK NY 10019",
+    "beneficiaryAddress": "9101 Alta Drive, Unit 15, Las Vegas, NV 89145",
+    "intermediaryBankIBAN": null,
+    "intermediaryBankSWIFTCode": "CHASUS33",
+    "intermediaryBankName": "CHASE MANHATTAN BANK (J.P. MORGAN CHASE & CO)",
+    "intermediaryBankAddress": "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005"
+  }
+]
+
+### IMT: Beneficiary Account Name (field 19) contains a disallowed character (ampersand) —
+### legal/identity data is rejected outright rather than sanitized. Expect: 200 OK, Success: false,
+### Errors containing a disallowed-character rejection reason tied to index 0.
+POST {{baseUrl}}/convert
+Content-Type: application/json
+
+[
+  {
+    "paymentTypeCode": "TT",
+    "paymentSourceTypeCode": "LEDGER",
+    "sourceBankAccountName": null,
+    "sourceBankAccountNo": null,
+    "sourceBankBSB": null,
+    "destinationBankTypeCode": null,
+    "destinationBankAccountName": "SAMER & KIKI TRADING",
+    "destinationBankAccountNo": "658450191",
+    "paymentDate": "2026-08-18T10:00:00",
+    "sourceCurrency": "USD",
+    "sourceAmount": 588517.58,
+    "amount": 0.0,
+    "paymentReference": "TT-000001",
+    "notes": "10 bps on fx",
+    "currency": null,
+    "destinationBankIBAN": null,
+    "destinationBankSWIFTCode": "CHASUS33",
+    "destinationBankName": "NATIONAL FINANCIAL SERVICES",
+    "destinationBankAddress": "640 5TH AVENUE NEW YORK NY 10019",
+    "beneficiaryAddress": "9101 Alta Drive, Unit 15, Las Vegas, NV 89145",
+    "intermediaryBankIBAN": null,
+    "intermediaryBankSWIFTCode": "CHASUS33",
+    "intermediaryBankName": "CHASE MANHATTAN BANK (J.P. MORGAN CHASE & CO)",
+    "intermediaryBankAddress": "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005"
+  }
+]

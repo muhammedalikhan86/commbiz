@@ -13,6 +13,7 @@ public static class PaymentTypeRouter
     private const int HeaderErrorIndex = -1;
     private const string DirectEntryType = "DE";
     private const string BPayType = "BPAY";
+    private const string ImtType = "TT"; // F-017: Shaw and Partners' internal "Telegraphic Transfer" code - CBA's file calls this format "IMT"
     private const string PaymentTypeCodeProperty = "paymentTypeCode";
 
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
@@ -39,6 +40,7 @@ public static class PaymentTypeRouter
         {
             DirectEntryType => await DispatchDirectEntryAsync(body, bus),
             BPayType => await DispatchBPayAsync(body, bus),
+            ImtType => await DispatchImtAsync(body, bus),
             _ => Results.Ok(RejectedUnsupported(typeCodes))
         };
     }
@@ -56,6 +58,14 @@ public static class PaymentTypeRouter
         var instructions = body.Deserialize<List<BPay.BPayPaymentInstructionRequest>>(JsonOptions) ?? [];
         var response = await bus.InvokeAsync<BPay.ConvertBPayBatchResponse>(
             new BPay.ConvertBPayBatchCommand(instructions));
+        return Results.Ok(response);
+    }
+
+    private static async Task<IResult> DispatchImtAsync(JsonElement body, IMessageBus bus)
+    {
+        var instructions = body.Deserialize<List<Imt.ImtPaymentInstructionRequest>>(JsonOptions) ?? [];
+        var response = await bus.InvokeAsync<Imt.ConvertImtBatchResponse>(
+            new Imt.ConvertImtBatchCommand(instructions));
         return Results.Ok(response);
     }
 

@@ -1,0 +1,152 @@
+using CommBiz.Api.Features.Imt;
+
+namespace CommBiz.Api.Tests.Imt;
+
+public class ImtRecordMapperTests
+{
+    private static readonly ImtSettings Settings = new()
+    {
+        DebitAccountBsb = "062-000",
+        DebitAccountNumber = "2112 0075",
+        DebitAccountName = "SHAW - AUD TRUST ACCOUNT",
+    };
+
+    private static ImtPaymentInstructionRequest ValidInstruction() =>
+        new(
+            PaymentTypeCode: "TT",
+            PaymentSourceTypeCode: "LEDGER",
+            SourceBankAccountName: null,
+            SourceBankAccountNo: null,
+            SourceBankBsb: null,
+            DestinationBankTypeCode: null,
+            DestinationBankAccountName: "SAMER MOHAMMED KIKI",
+            DestinationBankAccountNo: "658450191",
+            PaymentDate: new DateTime(2026, 4, 23, 10, 0, 0),
+            SourceCurrency: "USD",
+            SourceAmount: 588517.58m,
+            Amount: 0.0m,
+            PaymentReference: "TT-000001",
+            Notes: "10 bps on fx",
+            Currency: null,
+            DestinationBankIBAN: null,
+            DestinationBankSwiftCode: "CHASUS33",
+            DestinationBankName: "NATIONAL FINANCIAL SERVICES",
+            DestinationBankAddress: "640 5TH AVENUE NEW YORK NY 10019",
+            BeneficiaryAddress: "9101 Alta Drive, Unit 15, Las Vegas, NV 89145",
+            IntermediaryBankIBAN: null,
+            IntermediaryBankSwiftCode: "CHASUS33",
+            IntermediaryBankName: "CHASE MANHATTAN BANK (J.P. MORGAN CHASE & CO)",
+            IntermediaryBankAddress: "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005");
+
+    private static string[] Fields(string record) => record.Split(',');
+
+    private static string DebitAccountNumber => ImtRecordMapper.DeriveDebitAccountNumber(Settings);
+
+    [Fact]
+    public void Record_has_exactly_27_comma_separated_fields()
+    {
+        var record = ImtRecordMapper.Map(ValidInstruction(), DebitAccountNumber);
+
+        Assert.Equal(27, Fields(record).Length);
+    }
+
+    [Fact]
+    public void Field_1_is_the_literal_constant_IMT_never_TT()
+    {
+        var record = ImtRecordMapper.Map(ValidInstruction(), DebitAccountNumber);
+
+        Assert.Equal("IMT", Fields(record)[0]);
+    }
+
+    [Fact]
+    public void Field_3_process_date_is_formatted_YYMMDD()
+    {
+        var record = ImtRecordMapper.Map(ValidInstruction(), DebitAccountNumber);
+
+        Assert.Equal("260423", Fields(record)[2]);
+    }
+
+    [Fact]
+    public void Field_5_payment_amount_is_populated_when_source_amount_is_positive_and_field_6_is_blank()
+    {
+        var record = ImtRecordMapper.Map(ValidInstruction(), DebitAccountNumber);
+        var fields = Fields(record);
+
+        Assert.Equal("588517.58", fields[4]);
+        Assert.Equal(string.Empty, fields[5]);
+    }
+
+    [Fact]
+    public void Field_6_debit_amount_is_populated_when_amount_is_positive_and_field_5_is_blank()
+    {
+        var instruction = ValidInstruction() with { SourceAmount = 0m, Amount = 1234.56m };
+        var record = ImtRecordMapper.Map(instruction, DebitAccountNumber);
+        var fields = Fields(record);
+
+        Assert.Equal(string.Empty, fields[4]);
+        Assert.Equal("1234.56", fields[5]);
+    }
+
+    [Fact]
+    public void Field_7_debit_account_number_is_derived_from_static_ImtSettings()
+    {
+        var record = ImtRecordMapper.Map(ValidInstruction(), DebitAccountNumber);
+
+        // BSB "062-000" -> last 4 digits "2000"; account number "2112 0075" -> spaces stripped "21120075"
+        Assert.Equal("200021120075", Fields(record)[6]);
+    }
+
+    [Fact]
+    public void Field_13_intermediary_country_is_derived_from_SWIFT_chars_5_and_6()
+    {
+        var record = ImtRecordMapper.Map(ValidInstruction(), DebitAccountNumber);
+
+        Assert.Equal("US", Fields(record)[12]);
+    }
+
+    [Fact]
+    public void Field_17_beneficiary_bank_country_is_derived_from_SWIFT_chars_5_and_6()
+    {
+        var record = ImtRecordMapper.Map(ValidInstruction(), DebitAccountNumber);
+
+        Assert.Equal("US", Fields(record)[16]);
+    }
+
+    [Fact]
+    public void Field_26_beneficiary_country_matches_field_17_derivation()
+    {
+        var record = ImtRecordMapper.Map(ValidInstruction(), DebitAccountNumber);
+        var fields = Fields(record);
+
+        Assert.Equal(fields[16], fields[25]);
+    }
+
+    [Fact]
+    public void Field_20_beneficiary_address_commas_are_sanitized_to_spaces()
+    {
+        var record = ImtRecordMapper.Map(ValidInstruction(), DebitAccountNumber);
+
+        Assert.Equal("9101 Alta Drive Unit 15 Las Vegas NV 89145", Fields(record)[19]);
+    }
+
+    [Fact]
+    public void Fields_8_9_12_16_21_22_23_24_25_are_always_empty()
+    {
+        var record = ImtRecordMapper.Map(ValidInstruction(), DebitAccountNumber);
+        var fields = Fields(record);
+        var alwaysEmptyIndexes = new[] { 7, 8, 11, 15, 20, 21, 22, 23, 24 };
+
+        foreach (var index in alwaysEmptyIndexes)
+        {
+            Assert.Equal(string.Empty, fields[index]);
+        }
+    }
+
+    [Fact]
+    public void No_field_is_padded_or_fixed_width()
+    {
+        var record = ImtRecordMapper.Map(ValidInstruction() with { SourceCurrency = "USD" }, DebitAccountNumber);
+
+        Assert.StartsWith("IMT,10 bps on fx,260423,USD,", record, StringComparison.Ordinal);
+    }
+}

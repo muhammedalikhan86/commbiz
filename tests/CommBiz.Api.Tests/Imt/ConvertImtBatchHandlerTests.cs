@@ -1,0 +1,112 @@
+using CommBiz.Api.Features.Imt;
+
+namespace CommBiz.Api.Tests.Imt;
+
+public class ConvertImtBatchHandlerTests
+{
+    private static readonly ImtSettings Settings = new()
+    {
+        DebitAccountBsb = "062-000",
+        DebitAccountNumber = "2112 0075",
+        DebitAccountName = "SHAW - AUD TRUST ACCOUNT",
+    };
+
+    private static ImtPaymentInstructionRequest ValidInstruction() =>
+        new(
+            PaymentTypeCode: "TT",
+            PaymentSourceTypeCode: "LEDGER",
+            SourceBankAccountName: null,
+            SourceBankAccountNo: null,
+            SourceBankBsb: null,
+            DestinationBankTypeCode: null,
+            DestinationBankAccountName: "SAMER MOHAMMED KIKI",
+            DestinationBankAccountNo: "658450191",
+            PaymentDate: DateTime.UtcNow.Date.AddDays(1),
+            SourceCurrency: "USD",
+            SourceAmount: 588517.58m,
+            Amount: 0.0m,
+            PaymentReference: "TT-000001",
+            Notes: "10 bps on fx",
+            Currency: null,
+            DestinationBankIBAN: null,
+            DestinationBankSwiftCode: "CHASUS33",
+            DestinationBankName: "NATIONAL FINANCIAL SERVICES",
+            DestinationBankAddress: "640 5TH AVENUE NEW YORK NY 10019",
+            BeneficiaryAddress: "9101 Alta Drive, Unit 15, Las Vegas, NV 89145",
+            IntermediaryBankIBAN: null,
+            IntermediaryBankSwiftCode: "CHASUS33",
+            IntermediaryBankName: "CHASE MANHATTAN BANK",
+            IntermediaryBankAddress: "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005");
+
+    private static ConvertImtBatchCommand CommandWith(IReadOnlyList<ImtPaymentInstructionRequest> instructions) => new(instructions);
+
+    [Fact]
+    public void Valid_batch_returns_success_with_converted_text()
+    {
+        var command = CommandWith([ValidInstruction()]);
+
+        var result = ConvertImtBatchHandler.Handle(command, Settings);
+
+        Assert.True(result.Success);
+        Assert.False(string.IsNullOrEmpty(result.ConvertedText));
+        Assert.Null(result.Errors);
+    }
+
+    [Fact]
+    public void Invalid_batch_returns_failure_with_per_instruction_reasons()
+    {
+        var command = CommandWith([ValidInstruction() with { Notes = "" }]);
+
+        var result = ConvertImtBatchHandler.Handle(command, Settings);
+
+        Assert.False(result.Success);
+        Assert.Null(result.ConvertedText);
+        Assert.NotNull(result.Errors);
+        var error = Assert.Single(result.Errors);
+        Assert.Equal(0, error.Index);
+        Assert.Contains("Notes", error.Reason);
+    }
+
+    [Fact]
+    public void Multi_instruction_batch_is_joined_with_CRLF_and_has_no_trailing_CRLF()
+    {
+        var first = ValidInstruction();
+        var second = ValidInstruction() with { PaymentReference = "TT-000002" };
+        var command = CommandWith([first, second]);
+
+        var result = ConvertImtBatchHandler.Handle(command, Settings);
+
+        Assert.True(result.Success);
+        var convertedText = result.ConvertedText!;
+
+        Assert.False(convertedText.EndsWith("\r\n", StringComparison.Ordinal));
+        var rows = convertedText.Split("\r\n");
+        Assert.Equal(2, rows.Length); // exactly one row per instruction - no header/trailer, no blank trailing row
+        Assert.Equal(ImtRecordMapper.Map(first, ImtRecordMapper.DeriveDebitAccountNumber(Settings)), rows[0]);
+        Assert.Equal(ImtRecordMapper.Map(second, ImtRecordMapper.DeriveDebitAccountNumber(Settings)), rows[1]);
+    }
+
+    [Fact]
+    public void Single_instruction_batch_has_no_CRLF_at_all()
+    {
+        var command = CommandWith([ValidInstruction()]);
+
+        var result = ConvertImtBatchHandler.Handle(command, Settings);
+
+        Assert.DoesNotContain("\r\n", result.ConvertedText);
+    }
+
+    [Fact]
+    public void Batch_exceeding_350_instructions_is_rejected_in_full()
+    {
+        var instructions = Enumerable.Repeat(ValidInstruction(), 351).ToArray();
+        var command = CommandWith(instructions);
+
+        var result = ConvertImtBatchHandler.Handle(command, Settings);
+
+        Assert.False(result.Success);
+        Assert.Null(result.ConvertedText);
+        Assert.NotNull(result.Errors);
+        Assert.Contains(result.Errors, e => e.Index == -1 && e.Reason.Contains("at most 350"));
+    }
+}

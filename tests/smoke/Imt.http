@@ -1,0 +1,102 @@
+@baseUrl = http://localhost:5182
+
+### Valid batch: 1 real sample instruction (International Money Transfer, routed via API code
+### "TT" — the file's own Transaction Type field is always the constant "IMT"). Intermediary bank
+### fields populated; beneficiary/intermediary country codes derived from the SWIFT BIC.
+### Expect: 200 OK, Success: true, ConvertedText populated (single 27-field CSV row, no trailing
+### CRLF, no trailer record), Errors: null.
+POST {{baseUrl}}/convert
+Content-Type: application/json
+
+[
+  {
+    "paymentTypeCode": "TT",
+    "paymentSourceTypeCode": "LEDGER",
+    "sourceBankAccountName": null,
+    "sourceBankAccountNo": null,
+    "sourceBankBSB": null,
+    "destinationBankTypeCode": null,
+    "destinationBankAccountName": "SAMER MOHAMMED KIKI",
+    "destinationBankAccountNo": "658450191",
+    "paymentDate": "2026-08-18T10:00:00",
+    "sourceCurrency": "USD",
+    "sourceAmount": 588517.58,
+    "amount": 0.0,
+    "paymentReference": "TT-000001",
+    "notes": "10 bps on fx",
+    "currency": null,
+    "destinationBankIBAN": null,
+    "destinationBankSWIFTCode": "CHASUS33",
+    "destinationBankName": "NATIONAL FINANCIAL SERVICES",
+    "destinationBankAddress": "640 5TH AVENUE NEW YORK NY 10019",
+    "beneficiaryAddress": "9101 Alta Drive, U15, Las Vegas, NV 89145",
+    "intermediaryBankIBAN": null,
+    "intermediaryBankSWIFTCode": "CHASUS33",
+    "intermediaryBankName": "CHASE MANHATTAN BANK",
+    "intermediaryBankAddress": "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005"
+  }
+]
+
+### Valid batch: 2 instructions, second one with no intermediary bank at all (fields 10-13 blank —
+### allowed, since the beneficiary bank's own SWIFT BIC (fields 14-17) is sufficient on its own).
+### Also exercises a second currency (GBP) and confirms the beneficiary address comma
+### ("27 Oxford Street, London W1D 2DZ") is sanitized (comma -> space) rather than rejected.
+### Expect: 200 OK, Success: true, ConvertedText populated (two 27-field CSV rows joined by CRLF,
+### no trailing CRLF), Errors: null.
+POST {{baseUrl}}/convert
+Content-Type: application/json
+
+[
+  {
+    "paymentTypeCode": "TT",
+    "paymentSourceTypeCode": "LEDGER",
+    "sourceBankAccountName": null,
+    "sourceBankAccountNo": null,
+    "sourceBankBSB": null,
+    "destinationBankTypeCode": null,
+    "destinationBankAccountName": "SAMER MOHAMMED KIKI",
+    "destinationBankAccountNo": "658450191",
+    "paymentDate": "2026-08-18T10:00:00",
+    "sourceCurrency": "USD",
+    "sourceAmount": 588517.58,
+    "amount": 0.0,
+    "paymentReference": "TT-000001",
+    "notes": "10 bps on fx",
+    "currency": null,
+    "destinationBankIBAN": null,
+    "destinationBankSWIFTCode": "CHASUS33",
+    "destinationBankName": "NATIONAL FINANCIAL SERVICES",
+    "destinationBankAddress": "640 5TH AVENUE NEW YORK NY 10019",
+    "beneficiaryAddress": "9101 Alta Drive, U 15, Las Vegas, NV 89145",
+    "intermediaryBankIBAN": null,
+    "intermediaryBankSWIFTCode": "CHASUS33",
+    "intermediaryBankName": "CHASE MANHATTAN BANK",
+    "intermediaryBankAddress": "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005"
+  },
+  {
+    "paymentTypeCode": "TT",
+    "paymentSourceTypeCode": "LEDGER",
+    "sourceBankAccountName": null,
+    "sourceBankAccountNo": null,
+    "sourceBankBSB": null,
+    "destinationBankTypeCode": null,
+    "destinationBankAccountName": "GLOBEX TRADING PTY LTD",
+    "destinationBankAccountNo": "4471820033",
+    "paymentDate": "2026-08-18T10:00:00",
+    "sourceCurrency": "GBP",
+    "sourceAmount": 42500.00,
+    "amount": 0.0,
+    "paymentReference": "TT-000002",
+    "notes": "Supplier invoice settlement",
+    "currency": null,
+    "destinationBankIBAN": null,
+    "destinationBankSWIFTCode": "BARCGB22",
+    "destinationBankName": "BARCLAYS BANK UK PLC",
+    "destinationBankAddress": "1 CHURCHILL PLACE LONDON E14 5HP",
+    "beneficiaryAddress": "27 Oxford Street, London W1D 2DZ",
+    "intermediaryBankIBAN": null,
+    "intermediaryBankSWIFTCode": null,
+    "intermediaryBankName": null,
+    "intermediaryBankAddress": null
+  }
+]
