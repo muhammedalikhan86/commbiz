@@ -2,7 +2,7 @@
 
 > Status: DRAFT
 > Tranche: v1
-> Version: v6
+> Version: v7
 > Last updated: 2026-08-14
 > PRD: docs/prd.md (built against v7)
 > Architecture: docs/architecture.md (built against v6)
@@ -12,8 +12,10 @@
 | Phase | Goal | Status |
 |-------|------|--------|
 | Phase 1 | Direct Entry Conversion Core — accept a batch, route/validate/convert Direct Entry instructions, return the assembled file inline as JSON | Done |
-| Phase 2 | Cross-Cutting Concerns & Hardening — logging, security posture, performance targets | Planned |
-| Phase 3 | Release Readiness — hosting/runtime configuration, end-to-end test coverage | Planned |
+| Phase 2 | Additional Payment Types I — extend routing/validation/conversion to BPAY Batch Payments, International Money Transfers (IMT), and Priority Payments | Planned |
+| Phase 3 | Additional Payment Types II — extend routing/validation/conversion to Non-CBA Payment Requests; confirm specifications for RTGS, Payables Direct, and NZ BECS ahead of future scheduling | Planned |
+| Phase 4 | Cross-Cutting Concerns & Hardening — logging, security posture, performance targets | Planned |
+| Phase 5 | Release Readiness — hosting/runtime configuration, end-to-end test coverage | Planned |
 
 ## Feature Backlog
 
@@ -28,11 +30,17 @@
 | F-007 | Implement Direct Entry header and trailer record assembly, including self-balancing totals | 1 | Must | Done | Header record populates from Direct Entry Configuration plus the earliest instruction's payment date; trailer totals (credit, debit, net, record count) reconcile against the detail records |
 | F-008 | Assemble the final fixed-width Direct Entry file content (120-character, CRLF-terminated records) and return it as text in the JSON response | 1 | Must | Done | Output matches the Direct Entry spec's structural rules for a valid batch, per FR-004 and ADR-008 |
 | F-014 | Add a self-balancing (contra) detail record before the trailer record, and reduce the minimum batch size from 2 to 1 payment instruction | 1 | Must | Done | A self-balancing detail record is generated for every conversion, posting the batch's total amount (in cents, computed identically to the trailer's existing per-instruction-cents-then-sum total — see PM-005) against the configured settlement account (`TraceAccountBsb`/`TraceAccountAccNo`), in the transaction direction opposite the batch's configured `TransactionCode`, positioned immediately before the trailer record; the trailer's totals (credit, debit, net, record count) include this record so net total is always zero and the file is fully self-balancing; a batch containing as few as 1 valid instruction is accepted (previously rejected below 2), since the self-balancing record itself satisfies the Direct Entry spec's minimum-2-detail-record rule, per FR-005/FR-007/FR-008 |
-| F-009 | Integrate Shaw.Diagnostics logging (internal NuGet feed, v2.0.0) with redaction of sensitive payment fields | 2 | Must | Planned | Logs are emitted via Shaw.Diagnostics; no account numbers, amounts, or names appear in plaintext logs, per NFR-002/ADR-006 |
-| F-010 | Confirm and document the trusted internal-only deployment boundary (no application-level auth) | 2 | Must | Planned | Deployment network boundary documented; service runs without app-level auth controls, per NFR-003 |
-| F-011 | Define and validate batch size/performance targets | 2 | Should | Planned | Target batch size and latency confirmed (resolves Architecture A4) and validated under representative load |
-| F-012 | Kestrel-only hosting/runtime configuration (no Docker, no database) | 3 | Must | Planned | Service runs directly on Kestrel in the target environment with no container runtime and no database dependency, per ADR-005 |
-| F-013 | End-to-end test coverage for Direct Entry conversion (happy path and validation-failure paths) | 3 | Must | Planned | Automated tests cover: a valid batch converts correctly; a batch with one invalid instruction is rejected in full with reasons; a batch with an unsupported payment type is rejected; a single-instruction batch converts correctly, with a self-balancing detail record added and the file's trailer totals reconciling to zero net, per F-014 |
+| F-015 | Extend the Payment Type Router to accept BPAY Batch Payments, International Money Transfers (IMT), and Priority Payments codes (still rejecting the whole batch if any instruction's type isn't supported) | 2 | Must | Planned | Router accepts `paymentTypeCode` values for BPAY, IMT, and Priority Payments alongside Direct Entry; a batch containing any unsupported type is still rejected in full, per FR-006 |
+| F-016 | Implement BPAY Batch Payments conversion (validation and fixed-format file assembly, per the BPay File Specification) | 2 | Must | Planned | Every BPAY-specific field rule (Biller Code, settlement date, etc.) is enforced per the BPay spec; a valid BPAY batch converts to the correct file layout; an invalid batch is rejected in full with a reason per invalid instruction |
+| F-017 | Implement International Money Transfers (IMT) conversion (validation and file assembly, per the MT101 specification) | 2 | Must | Planned | Every IMT-specific field rule is enforced per the MT101 spec; a valid IMT batch converts to the correct file layout; an invalid batch is rejected in full with a reason per invalid instruction |
+| F-018 | Implement Priority Payments conversion (validation and file assembly, sharing the MT101 format with IMT) | 2 | Must | Planned | Every Priority-Payment-specific field rule is enforced per the MT101 spec; a valid Priority Payments batch converts to the correct file layout; an invalid batch is rejected in full with a reason per invalid instruction |
+| F-019 | Extend the Payment Type Router to accept Non-CBA Payment Requests, and implement its conversion (validation and file assembly, sharing the MT101 format with IMT/Priority Payments) | 3 | Must | Planned | Router accepts the Non-CBA Payment Request `paymentTypeCode`; every Non-CBA-specific field rule is enforced per the MT101 spec; a valid batch converts to the correct file layout; an invalid batch is rejected in full with a reason per invalid instruction |
+| F-020 | Obtain and confirm file specifications for RTGS, Payables Direct (Cheques / Cheques and DE / Government), and NZ BECS (MT9) — named in the CommBiz Automated registration form but not yet documented in the specification stash | 3 | Must | Planned | A confirmed specification (structural rules, validation rules, field mapping) exists for each of the five payment types, sufficient to plan conversion features; no conversion feature for these types is scheduled until this is satisfied |
+| F-009 | Integrate Shaw.Diagnostics logging (internal NuGet feed, v2.0.0) with redaction of sensitive payment fields | 4 | Must | Planned | Logs are emitted via Shaw.Diagnostics; no account numbers, amounts, or names appear in plaintext logs, per NFR-002/ADR-006 |
+| F-010 | Confirm and document the trusted internal-only deployment boundary (no application-level auth) | 4 | Must | Planned | Deployment network boundary documented; service runs without app-level auth controls, per NFR-003 |
+| F-011 | Define and validate batch size/performance targets | 4 | Should | Planned | Target batch size and latency confirmed (resolves Architecture A4) and validated under representative load |
+| F-012 | Kestrel-only hosting/runtime configuration (no Docker, no database) | 5 | Must | Planned | Service runs directly on Kestrel in the target environment with no container runtime and no database dependency, per ADR-005 |
+| F-013 | End-to-end test coverage for Direct Entry conversion (happy path and validation-failure paths) | 5 | Must | Planned | Automated tests cover: a valid batch converts correctly; a batch with one invalid instruction is rejected in full with reasons; a batch with an unsupported payment type is rejected; a single-instruction batch converts correctly, with a self-balancing detail record added and the file's trailer totals reconciling to zero net, per F-014 |
 
 ## Dependencies
 
@@ -46,6 +54,12 @@
 | F-007 | F-006 | F-008 | Needs detail records before totals can be computed |
 | F-008 | F-007 | F-013 | Completes the core conversion capability |
 | F-014 | F-005, F-007 | F-013 | Amends already-Done Phase 1 work (validator's minimum-count rule, trailer assembly) per PRD v7's self-balancing requirement; must land before F-013's E2E tests are finalised |
+| F-015 | F-004 | F-016, F-017, F-018 | Extends the existing Phase 1 router to recognise the new payment types |
+| F-016 | F-015 | — | Needs routing in place before per-type validation/assembly |
+| F-017 | F-015 | — | Needs routing in place before per-type validation/assembly |
+| F-018 | F-015 | — | Needs routing in place before per-type validation/assembly |
+| F-019 | F-015 | — | Needs the router extended again before adding Non-CBA |
+| F-020 | — | — | Independent spec-acquisition task; blocks any future RTGS/Payables Direct/NZ BECS conversion feature (none scheduled yet) |
 | F-009 | F-001 | — | Independent of the conversion logic itself |
 | F-010 | F-001 | — | Independent of the conversion logic itself |
 | F-011 | F-008 | — | Needs a working conversion path to measure against |
@@ -54,7 +68,7 @@
 
 ## Out of Scope (confirmed in PRD)
 
-- Payment types other than Direct Entry in this tranche (e.g. BPAY, international transfers) — planned as future tranches, not excluded permanently.
+- Payment types beyond Direct Entry, BPAY, International Money Transfers, Priority Payments, and Non-CBA Payment Requests (i.e. RTGS, the three Payables Direct variants, and NZ BECS/MT9) — not excluded permanently; scheduled once F-020 confirms their specifications.
 - Ingesting or handling CommBank return/status files, or feeding results back to Shaw and Partners — permanently out of scope (PRD Non-Goals).
 - A general-purpose "any format to any format" conversion platform.
 - Application-level authentication (service is internal-only).
@@ -64,8 +78,7 @@
 
 | ID | Item | Owner | Due |
 |----|------|-------|-----|
-| PM-001 | Future-tranche candidates from the document stash: BPAY (BPay Payments spec) and International/Priority Payments (MT101 spec) look like clear candidates for Tranche v2+, each converting to their own CommBank format. BAI2 and the DELIST CSV spec appear to be account-information/reporting formats rather than outbound payment types analogous to Direct Entry — confirm whether either is actually in scope before planning a tranche around them. BTRS Enriched and the Status Files/Naming Conventions spec relate to bank return/status reporting, which the PRD already excludes permanently — flagged here only so they aren't mistaken for a future payment-type tranche. | User | Before Tranche v2 planning |
-| PM-002 | Architecture Open Question A4 (expected/maximum batch size and target conversion latency) is still open — feeds directly into F-011's acceptance criteria. | User | Before Phase 2 completion |
+| PM-002 | Architecture Open Question A4 (expected/maximum batch size and target conversion latency) is still open — feeds directly into F-011's acceptance criteria. | User | Before Phase 4 completion |
 | PM-003 | `/convert` request/response contract was reshaped to match the real upstream payload (`paymentTypeCode`, `accountNo`, `sourceBank*`, `amount`, etc.) instead of the original Direct-Entry-field-shaped DTO; conversion rules are now sourced exclusively from `appsettings.json`'s `DirectEntry` section (`DirectEntrySettings` carries no hardcoded defaults, avoiding duplicated-value drift), including the confirmed `UserIdentificationNumber` = `"301500"`. Still open: `DescriptionOfEntriesOnFile` = `"ONLINEPAYMENTS"` (14 chars) exceeds the Header spec's 12-char field width and is silently truncated to `"ONLINEPAYMEN"` — needs a confirmed shorter value. Also open: header `DateToBeProcessed` currently defaults to the earliest instruction's `PaymentDate` when a batch spans multiple dates — confirm whether mixed dates should instead be rejected or split into separate files. HTTP status code for rejections (200 OK + `Success:false` envelope vs. 4xx) is still unresolved. `docs/test-cases.md`, `docs/handoff.md`, and `docs/testing/phase-1-direct-entry-conversion-core.md` still describe the pre-reshape contract (old field names, old `/direct-entry/convert` path, removed `/diagnostics/ping` endpoint, stale test count) and need a follow-up rewrite pass. | User | Before Phase 3 (F-013 E2E tests) / before production use |
 | PM-004 | F-014's self-balancing detail record reuses existing `DirectEntrySettings` fields rather than introducing new configuration: its account (position 2-17) is `TraceAccountBsb`/`TraceAccountAccNo`; its Title, Lodgement Reference, Trace BSB/Account (81-96, self-referencing, consistent with existing detail records), Name of Remitter, and Indicator (`"N"`) reuse the same static config/constants regular detail records already use; its Transaction Code is the inverse of `settings.TransactionCode` (credit code `"50"` if configured as debit `"13"`, or vice versa); its Amount is the batch's total (sum of all real detail amounts, in cents); Withholding Tax is zero. This is a design decision recorded here to guide implementation, not an open question. |
 
@@ -73,6 +86,7 @@
 
 | ID | Item | Resolution |
 |----|------|------------|
+| PM-001 | Future-tranche candidates from the document stash: BPAY (BPay Payments spec) and International/Priority Payments (MT101 spec) look like clear candidates, each converting to their own CommBank format. BAI2 and the DELIST CSV spec appear to be account-information/reporting formats rather than outbound payment types analogous to Direct Entry. BTRS Enriched and the Status Files/Naming Conventions spec relate to bank return/status reporting, which the PRD already excludes permanently. | Resolved — re-checked against the full document stash plus the CommBiz Automated registration form. BPAY, International Money Transfers, and Priority Payments scheduled into Phase 2, and Non-CBA Payment Requests into Phase 3, both within the current Tranche v1 (not deferred to a future tranche as originally flagged) — see F-015–F-019. RTGS, the three Payables Direct variants, and NZ BECS (MT9) are named only in the registration form with no spec in the stash; they remain future candidates pending specification acquisition, tracked as F-020. BAI2 and DELIST CSV confirmed as account-information/reporting formats, not payment types. BTRS Enriched and other statement/status formats remain permanently out of scope per the PRD's Non-Goals. |
 | PM-005 | F-014's self-balancing Amount must be computed as the exact same cents total the trailer's credit/debit totals already use (`instructions.Sum(instruction => AmountToCents(instruction.Amount))` — round each instruction to cents first, then sum), not a separate `Math.Round(instructions.Sum(i => i.Amount) * 100m)` recomputed from the decimal amounts. | Resolved — implemented as specified: the shared round-then-sum cents total is factored into one place consumed by both the self-balancing mapper and the trailer mapper. Verified by the F-014 test suite (79 tests passing, 0 vulnerabilities); trailer net total reconciles to zero on every conversion, confirmed by Integration Agent and Reviewer-Integration PASS verdicts. |
 
 ## Version History
@@ -84,3 +98,4 @@
 | v4 | 2026-08-13 | Added F-014 (self-balancing contra detail record; minimum batch size reduced from 2 to 1) per PRD v7/architecture v6; updated F-013's acceptance criteria and the Dependencies table; recorded the contra record's field-reuse design decision as PM-004 and its amount-computation precision requirement as PM-005 (must reuse the trailer's exact round-then-sum cents total, not a separately rounded recomputation); annotated Phase 1 as amended | User requirement change |
 | v5 | 2026-08-14 | F-014 marked Done — Reviewer PASS verdict (first pass, no issues); Phase 1 fully complete again | Reviewer PASS verdict on F-014 |
 | v6 | 2026-08-14 | Confirmed F-005's Acceptance Criteria correctly reflects the Integration Agent's minimum-2→minimum-1 drift fix; resolved and closed PM-005 (amount-computation precision) into a new Resolved Items section, now implemented and verified by the F-014 test suite (79 tests passing, 0 vulnerabilities); confirmed no Tranche boundary applies (Phase 1 Done, Phases 2/3 still Planned) | Integration Agent PASS, Reviewer-Integration PASS on F-014 |
+| v7 | 2026-08-14 | Added Phase 2 (Additional Payment Types I — BPAY, IMT, Priority Payments: F-015–F-018) and Phase 3 (Additional Payment Types II — Non-CBA Payment Requests plus spec acquisition for RTGS/Payables Direct/NZ BECS: F-019–F-020); renumbered former Phase 2 (Cross-Cutting Concerns & Hardening) → Phase 4 and former Phase 3 (Release Readiness) → Phase 5; updated Out of Scope wording; resolved PM-001 into Resolved Items | Triage edit |
