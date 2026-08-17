@@ -1,0 +1,135 @@
+@baseUrl = http://localhost:5182
+
+### Valid batch: 1 real sample instruction (Priority Payments, routed via API code "RTGS" — the
+### file's own Transaction Type field is always the constant "PP"). Domestic BSB-based payment, no
+### SWIFT/currency/intermediary fields populated. BeneficiaryAddress omitted (optional field).
+### Expect: 200 OK, Success: true, ConvertedText populated (single 27-field CSV row, no trailing
+### CRLF, no header/trailer record), Mappings populated with 1 entry keyed "row1", Errors: null.
+POST {{baseUrl}}/convert
+Content-Type: application/json
+
+[
+  {
+    "paymentTypeCode": "RTGS",
+    "paymentSourceTypeCode": "CMA",
+    "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
+    "sourceBankAccountNo": "114316871",
+    "sourceBankBSB": "012141",
+    "destinationBankAccountName": "ORS APP GATB",
+    "destinationBankAccountNo": "838629371",
+    "destinationBankBSB": "012110",
+    "paymentDate": "2026-08-18T10:00:00",
+    "sourceCurrency": "AUD",
+    "sourceAmount": 0.0,
+    "amount": 10775.0,
+    "notes": "Accounts has been paid to before.",
+    "beneficiaryAddress": null
+  }
+]
+
+### Valid batch: 2 instructions, second one with a populated BeneficiaryAddress (letters/numbers/
+### spaces only — no hyphen/apostrophe, per the stricter PP address rule).
+### Expect: 200 OK, Success: true, ConvertedText populated (two 27-field CSV rows joined by CRLF,
+### no trailing CRLF), Mappings populated with 2 entries keyed "row1"/"row2", Errors: null.
+POST {{baseUrl}}/convert
+Content-Type: application/json
+
+[
+  {
+    "paymentTypeCode": "RTGS",
+    "paymentSourceTypeCode": "CMA",
+    "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
+    "sourceBankAccountNo": "114316871",
+    "sourceBankBSB": "012141",
+    "destinationBankAccountName": "ORS APP GATB",
+    "destinationBankAccountNo": "838629371",
+    "destinationBankBSB": "012110",
+    "paymentDate": "2026-08-18T10:00:00",
+    "sourceCurrency": "AUD",
+    "sourceAmount": 0.0,
+    "amount": 10775.0,
+    "notes": "Accounts has been paid to before.",
+    "beneficiaryAddress": null
+  },
+  {
+    "paymentTypeCode": "RTGS",
+    "paymentSourceTypeCode": "CMA",
+    "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
+    "sourceBankAccountNo": "114316871",
+    "sourceBankBSB": "012141",
+    "destinationBankAccountName": "SUNRISE HOLDINGS PTY LTD",
+    "destinationBankAccountNo": "552017743",
+    "destinationBankBSB": "062000",
+    "paymentDate": "2026-08-19T10:00:00",
+    "sourceCurrency": "AUD",
+    "sourceAmount": 0.0,
+    "amount": 4250.50,
+    "notes": "Quarterly service fee",
+    "beneficiaryAddress": "9101 Alta Drive U15"
+  }
+]
+
+### Mixed paymentTypeCode (found 'DE', 'RTGS') — whole batch rejected in full, per existing
+### PaymentTypeRouter mixed-type rejection behaviour (see Errors.http). Only the paymentTypeCode
+### mix is invalid; the RTGS instruction on its own matches the valid batch above.
+### Expect: 200 OK, Success: false, Errors: ["Payment batch must not mix payment types (found 'DE', 'RTGS')."].
+POST {{baseUrl}}/convert
+Content-Type: application/json
+
+[
+  {
+    "paymentTypeCode": "DE",
+    "accountNo": "S1605677",
+    "paymentSourceTypeCode": "CMA",
+    "sourceBankAccountName": "SOPHIA CLARK",
+    "sourceBankAccountNo": "111375004",
+    "sourceBankBSB": "015141",
+    "paymentDate": "2026-08-20T10:00:00",
+    "sourceCurrency": "AUD",
+    "sourceAmount": 0.0,
+    "amount": 7500.0,
+    "createBy": "James Harris"
+  },
+  {
+    "paymentTypeCode": "RTGS",
+    "paymentSourceTypeCode": "CMA",
+    "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
+    "sourceBankAccountNo": "114316871",
+    "sourceBankBSB": "012141",
+    "destinationBankAccountName": "ORS APP GATB",
+    "destinationBankAccountNo": "838629371",
+    "destinationBankBSB": "012110",
+    "paymentDate": "2026-08-18T10:00:00",
+    "sourceCurrency": "AUD",
+    "sourceAmount": 0.0,
+    "amount": 10775.0,
+    "notes": "Accounts has been paid to before.",
+    "beneficiaryAddress": null
+  }
+]
+
+### Invalid instruction: blank destinationBankBSB (must be exactly 6 numeric digits) on instruction 0
+### — everything else valid so the DestinationBankBsb failure is isolated.
+### Expect: 200 OK, Success: false, Mappings: null, Errors containing
+### "DestinationBankBsb '' must be exactly 6 numeric digits." tied to index 0.
+POST {{baseUrl}}/convert
+Content-Type: application/json
+
+[
+  {
+    "paymentTypeCode": "RTGS",
+    "paymentSourceTypeCode": "CMA",
+    "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
+    "sourceBankAccountNo": "114316871",
+    "sourceBankBSB": "012141",
+    "destinationBankAccountName": "ORS APP GATB",
+    "destinationBankAccountNo": "838629371",
+    "destinationBankBSB": "",
+    "paymentDate": "2026-08-18T10:00:00",
+    "sourceCurrency": "AUD",
+    "sourceAmount": 0.0,
+    "amount": 10775.0,
+    "notes": "Accounts has been paid to before.",
+    "beneficiaryAddress": null
+  }
+]

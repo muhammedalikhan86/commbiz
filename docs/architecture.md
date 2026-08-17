@@ -1,7 +1,7 @@
 # Architecture: Shaw and Partners → CommBank Payment File Conversion Service
 
 > Status: APPROVED
-> Version: v9
+> Version: v10
 > Last updated: 2026-08-17
 > PRD: docs/prd.md (built against v8)
 
@@ -119,11 +119,36 @@ contains the data that genuinely varies per instruction (see §3, Direct Entry C
 - **Inputs:** Validated batch of IMT-typed payment instructions; IMT Configuration.
 - **Outputs:** Assembled IMT file content (one 27-field CSV row per instruction, CRLF-separated,
   no trailing CRLF, no header/trailer record), plus its parallel `LineMapping` breakdown (one
-  `row1`/`row2`... entry per instruction \u2014 see Field Mapping Model).
+  `row1`/`row2`... entry per instruction — see Field Mapping Model).
 - **Dependencies:** ImtValidator — this slice's own validation logic, not shared with Direct
   Entry or BPay; IMT Configuration (`ImtSettings`: debit account BSB/number/name).
 - **Technology:** Plain C# mapping code (`ImtRecordMapper`), no AutoMapper/commercial mapping
   library, per Technology Decisions.
+
+### Priority Payments Conversion Slice
+- **Responsibility:** Validates and converts a batch of Priority-Payments-typed instructions
+  (routed on Shaw and Partners' internal `RTGS` code — also known as Priority Payments; every
+  output row still writes the literal constant `PP` per the CBA file spec, never the API's own
+  routing code) into a CommBank Priority Payments/MT101-family file: one 27-field CSV row per
+  instruction, CRLF-separated between rows, with no trailing CRLF after the last row. Shares the
+  same MT101 file family as the IMT Conversion Slice but enforces its own, stricter field rules
+  per the MT101 spec's §1.5 (a 14-month process-date window rather than IMT's 7-day window; an
+  exactly-6-digit, unpadded beneficiary bank BSB rather than Direct Entry's `nnn-nnn`; stricter
+  beneficiary name/address character rules than IMT's, disallowing hyphens/apostrophes). The
+  debit account number field is sourced entirely from Priority Payments Configuration, never the
+  request's own source bank fields (which are carried but unused, the same treatment IMT gives
+  its own unused fields). Built directly against the shared Field Mapping Model from its first
+  commit, not retrofitted.
+- **Inputs:** Validated batch of Priority-Payments-typed payment instructions; Priority Payments
+  Configuration.
+- **Outputs:** Assembled Priority Payments file content (one 27-field CSV row per instruction,
+  CRLF-separated, no trailing CRLF, no header/trailer record), plus its parallel `LineMapping`
+  breakdown (one `row1`/`row2`... entry per instruction — see Field Mapping Model).
+- **Dependencies:** PriorityPaymentValidator — this slice's own validation logic, not shared with
+  Direct Entry, BPay, or IMT; Priority Payments Configuration (`PriorityPaymentsSettings`: debit
+  account BSB/number/name).
+- **Technology:** Plain C# mapping code (`PriorityPaymentRecordMapper`), no AutoMapper/commercial
+  mapping library, per Technology Decisions.
 
 ### Field Mapping Model
 - **Responsibility:** A shared, cross-slice type representing a field-by-field breakdown of a
@@ -185,10 +210,11 @@ contains the data that genuinely varies per instruction (see §3, Direct Entry C
 
 ## 4. Data Flow
 
-Routing now fans out to three slices — Direct Entry (`DE`), BPay (`BPAY`), and IMT (`TT`) — all
-dispatched through the same Payment Type Router. Direct Entry remains the primary worked example
-below, since it is the most structurally involved (header + details + self-balancing record +
-trailer); see the note after step 6 for how BPay and IMT differ.
+Routing now fans out to four slices — Direct Entry (`DE`), BPay (`BPAY`), IMT (`TT`), and Priority
+Payments (`RTGS`) — all dispatched through the same Payment Type Router. Direct Entry remains the
+primary worked example below, since it is the most structurally involved (header + details +
+self-balancing record + trailer); see the note after step 6 for how BPay, IMT, and Priority
+Payments differ.
 
 1. Shaw and Partners' system sends a batch of payment instructions, in its own native payload
    shape, to the API Host's `POST /convert` endpoint.
@@ -217,12 +243,14 @@ trailer); see the note after step 6 for how BPay and IMT differ.
    parallel `Mappings` list — one entry per line of the converted output — for the testing team
    to verify the output field-by-field without parsing the raw fixed-width/CSV text.
 
-**BPay and IMT follow the same overall shape** (validate → map → assemble → return inline) but
-with slice-specific field rules and output formats: BPay assembles a CSV Header + one Payment
-Details record per instruction, with no trailer or self-balancing record; IMT assembles one
-27-field CSV row per instruction, CRLF-separated, with no header or trailer record and no
-trailing CRLF after the last row. See the BPay Conversion Slice and IMT Conversion Slice entries
-in §3 for their full field/output rules.
+**BPay, IMT, and Priority Payments follow the same overall shape** (validate → map → assemble →
+return inline) but with slice-specific field rules and output formats: BPay assembles a CSV
+Header + one Payment Details record per instruction, with no trailer or self-balancing record;
+IMT and Priority Payments each assemble one 27-field CSV row per instruction, CRLF-separated,
+with no header or trailer record and no trailing CRLF after the last row, sharing the same
+MT101 file family but enforcing their own distinct field rules per the MT101 spec. See the BPay
+Conversion Slice, IMT Conversion Slice, and Priority Payments Conversion Slice entries in §3 for
+their full field/output rules.
 
 ## 5. Functional Requirements
 
@@ -283,3 +311,4 @@ in §3 for their full field/output rules.
 | v7 | 2026-08-17 | Documentation catch-up for F-015/F-016/F-017 (Reviewer-PASS'd since 2026-08-14) — architecture.md had not been updated since v6/Phase 1. Replaced the Payment Type Router entry (was DE-only) with its real cross-slice dispatcher behaviour (empty/mixed/unsupported rejection, ADR-002 exception); added BPay Conversion Slice and IMT Conversion Slice component entries, each with its own slice-owned validator; updated Data Flow to reflect fan-out to DE/BPAY/IMT with a note on BPay/IMT's differing output shapes (no trailer; IMT also has no header and no trailing CRLF); confirmed FR-006 and §7 Technology Decisions still read correctly for the now-multi-type reality, no changes needed | Documentation catch-up |
 | v8 | 2026-08-17 | Added FR-009 and a new shared Field Mapping Model component (`FieldMapping`/`LineMapping` records) exposing a per-line, per-field breakdown of every conversion response (request field/value + CBA response field/value), parallel to `ConvertedText`; a second sanctioned ADR-002 exception (added ADR-009); updated API Host outputs and Data Flow step 6 accordingly. Applies to DE, BPay, and IMT (retrofit — all already Done) and to the not-yet-built F-018 (Priority Payments), tracked as new PMBook item F-021 | Triage edit — user requirement change; upward ripple to PRD v8 |
 | v9 | 2026-08-17 | Clarified the Field Mapping Model description to state explicitly that a line's field list covers every spec-defined field position for that record type (including reserved/blank/unused positions), not only populated ones — the wording previously left this ambiguous, which is what let the original F-021 implementation silently skip unpopulated positions until PMBook v17's correction fixed the code | Integration Agent Documentation Drift finding on the F-021 correction |
+| v10 | 2026-08-17 | Added the missing Priority Payments Conversion Slice component entry to §3 (F-018, Done, had no architecture.md entry) and updated §4 Data Flow's fan-out note to include Priority Payments (`RTGS`) alongside DE/BPAY/IMT | Integration Agent Documentation Drift finding on F-018 |
