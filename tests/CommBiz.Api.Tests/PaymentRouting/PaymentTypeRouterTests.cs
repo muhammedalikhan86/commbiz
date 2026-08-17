@@ -27,9 +27,23 @@ public class PaymentTypeRouterTests(WebApplicationFactory<Program> factory)
         ["DirectEntry:TransactionCode"] = "13",
     };
 
+    // Confirmed static Priority Payments config, needed whenever a batch dispatches through to the
+    // Priority Payments slice.
+    private static readonly Dictionary<string, string?> PriorityPaymentsConfig = new()
+    {
+        ["PriorityPayments:DebitAccountBsb"] = "062-000",
+        ["PriorityPayments:DebitAccountNumber"] = "2112 0075",
+        ["PriorityPayments:DebitAccountName"] = "SHAW - AUD TRUST ACCOUNT",
+    };
+
     private HttpClient CreateClient() =>
         factory.WithWebHostBuilder(builder =>
                 builder.ConfigureAppConfiguration((_, config) => config.AddInMemoryCollection(DirectEntryConfig)))
+            .CreateClient();
+
+    private HttpClient CreateClientWithPriorityPaymentsConfig() =>
+        factory.WithWebHostBuilder(builder =>
+                builder.ConfigureAppConfiguration((_, config) => config.AddInMemoryCollection(PriorityPaymentsConfig)))
             .CreateClient();
 
     private static object ValidDirectEntryInstruction(string paymentTypeCode = "DE", string accountNo = "S1605677") =>
@@ -146,5 +160,60 @@ public class PaymentTypeRouterTests(WebApplicationFactory<Program> factory)
         var result = await response.Content.ReadFromJsonAsync<Features.BPay.ConvertBPayBatchResponse>();
         Assert.NotNull(result);
         Assert.True(result.Success);
+    }
+
+    private static object ValidPriorityPaymentInstruction(string paymentTypeCode = "RTGS") =>
+        new
+        {
+            PaymentTypeCode = paymentTypeCode,
+            PaymentSourceTypeCode = "CMA",
+            SourceBankAccountName = "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
+            SourceBankAccountNo = "114316871",
+            SourceBankBSB = "012141",
+            DestinationBankAccountName = "ORS APP GATB",
+            DestinationBankAccountNo = "838629371",
+            DestinationBankBSB = "012110",
+            PaymentDate = DateTime.UtcNow.Date.AddDays(1),
+            SourceCurrency = "AUD",
+            SourceAmount = 0.0m,
+            Amount = 10775.0m,
+            Notes = "Accounts has been paid to before.",
+            BeneficiaryAddress = (string?)null,
+        };
+
+    [Theory]
+    [InlineData("RTGS")]
+    [InlineData("rtgs")]
+    [InlineData("Rtgs")]
+    public async Task A_priority_payment_batch_dispatches_to_the_priority_payments_slice_case_insensitively(string paymentTypeCode)
+    {
+        var client = CreateClientWithPriorityPaymentsConfig();
+        var batch = new object[] { ValidPriorityPaymentInstruction(paymentTypeCode) };
+
+        var response = await client.PostAsJsonAsync("/convert", batch);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var result = await response.Content.ReadFromJsonAsync<Features.PriorityPayments.ConvertPriorityPaymentBatchResponse>();
+        Assert.NotNull(result);
+        Assert.True(result.Success);
+        Assert.False(string.IsNullOrEmpty(result.ConvertedText));
+        Assert.NotNull(result.Mappings);
+    }
+
+    [Fact]
+    public async Task Batch_mixing_RTGS_with_another_payment_type_is_rejected_in_full()
+    {
+        var client = CreateClientWithPriorityPaymentsConfig();
+        var batch = new object[] { ValidPriorityPaymentInstruction(), new { PaymentTypeCode = "DE" } };
+
+        var response = await client.PostAsJsonAsync("/convert", batch);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var result = await response.Content.ReadFromJsonAsync<PaymentRoutingResponse>();
+        Assert.NotNull(result);
+        Assert.False(result.Success);
+        Assert.Null(result.ConvertedText);
+        Assert.NotNull(result.Errors);
+        Assert.Contains(result.Errors, e => e.Reason.Contains("must not mix"));
     }
 }
