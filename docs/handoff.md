@@ -1,7 +1,7 @@
 # Handoff: Shaw and Partners → CommBank Payment File Conversion Service
 
 > Tranche: v1
-> Last updated: 2026-08-17
+> Last updated: 2026-08-18
 
 ## What Was Done
 
@@ -38,8 +38,8 @@ including the F-014 self-balancing amendment.**
 Integration Agent then: fixed a `WolverineFx.RuntimeCompilation` missing-dependency issue; ran the
 full test suite (79 passed, 0 failed), format, build, and security audit — all green.
 
-**Phase 2 — Additional Payment Types is underway: F-015, F-016, and F-017 are Done; F-018
-(Priority Payments) is next, still Planned and blocked on PM-006.**
+**Phase 2 — Additional Payment Types is now fully Done: F-015, F-016, F-017, F-018, and F-021 are
+all Done.**
 
 - F-015 — Extended the Payment Type Router into a real top-level cross-slice dispatcher
   (`Features/PaymentRouting`): it peeks `paymentTypeCode` on the raw JSON batch, rejects
@@ -70,54 +70,65 @@ full test suite (79 passed, 0 failed), format, build, and security audit — all
   previously duplicated byte-identically across 6 mapper files, into a new shared
   `src/CommBiz.Api/Features/Shared/MappingUtilities.cs`. Pure internal refactor, zero behavior
   change, PASS on first review.
+- F-018 — Full Priority Payments (also known as RTGS) conversion slice. Routed on the API's
+  `"RTGS"` payment type code (the CBA file format literal is always `"PP"`, the same pattern as
+  IMT's `"TT"` → `"IMT"`). Shares IMT's 27-field CSV format (MT101 spec §1.5), but almost every
+  SWIFT/currency/intermediary field is "Not applicable" for this domestic, BSB-based payment. Built
+  directly against the shared Field Mapping Model from F-021, not retrofitted — `Mappings` present
+  from day one. New `PriorityPaymentsSettings` config section with a confirmed real settlement
+  account (same account IMT uses: `062-000`/`2112 0075`/`SHAW - AUD TRUST ACCOUNT`). Key
+  business-rule differences from IMT: a 14-month process-date window (not IMT's 7 days), stricter
+  beneficiary name/address character rules (no hyphen/apostrophe), and a plain 6-digit BSB (not
+  hyphenated like Direct Entry). Files: `src/CommBiz.Api/Features/PriorityPayments/*.cs`,
+  `README.md`, new `tests/smoke/PriorityPayments.http` (4 scenarios). Reviewer PASS on first
+  attempt.
 
-Integration + Reviewer-Integration both PASS on first attempt for this round: 244 tests passing,
-0 vulnerabilities, no fixes needed.
+Integration Agent PASS (318 tests, 0 vulnerabilities) and Reviewer-Integration PASS (first
+attempt) for F-018 — no fixes needed. With F-018 Done, all five Phase 2 features (F-015, F-016,
+F-017, F-018, F-021) are now Done and the phase is closed.
 
 ## Current State
 
-- Service builds, tests, and runs cleanly (244 tests passing, 0 failed, 0 vulnerabilities).
+- Service builds, tests, and runs cleanly (318 tests passing, 0 failed, 0 vulnerabilities).
 - Kestrel-hosted; Wolverine-wired.
-- Three payment types convert end to end through the shared router: route → validate → map →
-  assemble, returning the result inline as JSON per [ADR-008](adr/ADR-008-inline-json-response.md).
-  - Direct Entry — `POST /convert` accepts a batch of as few as 1 valid payment instruction
-    (previously required 2) and always returns a file whose trailer totals reconcile to zero net,
-    thanks to the F-014 self-balancing record.
+- **Phase 1 (Direct Entry Conversion Core) and Phase 2 (Additional Payment Types) are both fully
+  Done.** Four payment types now convert end to end through the shared router: route → validate →
+  map → assemble, returning the result inline as JSON per
+  [ADR-008](adr/ADR-008-inline-json-response.md).
+  - Direct Entry — `POST /convert` accepts a batch of as few as 1 valid payment instruction and
+    always returns a file whose trailer totals reconcile to zero net, thanks to the F-014
+    self-balancing record.
   - BPAY Batch Payments — converts to the BPay CSV layout (Header + one Payment Details record per
     instruction, no trailer/self-balancing record).
   - International Money Transfers (IMT) — converts to the 27-field MT101-family CSV layout.
-- All three payment types' responses now also include a `Mappings` field (F-021), giving a
-  per-line, per-field breakdown of request-origin vs. CBA-spec-output values, for testing-team
-  verification without needing to parse the raw converted text.
-- Priority Payments (F-018, also known as RTGS) is not yet implemented — still Planned, blocked on
-  PM-006 (confirmed request-object shape not yet provided). Its Acceptance Criteria have already
-  been amended (in a prior session) to require it be built directly against the shared Field
-  Mapping Model from day one, so it won't need a retrofit once it starts.
+  - Priority Payments (RTGS) — converts to the same 27-field MT101-family CSV layout as IMT, with
+    almost all SWIFT/currency/intermediary fields "Not applicable" for this domestic BSB-based
+    payment; 14-month process-date window; stricter beneficiary character rules.
+- All four payment types' responses include a `Mappings` field (F-021), giving a per-line,
+  per-field breakdown of request-origin vs. CBA-spec-output values, for testing-team verification
+  without needing to parse the raw converted text. Priority Payments was built against this model
+  from day one, with no retrofit needed.
 - `GET /health` returns a basic liveness check.
-- Known gaps, not yet resolved: [docs/test-cases.md](test-cases.md) doesn't yet have `TC-xxx`
-  scenarios asserting `Mappings` shape/content (flagged in PMBook Open Items). The
-  [docs/testing/phase-2-additional-payment-types-i.md](testing/phase-2-additional-payment-types-i.md)
-  test runbook's `Mappings` coverage is being addressed by a parallel Finalizer this round.
+- Phase 3 (Cross-Cutting Concerns & Hardening) and Phase 4 (Release Readiness) are both Planned,
+  not yet started.
+- Known gaps, tracked in the PMBook as PM-010/PM-011, not yet resolved: [docs/test-cases.md](test-cases.md)
+  has zero scenarios for Priority Payments; [docs/testing/phase-2-additional-payment-types-i.md](testing/phase-2-additional-payment-types-i.md),
+  [ADR-009](adr/ADR-009-shared-field-mapping-response-model.md), this handoff doc, `CHANGELOG.md`,
+  and `REVISION.md` were all one feature stale (describing F-018 as Planned/blocked and carrying a
+  stale 244-test count) prior to this Finalization round. These docs should be brought current —
+  and PM-010/PM-011 resolved — before Phase 4's E2E test work (F-013) begins.
 
 ## What's Next
 
-**Phase 2 — Additional Payment Types (current phase)**
-- F-018 — Priority Payments (also known as RTGS), sharing the MT101 format with IMT — blocked on
-  PM-006 until the upstream request-object shape is confirmed. Once the shape lands, build it
-  directly against the shared Field Mapping Model (`Features/Shared/FieldMapping.cs`) from the
-  start — no separate retrofit step needed, unlike DE/BPay/IMT which had F-021 applied after the
-  fact.
-- Once F-018 is implemented, run Phase 2 Integration/Finalization covering it — either as its own
-  full round, or a solo Finalization pass like this one if F-018 lands cleanly.
-
-**Phase 3 — Cross-Cutting Concerns & Hardening**
+**Phase 3 — Cross-Cutting Concerns & Hardening (current phase)**
 - F-009 — Shaw.Diagnostics logging + redaction
 - F-010 — Document the internal-only deployment boundary
 - F-011 — Batch size/latency targets — blocked on Architecture Open Question A4 / PM-002
 
 **Phase 4 — Release Readiness**
 - F-012 — Kestrel-only hosting config
-- F-013 — E2E test coverage
+- F-013 — E2E test coverage — should follow closure of PM-010/PM-011's documentation gaps so the
+  E2E suite has accurate Priority Payments test-case coverage to build from
 
 ## Important Context
 
@@ -137,6 +148,7 @@ Integration + Reviewer-Integration both PASS on first attempt for this round: 24
      `DirectEntryTrailerRecordMapper`, `DirectEntrySelfBalancingRecordMapper`, `DirectEntryAmountTotals`)
    - `src/CommBiz.Api/Features/BPay/` (validator, header/detail CSV mappers, Command+Handler)
    - `src/CommBiz.Api/Features/Imt/` (validator, CSV mapper, Command+Handler)
+   - `src/CommBiz.Api/Features/PriorityPayments/` (validator, CSV mapper, Command+Handler)
    All mapping is done via pure static functions, no AutoMapper ([ADR-004](adr/ADR-004-manual-mapping-no-automapper.md)).
 4. **Build/test/format commands** — the solution builds via `dotnet build CommBiz.sln`, tests via
    `dotnet test`, format via `dotnet format`.
@@ -144,16 +156,22 @@ Integration + Reviewer-Integration both PASS on first attempt for this round: 24
    Shaw and Partners' own name for Priority Payments (F-018); it does not require separate routing
    or conversion work. The formerly tracked Non-CBA Payment Requests, Payables Direct, and NZ BECS
    (MT9) work (F-019/F-020) is cancelled, not deferred — see PM-008 and PMBook v11.
-6. **F-018 (Priority Payments) is the next feature up in Phase 2**, still Planned — blocked on
-   PM-006 until the upstream request-object shape (analogous to BPAY's and IMT's confirmed shapes)
-   is provided. The MT101 spec's §1.5 Priority Payment Field Definition is already available, so
-   once the request shape lands this should be a small additive change to the existing router and
-   slice pattern, not a new design effort.
-7. **The shared Field Mapping Model (F-021) is now an established second ADR-002 exception**,
-   alongside the Payment Type Router — see
+6. **F-018 (Priority Payments) is Done** — built against the confirmed upstream request-object
+   shape (PM-006 resolved), sharing the MT101 spec's §1.5 Priority Payment Field Definition with
+   IMT. It is a domestic, BSB-based payment: almost all SWIFT/currency/intermediary fields are "Not
+   applicable", the process-date window is 14 months (vs. IMT's 7 days), and beneficiary
+   name/address fields disallow hyphens/apostrophes.
+7. **The shared Field Mapping Model (F-021) is now used consistently by all four implemented
+   payment types (DE, BPay, IMT, Priority Payments)** — it is an established second ADR-002
+   exception, alongside the Payment Type Router — see
    [ADR-009](adr/ADR-009-shared-field-mapping-response-model.md). It lives at
    `src/CommBiz.Api/Features/Shared/FieldMapping.cs` (`FieldMapping`/`LineMapping`), with the
    `AmountToCents`/`FixedWidth` helpers factored out to
-   `src/CommBiz.Api/Features/Shared/MappingUtilities.cs`. Any future payment type (starting with
-   F-018) should build its response against this model from day one, not retrofit it in afterward
-   as DE/BPay/IMT had to be.
+   `src/CommBiz.Api/Features/Shared/MappingUtilities.cs`. Priority Payments (F-018) was the first
+   feature built directly against this model from day one, with no retrofit step required.
+8. **PM-010/PM-011 track remaining documentation gaps from the F-018 round** —
+   [docs/test-cases.md](test-cases.md) has zero Priority Payments scenarios (PM-010), and several
+   docs ([docs/testing/phase-2-additional-payment-types-i.md](testing/phase-2-additional-payment-types-i.md),
+   [ADR-009](adr/ADR-009-shared-field-mapping-response-model.md), `CHANGELOG.md`, `REVISION.md`)
+   were one feature stale (PM-011) prior to this Finalization round. Close both before starting
+   Phase 4's E2E test work (F-013), so the E2E suite has accurate source material to build from.
