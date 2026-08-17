@@ -1,9 +1,9 @@
 # Test Runbook: Phase 2 — Additional Payment Types I
 
 > Status: DRAFT
-> Version: v2
-> Last updated: 2026-08-17
-> Covers: F-015–F-017, F-021 (see [docs/project-management.md](../project-management.md))
+> Version: v3
+> Last updated: 2026-08-18
+> Covers: F-015–F-018, F-021 (see [docs/project-management.md](../project-management.md))
 > Scenario reference: [docs/test-cases.md](../test-cases.md) TC-051–TC-065 (independently numbered
 > range, disjoint from test-cases.md's own TC-033–TC-050 Phase 2 section — some scenarios below are
 > manual walkthroughs of the same underlying rules test-cases.md covers, e.g. TC-051/TC-052 here mirror
@@ -632,6 +632,14 @@ fields (Beneficiary Address, Beneficiary Payment Details — see TC-062), which 
 | IMT `BeneficiaryAddress` | must not be blank, ≤40 characters after sanitization |
 | IMT `PaymentReference` | must not be blank, ≤105 characters after sanitization |
 | IMT batch size | 1–350 instructions |
+| PP `Notes` | must not be blank |
+| PP `PaymentDate` | today .. today + 14 months |
+| PP `Amount` | must be > 0 |
+| PP `DestinationBankBSB` | exactly 6 numeric digits |
+| PP `DestinationBankAccountNo` | 3–9 characters |
+| PP `DestinationBankAccountName` | no hyphen/apostrophe, ≤32 characters |
+| PP `BeneficiaryAddress` | optional; if present, ≤40 characters, no hyphen/apostrophe |
+| PP batch size | 1–350 instructions |
 
 ---
 
@@ -738,3 +746,197 @@ $result.mappings                           # expect: $null
 runbook and in [phase-1-direct-entry-conversion-core.md](phase-1-direct-entry-conversion-core.md) —
 `Mappings` is only ever populated alongside a successful conversion, never as a partial/best-effort
 result on a rejected batch.
+
+---
+
+## F-018 — Priority Payments (RTGS) conversion — TC-071–TC-074
+
+> Added 2026-08-18.
+
+Priority Payments is routed on the API code `"RTGS"`; the CBA file's own Transaction Type field (field 1)
+always writes the literal constant `"PP"`, and the file shares IMT's 27-field CSV row shape (no header or
+trailer record, one row per instruction, CRLF-separated, no trailing CRLF after the last row). Unlike
+IMT, Priority Payments is a **domestic, BSB-based** payment — there is no SWIFT code, IBAN, or
+intermediary/correspondent bank at all; the destination is identified purely by a 6-digit BSB plus an
+account number. Two further rules differ materially from IMT:
+
+- **Process-date window:** Priority Payments allows `PaymentDate` up to **14 months** out, versus IMT's
+  7-day window (see [Boundary/limit field reference](#boundarylimit-field-reference) above).
+- **Character rules are stricter:** `DestinationBankAccountName` and (if present) `BeneficiaryAddress`
+  must contain **no hyphen or apostrophe** at all. IMT's equivalent fields *allow* hyphens/apostrophes
+  (see IMT's `DestinationBankAccountName` rule above) — Priority Payments does not.
+
+The debit (source) account is **always** taken from the static `PriorityPaymentsSettings` configuration
+(`appsettings.json`'s `PriorityPayments` section) — never from the request body, even though the request
+carries its own `sourceBankAccountName`/`sourceBankAccountNo`/`sourceBankBSB` fields (those are present
+on the request DTO but not used to populate the debit side of the output).
+
+**Automated equivalents:**
+[tests/CommBiz.Api.Tests/PriorityPayments/PriorityPaymentValidatorTests.cs](../../tests/CommBiz.Api.Tests/PriorityPayments/PriorityPaymentValidatorTests.cs),
+[tests/CommBiz.Api.Tests/PriorityPayments/PriorityPaymentRecordMapperTests.cs](../../tests/CommBiz.Api.Tests/PriorityPayments/PriorityPaymentRecordMapperTests.cs),
+[tests/CommBiz.Api.Tests/PriorityPayments/ConvertPriorityPaymentBatchHandlerTests.cs](../../tests/CommBiz.Api.Tests/PriorityPayments/ConvertPriorityPaymentBatchHandlerTests.cs),
+[tests/CommBiz.Api.Tests/PriorityPayments/PriorityPaymentConvertEndpointTests.cs](../../tests/CommBiz.Api.Tests/PriorityPayments/PriorityPaymentConvertEndpointTests.cs)
+
+All scenarios below are drawn verbatim from
+[tests/smoke/PriorityPayments.http](../../tests/smoke/PriorityPayments.http), which was verified live
+against the running host during Integration.
+
+### TC-071 — Happy path: single real sample instruction
+
+From [tests/smoke/PriorityPayments.http](../../tests/smoke/PriorityPayments.http) (verbatim) — domestic
+BSB-based instruction, destination BSB `012110`, `Amount: 10775`, `beneficiaryAddress` omitted (optional
+field):
+
+```powershell
+$body = @'
+[
+  {
+    "paymentTypeCode": "RTGS",
+    "paymentSourceTypeCode": "CMA",
+    "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
+    "sourceBankAccountNo": "114316871",
+    "sourceBankBSB": "012141",
+    "destinationBankAccountName": "ORS APP GATB",
+    "destinationBankAccountNo": "838629371",
+    "destinationBankBSB": "012110",
+    "paymentDate": "2026-08-18T10:00:00",
+    "sourceCurrency": "AUD",
+    "sourceAmount": 0.0,
+    "amount": 10775.0,
+    "notes": "Accounts has been paid to before.",
+    "beneficiaryAddress": null
+  }
+]
+'@
+
+$result = Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
+  -ContentType 'application/json' -Body $body
+```
+
+**Expected:** `200 OK`, `success: true`, `errors: null`.
+
+```powershell
+$result.convertedText.StartsWith("PP,")     # expect: True — file literal, never "RTGS"
+$result.convertedText.Split(',').Count      # expect: 27
+$result.mappings.line                       # expect: row1 (only one entry — single-instruction batch)
+$row1 = $result.mappings | Where-Object { $_.line -eq 'row1' }
+$row1.fields.Count                          # expect: 27 — one FieldMapping entry per CSV field
+```
+
+### TC-072 — Happy path: 2 instructions, second with a populated `BeneficiaryAddress`
+
+From [tests/smoke/PriorityPayments.http](../../tests/smoke/PriorityPayments.http) (verbatim) — second
+instruction's `beneficiaryAddress` (`"9101 Alta Drive U15"`) contains letters/digits/spaces only, no
+hyphen/apostrophe, per the stricter PP address rule:
+
+```powershell
+$result.convertedText -split "`r`n" | Measure-Object | Select-Object -ExpandProperty Count   # expect: 2
+$result.mappings.line                        # expect: row1, row2
+```
+
+**Expected:** `200 OK`, `success: true`; two 27-field CSV rows joined by exactly one CRLF (no trailing
+CRLF), `mappings` has 2 entries keyed `row1`/`row2`, each with 27 field entries.
+
+### TC-073 — Edge case: batch mixing `RTGS` with another payment type is rejected
+
+From [tests/smoke/PriorityPayments.http](../../tests/smoke/PriorityPayments.http) (verbatim) — a `DE`
+instruction and an otherwise-valid `RTGS` instruction in the same batch:
+
+```powershell
+$body = @'
+[
+  {
+    "paymentTypeCode": "DE",
+    "accountNo": "S1605677",
+    "paymentSourceTypeCode": "CMA",
+    "sourceBankAccountName": "SOPHIA CLARK",
+    "sourceBankAccountNo": "111375004",
+    "sourceBankBSB": "015141",
+    "paymentDate": "2026-08-20T10:00:00",
+    "sourceCurrency": "AUD",
+    "sourceAmount": 0.0,
+    "amount": 7500.0,
+    "createBy": "James Harris"
+  },
+  {
+    "paymentTypeCode": "RTGS",
+    "paymentSourceTypeCode": "CMA",
+    "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
+    "sourceBankAccountNo": "114316871",
+    "sourceBankBSB": "012141",
+    "destinationBankAccountName": "ORS APP GATB",
+    "destinationBankAccountNo": "838629371",
+    "destinationBankBSB": "012110",
+    "paymentDate": "2026-08-18T10:00:00",
+    "sourceCurrency": "AUD",
+    "sourceAmount": 0.0,
+    "amount": 10775.0,
+    "notes": "Accounts has been paid to before.",
+    "beneficiaryAddress": null
+  }
+]
+'@
+
+Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
+  -ContentType 'application/json' -Body $body
+```
+
+**Expected:** `200 OK`,
+```json
+{
+  "success": false,
+  "convertedText": null,
+  "errors": [
+    { "index": -1, "reason": "Payment batch must not mix payment types (found 'DE', 'RTGS')." }
+  ]
+}
+```
+The `RTGS` instruction is valid on its own (matches TC-071) — the rejection is purely about the mix,
+consistent with `PaymentTypeRouter`'s batch-level behaviour (see F-015 above).
+
+### TC-074 — Regression: malformed destination BSB returns `Mappings: null`
+
+From [tests/smoke/PriorityPayments.http](../../tests/smoke/PriorityPayments.http) (verbatim) — TC-071's
+body with `destinationBankBSB` blanked out:
+
+```powershell
+$body = @'
+[
+  {
+    "paymentTypeCode": "RTGS",
+    "paymentSourceTypeCode": "CMA",
+    "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
+    "sourceBankAccountNo": "114316871",
+    "sourceBankBSB": "012141",
+    "destinationBankAccountName": "ORS APP GATB",
+    "destinationBankAccountNo": "838629371",
+    "destinationBankBSB": "",
+    "paymentDate": "2026-08-18T10:00:00",
+    "sourceCurrency": "AUD",
+    "sourceAmount": 0.0,
+    "amount": 10775.0,
+    "notes": "Accounts has been paid to before.",
+    "beneficiaryAddress": null
+  }
+]
+'@
+
+$result = Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
+  -ContentType 'application/json' -Body $body
+```
+
+**Expected:**
+```json
+{
+  "success": false,
+  "convertedText": null,
+  "errors": [
+    { "index": 0, "reason": "DestinationBankBsb '' must be exactly 6 numeric digits." }
+  ]
+}
+```
+```powershell
+$result.mappings                             # expect: $null
+```
+Consistent with F-021's TC-070 above — `Mappings` is only ever populated alongside a successful
+conversion, never on a rejected batch.
