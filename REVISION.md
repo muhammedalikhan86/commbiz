@@ -1,6 +1,12 @@
 # Revision History
 
-**Current Revision:** 4
+**Current Revision:** 5
+## Revision 5
+- **Date:** 2026-08-18
+- **Description:** Priority Payments conversion pipeline; Phase 2 (Additional Payment Types) complete
+- **Features:** F-018; Phase 2 closure (F-015, F-016, F-017, F-018, F-021 all Done)
+- **Test Coverage:** 318 passing tests (verified via `dotnet test`); 0 vulnerabilities
+
 ## Revision 4
 - **Date:** 2026-08-17
 - **Description:** Shared Field Mapping Model with per-line mapping metadata for all payment types

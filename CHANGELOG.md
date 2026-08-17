@@ -5,6 +5,78 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] — 2026-08-18
+
+### Added
+
+#### Priority Payments Conversion Pipeline
+- **F-018:** New Priority Payments batch conversion pipeline for RTGS (Real-Time Gross Settlement) payment routing
+  - Shares International Money Transfers (IMT) file format with domestic-only field restrictions
+  - Routed on payment type `"RTGS"` via `PaymentTypeRouter`
+  - Validator enforces Priority Payments-specific batch constraints and instruction rules
+  - `PriorityPaymentsSettingsMapper` converts batch metadata to Priority Payments request/response structure
+  - Handler orchestrates validation, mapping, and conversion into final formatted output
+  - Unified `Mappings` model (F-021) included from day one for field-level traceability
+
+#### Phase 2 Complete: Additional Payment Types
+- All five Phase 2 features now shipped and integrated (F-015, F-016, F-017, F-018, F-021)
+  - F-015: Payment Type Router dispatcher (unified routing surface)
+  - F-016: BPAY batch payments conversion
+  - F-017: International Money Transfers (IMT) CSV format
+  - F-018: Priority Payments RTGS routing (this release)
+  - F-021: Shared Field Mapping Model (integrated into all payment types)
+  - Direct Entry foundation (Phase 1) remains unchanged and unaffected
+
+### Modules/Files Modified
+- `src/CommBiz.Api/Features/PriorityPayments/` [new]
+  - `ConvertPriorityPaymentsBatchRequest.cs` — Request model for Priority Payments batch input
+  - `PriorityPaymentsSettings.cs` — Configuration and settings for Priority Payments processing
+  - `PriorityPaymentsBatchValidator.cs` — Batch-level validation (instruction count, field presence)
+  - `PriorityPaymentsInstructionValidator.cs` — Per-instruction validation and constraint enforcement
+  - `PriorityPaymentsBatchMapper.cs` — Maps batch instructions to CBA-spec format
+  - `ConvertPriorityPaymentsBatchCommand.cs` — MediatR command for orchestration
+  - `ConvertPriorityPaymentsBatchHandler.cs` — Handler implementing the conversion pipeline
+  - `ConvertPriorityPaymentsBatchResponse.cs` — Response model with `ConvertedText` and `Mappings`
+
+- `src/CommBiz.Api/PaymentTypeRouter.cs` [modified]
+  - Added `"RTGS"` case to payment type routing switch
+  - Dispatches `"RTGS"` to `ConvertPriorityPaymentsBatchCommand`
+  - No changes to existing routing logic (DE, BPAY, IMT dispatch unchanged)
+
+- `src/CommBiz.Api/Program.cs` [modified]
+  - Registered `PriorityPaymentsSettings` in dependency injection container
+  - MediatR handler auto-discovery includes Priority Payments handler
+  - No changes to existing service registrations
+
+- `src/CommBiz.Api/appsettings.json` [modified]
+  - Added `"PriorityPayments"` configuration section (mirrors IMT structure for shared file format)
+  - Field definitions and validation constraints for RTGS payment routing
+
+### Breaking Changes
+None — Priority Payments is purely additive. Existing payment types (Direct Entry, BPAY, IMT) are unaffected. New payment type routed on `"RTGS"` string; no changes to existing request/response contracts or routing logic.
+
+### Test Coverage
+**318 passing tests** (verified via `dotnet test`, 0 failed, 0 skipped; 0 vulnerabilities via `dotnet list package --vulnerable --include-transitive`):
+
+1. **Happy Path — Valid Priority Payments Batch Conversion**
+   - POST valid Priority Payments batch with multiple instructions to `POST /convert` with payment type `"RTGS"`
+   - Verify response includes `ConvertedText` (formatted RTGS output) and populated `Mappings` array
+   - Confirm `Mappings` is ordered parallel to `ConvertedText` with per-instruction field breakdown
+   - Validate output meets RTGS/IMT-derived file format constraints (domestic-only fields only)
+
+2. **Edge Case — Mixed Payment Type Rejection**
+   - POST batch mixing `"RTGS"` payment type with another payment type (e.g., `"BPAY"` instruction in same batch)
+   - Verify validation rejects the batch with clear error indicating mixed payment types not allowed
+   - Confirm response structure matches existing error handling (validation error case)
+
+3. **Regression-Sensitive — Invalid Instruction Handling**
+   - POST Priority Payments batch with invalid instruction code (e.g., malformed or missing)
+   - Verify response has `ConvertedText: null` and `Mappings: null` with appropriate error
+   - POST same invalid scenario to existing payment types (DE, BPAY, IMT)
+   - Confirm no regression: existing handlers still return `Mappings: null` on validation failure
+   - POST valid Revision 3 payloads (F-001–F-020) to all payment types
+   - Verify output byte-for-byte identical to Revision 4 behavior (Phase 2 additions don't affect Phase 1)
+
 ## [1.3.0] — 2026-08-17
 
 ### Added
