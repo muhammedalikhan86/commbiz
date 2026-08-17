@@ -1,3 +1,6 @@
+using CommBiz.Api.Features.Shared;
+using static CommBiz.Api.Features.Shared.MappingUtilities;
+
 namespace CommBiz.Api.Features.DirectEntry;
 
 // Header Record mapping (F-007, architecture.md §3/§4 step 5; docs/stash/Direct Entry - File Specification
@@ -11,22 +14,70 @@ public static class DirectEntryHeaderRecordMapper
     // the earliest instruction's date in the batch is used as the interim header date (see Assumptions).
     public static string Map(IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings)
     {
-        var dateToBeProcessed = instructions.Min(instruction => instruction.PaymentDate.Date);
+        var values = ResolveValues(instructions, settings);
 
         return
             RecordType +
             new string(' ', 17) +
             ReelSequenceNumber +
-            settings.InstitutionCode +
+            values.InstitutionCode +
             new string(' ', 7) +
-            FixedWidth(settings.NameOfUserSupplyingFile, 26) +
-            settings.UserIdentificationNumber.PadLeft(6, '0') +
-            FixedWidth(settings.DescriptionOfEntriesOnFile, 12) +
-            dateToBeProcessed.ToString("ddMMyy") +
+            FixedWidth(values.NameOfUserSupplyingFile, 26) +
+            values.UserIdentificationNumber.PadLeft(6, '0') +
+            FixedWidth(values.DescriptionOfEntriesOnFile, 12) +
+            values.DateToBeProcessed.ToString("ddMMyy") +
             new string(' ', 40);
     }
 
-    // Truncates rather than overflows the fixed-width record if a config value is longer than its field.
-    private static string FixedWidth(string value, int width) =>
-        value.Length >= width ? value[..width] : value.PadRight(width);
+    // F-021: same resolved values as Map, so the field-mapping breakdown can never drift from ConvertedText.
+    public static IReadOnlyList<FieldMapping> MapFields(
+        IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings)
+    {
+        var values = ResolveValues(instructions, settings);
+
+        return
+        [
+            new(nameof(RecordType), RecordType, "Record Type", RecordType),
+            new(nameof(ReelSequenceNumber), ReelSequenceNumber, "Reel Sequence Number", ReelSequenceNumber),
+            new(
+                nameof(DirectEntrySettings.InstitutionCode),
+                values.InstitutionCode,
+                "Name Of User Financial Institution",
+                values.InstitutionCode),
+            new(
+                nameof(DirectEntrySettings.NameOfUserSupplyingFile),
+                values.NameOfUserSupplyingFile,
+                "Name of User Supplying File",
+                FixedWidth(values.NameOfUserSupplyingFile, 26)),
+            new(
+                nameof(DirectEntrySettings.UserIdentificationNumber),
+                values.UserIdentificationNumber,
+                "Number of User Supplying File",
+                values.UserIdentificationNumber.PadLeft(6, '0')),
+            new(
+                nameof(DirectEntrySettings.DescriptionOfEntriesOnFile),
+                values.DescriptionOfEntriesOnFile,
+                "Description of Entries on File",
+                FixedWidth(values.DescriptionOfEntriesOnFile, 12)),
+            new(
+                nameof(PaymentInstructionRequest.PaymentDate),
+                values.DateToBeProcessed.ToString("O"),
+                "Date to be Processed",
+                values.DateToBeProcessed.ToString("ddMMyy")),
+        ];
+    }
+
+    private static (
+        string InstitutionCode,
+        string NameOfUserSupplyingFile,
+        string UserIdentificationNumber,
+        string DescriptionOfEntriesOnFile,
+        DateTime DateToBeProcessed) ResolveValues(
+        IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings) =>
+        (
+            settings.InstitutionCode,
+            settings.NameOfUserSupplyingFile,
+            settings.UserIdentificationNumber,
+            settings.DescriptionOfEntriesOnFile,
+            instructions.Min(instruction => instruction.PaymentDate.Date));
 }

@@ -56,10 +56,27 @@ full test suite (79 passed, 0 failed), format, build, and security audit — all
   router was extended to recognise the API's `TT` code (mapped to the file's `IMT` Transaction
   Type constant). Files: `src/CommBiz.Api/Features/Imt/*.cs`, `README.md`. `ImtSettings` config
   values are confirmed real values, not placeholders.
+- F-021 — Introduced a shared Field Mapping Model (`FieldMapping`/`LineMapping`, new file
+  `src/CommBiz.Api/Features/Shared/FieldMapping.cs`) and retrofitted Direct Entry, BPay, and IMT's
+  conversion responses with a new `Mappings` field: an ordered list, parallel to `ConvertedText`,
+  giving a per-line, per-field breakdown of request-side origin vs. CBA spec field/value — so the
+  testing team can validate conversions without parsing raw fixed-width/CSV text. This is a second
+  sanctioned [ADR-002](adr/ADR-002-vertical-slice-architecture.md) exception, alongside the Payment
+  Type Router (see [ADR-009](adr/ADR-009-shared-field-mapping-response-model.md)). Took 1 review
+  retry: round 1 caught a real bug where BPay's header timestamp was independently recomputed
+  between the text-assembly and field-breakdown code paths, risking a one-second mismatch; fixed by
+  resolving the timestamp once and passing it through explicitly.
+- F-021 follow-up refactor (no new feature ID) — extracted the `AmountToCents`/`FixedWidth` helpers,
+  previously duplicated byte-identically across 6 mapper files, into a new shared
+  `src/CommBiz.Api/Features/Shared/MappingUtilities.cs`. Pure internal refactor, zero behavior
+  change, PASS on first review.
+
+Integration + Reviewer-Integration both PASS on first attempt for this round: 244 tests passing,
+0 vulnerabilities, no fixes needed.
 
 ## Current State
 
-- Service builds, tests, and runs cleanly (206 tests passing, 0 failed).
+- Service builds, tests, and runs cleanly (244 tests passing, 0 failed, 0 vulnerabilities).
 - Kestrel-hosted; Wolverine-wired.
 - Three payment types convert end to end through the shared router: route → validate → map →
   assemble, returning the result inline as JSON per [ADR-008](adr/ADR-008-inline-json-response.md).
@@ -69,15 +86,29 @@ full test suite (79 passed, 0 failed), format, build, and security audit — all
   - BPAY Batch Payments — converts to the BPay CSV layout (Header + one Payment Details record per
     instruction, no trailer/self-balancing record).
   - International Money Transfers (IMT) — converts to the 27-field MT101-family CSV layout.
+- All three payment types' responses now also include a `Mappings` field (F-021), giving a
+  per-line, per-field breakdown of request-origin vs. CBA-spec-output values, for testing-team
+  verification without needing to parse the raw converted text.
 - Priority Payments (F-018, also known as RTGS) is not yet implemented — still Planned, blocked on
-  PM-006 (confirmed request-object shape not yet provided).
+  PM-006 (confirmed request-object shape not yet provided). Its Acceptance Criteria have already
+  been amended (in a prior session) to require it be built directly against the shared Field
+  Mapping Model from day one, so it won't need a retrofit once it starts.
 - `GET /health` returns a basic liveness check.
+- Known gaps, not yet resolved: [docs/test-cases.md](test-cases.md) doesn't yet have `TC-xxx`
+  scenarios asserting `Mappings` shape/content (flagged in PMBook Open Items). The
+  [docs/testing/phase-2-additional-payment-types-i.md](testing/phase-2-additional-payment-types-i.md)
+  test runbook's `Mappings` coverage is being addressed by a parallel Finalizer this round.
 
 ## What's Next
 
 **Phase 2 — Additional Payment Types (current phase)**
 - F-018 — Priority Payments (also known as RTGS), sharing the MT101 format with IMT — blocked on
-  PM-006 until the upstream request-object shape is confirmed
+  PM-006 until the upstream request-object shape is confirmed. Once the shape lands, build it
+  directly against the shared Field Mapping Model (`Features/Shared/FieldMapping.cs`) from the
+  start — no separate retrofit step needed, unlike DE/BPay/IMT which had F-021 applied after the
+  fact.
+- Once F-018 is implemented, run Phase 2 Integration/Finalization covering it — either as its own
+  full round, or a solo Finalization pass like this one if F-018 lands cleanly.
 
 **Phase 3 — Cross-Cutting Concerns & Hardening**
 - F-009 — Shaw.Diagnostics logging + redaction
@@ -118,3 +149,11 @@ full test suite (79 passed, 0 failed), format, build, and security audit — all
    is provided. The MT101 spec's §1.5 Priority Payment Field Definition is already available, so
    once the request shape lands this should be a small additive change to the existing router and
    slice pattern, not a new design effort.
+7. **The shared Field Mapping Model (F-021) is now an established second ADR-002 exception**,
+   alongside the Payment Type Router — see
+   [ADR-009](adr/ADR-009-shared-field-mapping-response-model.md). It lives at
+   `src/CommBiz.Api/Features/Shared/FieldMapping.cs` (`FieldMapping`/`LineMapping`), with the
+   `AmountToCents`/`FixedWidth` helpers factored out to
+   `src/CommBiz.Api/Features/Shared/MappingUtilities.cs`. Any future payment type (starting with
+   F-018) should build its response against this model from day one, not retrofit it in afterward
+   as DE/BPay/IMT had to be.

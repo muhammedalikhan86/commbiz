@@ -124,4 +124,53 @@ public class DirectEntrySelfBalancingRecordMapperTests
         Assert.Equal(detailRecord[96..112], selfBalancingRecord[96..112]); // Name of Remitter
         Assert.Equal(detailRecord[112..120], selfBalancingRecord[112..120]); // Withholding Tax
     }
+
+    [Fact]
+    public void MapFields_returns_the_same_12_spec_field_names_as_the_detail_mapper()
+    {
+        var fields = DirectEntrySelfBalancingRecordMapper.MapFields([Instruction(100.50m)], DebitSettings);
+
+        Assert.Equal(
+            new[]
+            {
+                "Record Type",
+                "BSB Number",
+                "Account Number to be Credited/Debited",
+                "Indicator",
+                "Transaction Code",
+                "Amount",
+                "Title of Account to be Credited/Debited",
+                "Lodgement Reference",
+                "Trace BSB Number",
+                "Trace Account Number",
+                "Name of Remitter",
+                "Amount of withholding tax",
+            },
+            fields.Select(field => field.CbaResponseField));
+    }
+
+    [Fact]
+    public void MapFields_cba_response_values_match_the_same_values_written_into_the_text_record()
+    {
+        var instructions = new[] { Instruction(100.00m), Instruction(50.00m) };
+        var record = DirectEntrySelfBalancingRecordMapper.Map(instructions, DebitSettings);
+        var fields = DirectEntrySelfBalancingRecordMapper.MapFields(instructions, DebitSettings);
+
+        Assert.Equal(record[18..20], fields.Single(f => f.CbaResponseField == "Transaction Code").CbaResponseValue);
+        Assert.Equal(record[20..30], fields.Single(f => f.CbaResponseField == "Amount").CbaResponseValue);
+        Assert.Equal(record[1..8], fields.Single(f => f.CbaResponseField == "BSB Number").CbaResponseValue);
+    }
+
+    [Fact]
+    public void MapFields_bsb_and_account_fields_are_attributed_to_the_settlement_account_config_field()
+    {
+        var fields = DirectEntrySelfBalancingRecordMapper.MapFields([Instruction(100.00m)], DebitSettings);
+
+        Assert.Equal(
+            nameof(DirectEntrySettings.TraceAccountBsb),
+            fields.Single(f => f.CbaResponseField == "BSB Number").RequestField);
+        Assert.Equal(
+            nameof(DirectEntrySettings.TraceAccountAccNo),
+            fields.Single(f => f.CbaResponseField == "Account Number to be Credited/Debited").RequestField);
+    }
 }

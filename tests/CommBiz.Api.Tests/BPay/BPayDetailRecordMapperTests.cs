@@ -104,4 +104,26 @@ public class BPayDetailRecordMapperTests
 
         Assert.Equal("50,,,,,,,,7334,,8923037123,,,130350,,,,,,,,,,,", record);
     }
+
+    [Fact]
+    public void MapFields_returns_only_the_4_populated_fields_in_spec_order()
+    {
+        var fields = BPayDetailRecordMapper.MapFields(ValidInstruction());
+
+        Assert.Equal(
+            new[] { "Record Type", "Biller Code", "Customer Reference Number", "Amount" },
+            fields.Select(field => field.CbaResponseField));
+    }
+
+    [Fact]
+    public void MapFields_cba_response_values_match_the_same_values_written_into_the_text_record()
+    {
+        var instruction = ValidInstruction() with { BPayBillerCode = "7334", BPayReference = "8923037123", Amount = 1303.50m };
+        var record = BPayDetailRecordMapper.Map(instruction);
+        var fields = BPayDetailRecordMapper.MapFields(instruction);
+
+        Assert.Equal(Fields(record)[8], fields.Single(f => f.CbaResponseField == "Biller Code").CbaResponseValue);
+        Assert.Equal(Fields(record)[10], fields.Single(f => f.CbaResponseField == "Customer Reference Number").CbaResponseValue);
+        Assert.Equal(Fields(record)[13], fields.Single(f => f.CbaResponseField == "Amount").CbaResponseValue);
+    }
 }

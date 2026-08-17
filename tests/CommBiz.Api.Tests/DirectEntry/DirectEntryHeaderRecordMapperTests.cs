@@ -132,5 +132,48 @@ public class DirectEntryHeaderRecordMapperTests
 
         Assert.Equal("140826", record[74..80]);
     }
+
+    [Fact]
+    public void MapFields_returns_the_7_populated_header_fields_in_spec_order()
+    {
+        var fields = DirectEntryHeaderRecordMapper.MapFields(ValidInstructions(), Settings);
+
+        Assert.Equal(
+            new[]
+            {
+                "Record Type",
+                "Reel Sequence Number",
+                "Name Of User Financial Institution",
+                "Name of User Supplying File",
+                "Number of User Supplying File",
+                "Description of Entries on File",
+                "Date to be Processed",
+            },
+            fields.Select(field => field.CbaResponseField));
+    }
+
+    [Fact]
+    public void MapFields_cba_response_values_match_the_same_values_written_into_the_text_record()
+    {
+        var record = DirectEntryHeaderRecordMapper.Map(ValidInstructions(), Settings);
+        var fields = DirectEntryHeaderRecordMapper.MapFields(ValidInstructions(), Settings);
+
+        Assert.Equal("0", fields.Single(f => f.CbaResponseField == "Record Type").CbaResponseValue);
+        Assert.Equal("CBA", fields.Single(f => f.CbaResponseField == "Name Of User Financial Institution").CbaResponseValue);
+        Assert.Equal(
+            record[30..56].TrimEnd(),
+            fields.Single(f => f.CbaResponseField == "Name of User Supplying File").CbaResponseValue!.TrimEnd());
+        Assert.Equal("301500", fields.Single(f => f.CbaResponseField == "Number of User Supplying File").CbaResponseValue);
+        Assert.Equal("051226", fields.Single(f => f.CbaResponseField == "Date to be Processed").CbaResponseValue);
+    }
+
+    [Fact]
+    public void MapFields_config_sourced_fields_are_attributed_to_the_settings_field_name_not_the_request()
+    {
+        var fields = DirectEntryHeaderRecordMapper.MapFields(ValidInstructions(), Settings);
+
+        Assert.Equal(nameof(DirectEntrySettings.InstitutionCode), fields.Single(f => f.CbaResponseField == "Name Of User Financial Institution").RequestField);
+        Assert.Equal(nameof(DirectEntrySettings.UserIdentificationNumber), fields.Single(f => f.CbaResponseField == "Number of User Supplying File").RequestField);
+    }
 }
 

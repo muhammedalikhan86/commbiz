@@ -1,3 +1,5 @@
+using CommBiz.Api.Features.Shared;
+
 namespace CommBiz.Api.Features.DirectEntry;
 
 // Trailer Record mapping (F-007, architecture.md §3/§4 step 5; docs/stash/Direct Entry - File Specification
@@ -9,21 +11,61 @@ public static class DirectEntryTrailerRecordMapper
 {
     private const string RecordType = "7";
     private const string BsbNumber = "999-999";
+    private const string NetTotalAmount = "0000000000"; // always zero, per the self-balancing record (F-014)
 
     public static string Map(IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings)
     {
-        var amountTotalInCents = DirectEntryAmountTotals.SumAmountInCents(instructions);
-        var amountTotalField = amountTotalInCents.ToString().PadLeft(10, '0');
+        var values = ResolveValues(instructions);
 
         return
             RecordType +
             BsbNumber +
             new string(' ', 12) +
-            "0000000000" + // File Net Total Amount - always zero, per the self-balancing record (F-014)
-            amountTotalField + // File Credit Total Amount
-            amountTotalField + // File Debit Total Amount
+            NetTotalAmount +
+            values.AmountTotalField + // File Credit Total Amount
+            values.AmountTotalField + // File Debit Total Amount
             new string(' ', 24) +
-            (instructions.Count + 1).ToString().PadLeft(6, '0') + // +1 for the self-balancing record (F-014)
+            values.RecordCountField +
             new string(' ', 40);
+    }
+
+    // F-021: same resolved values as Map, so the field-mapping breakdown can never drift from ConvertedText.
+    public static IReadOnlyList<FieldMapping> MapFields(
+        IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings)
+    {
+        var values = ResolveValues(instructions);
+
+        return
+        [
+            new(nameof(RecordType), RecordType, "Record Type", RecordType),
+            new(nameof(BsbNumber), BsbNumber, "BSB Number", BsbNumber),
+            new(nameof(NetTotalAmount), NetTotalAmount, "File (User) Net Total Amount", NetTotalAmount),
+            new(
+                "Amount",
+                values.AmountTotalInCents.ToString(),
+                "File (User) Credit Total Amount",
+                values.AmountTotalField),
+            new(
+                "Amount",
+                values.AmountTotalInCents.ToString(),
+                "File (User) Debit Total Amount",
+                values.AmountTotalField),
+            new(
+                "Instructions.Count",
+                instructions.Count.ToString(),
+                "File (User) Count of Record Type 1",
+                values.RecordCountField),
+        ];
+    }
+
+    private static (long AmountTotalInCents, string AmountTotalField, string RecordCountField) ResolveValues(
+        IReadOnlyList<PaymentInstructionRequest> instructions)
+    {
+        var amountTotalInCents = DirectEntryAmountTotals.SumAmountInCents(instructions);
+        var amountTotalField = amountTotalInCents.ToString().PadLeft(10, '0');
+        // +1 for the self-balancing record (F-014)
+        var recordCountField = (instructions.Count + 1).ToString().PadLeft(6, '0');
+
+        return (amountTotalInCents, amountTotalField, recordCountField);
     }
 }

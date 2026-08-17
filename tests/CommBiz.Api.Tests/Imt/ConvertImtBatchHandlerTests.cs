@@ -109,4 +109,43 @@ public class ConvertImtBatchHandlerTests
         Assert.NotNull(result.Errors);
         Assert.Contains(result.Errors, e => e.Index == -1 && e.Reason.Contains("at most 350"));
     }
+
+    [Fact]
+    public void Two_instruction_batch_mappings_has_one_row_per_instruction_in_order_no_header_or_trailer()
+    {
+        var first = ValidInstruction();
+        var second = ValidInstruction() with { PaymentReference = "TT-000002" };
+        var command = CommandWith([first, second]);
+
+        var result = ConvertImtBatchHandler.Handle(command, Settings);
+
+        Assert.True(result.Success);
+        Assert.Equal(["row1", "row2"], result.Mappings!.Select(line => line.Line));
+    }
+
+    [Fact]
+    public void Row_mappings_fields_match_the_same_instruction_used_to_build_that_row_of_converted_text()
+    {
+        var first = ValidInstruction() with { PaymentReference = "TT-000001" };
+        var second = ValidInstruction() with { PaymentReference = "TT-000002" };
+        var command = CommandWith([first, second]);
+
+        var result = ConvertImtBatchHandler.Handle(command, Settings);
+
+        var row1 = result.Mappings!.Single(line => line.Line == "row1");
+        var row2 = result.Mappings!.Single(line => line.Line == "row2");
+        Assert.Equal("TT-000001", row1.Fields.Single(f => f.CbaResponseField == "Beneficiary Payment Details").RequestValue);
+        Assert.Equal("TT-000002", row2.Fields.Single(f => f.CbaResponseField == "Beneficiary Payment Details").RequestValue);
+    }
+
+    [Fact]
+    public void Mappings_is_null_when_validation_fails()
+    {
+        var command = CommandWith([ValidInstruction() with { Notes = "" }]);
+
+        var result = ConvertImtBatchHandler.Handle(command, Settings);
+
+        Assert.False(result.Success);
+        Assert.Null(result.Mappings);
+    }
 }

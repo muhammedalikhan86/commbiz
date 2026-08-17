@@ -133,4 +133,57 @@ public class ConvertDirectEntryBatchHandlerTests
         Assert.Equal("1", recordLines[4][0..1]); // self-balancing
         Assert.Equal("7", recordLines[5][0..1]); // trailer
     }
+
+    [Fact]
+    public void Two_instruction_batch_mappings_has_one_line_per_detail_plus_header_selfbalancing_trailer_in_order()
+    {
+        var command = CommandWith([Instruction("DE"), Instruction("DE")]);
+
+        var result = ConvertDirectEntryBatchHandler.Handle(command, Settings);
+
+        Assert.True(result.Success);
+        Assert.NotNull(result.Mappings);
+        Assert.Equal(
+            ["header", "detail1", "detail2", "selfbalancing", "trailer"],
+            result.Mappings!.Select(line => line.Line));
+    }
+
+    [Fact]
+    public void Two_instruction_batch_mappings_detail_fields_match_the_converted_text_for_that_instruction()
+    {
+        var first = Instruction("DE") with { SourceBankAccountNo = "111375004" };
+        var second = Instruction("DE") with { SourceBankAccountNo = "222486115" };
+        var command = CommandWith([first, second]);
+
+        var result = ConvertDirectEntryBatchHandler.Handle(command, Settings);
+
+        var detail1 = result.Mappings!.Single(line => line.Line == "detail1");
+        var detail2 = result.Mappings!.Single(line => line.Line == "detail2");
+        Assert.Equal("111375004", detail1.Fields.Single(f => f.CbaResponseField == "Account Number to be Credited/Debited").RequestValue);
+        Assert.Equal("222486115", detail2.Fields.Single(f => f.CbaResponseField == "Account Number to be Credited/Debited").RequestValue);
+    }
+
+    [Fact]
+    public void Single_instruction_batch_mappings_has_only_detail1_no_detail2()
+    {
+        var command = CommandWith([Instruction("DE")]);
+
+        var result = ConvertDirectEntryBatchHandler.Handle(command, Settings);
+
+        Assert.True(result.Success);
+        Assert.Equal(
+            ["header", "detail1", "selfbalancing", "trailer"],
+            result.Mappings!.Select(line => line.Line));
+    }
+
+    [Fact]
+    public void Mappings_is_null_when_validation_fails()
+    {
+        var command = CommandWith([]);
+
+        var result = ConvertDirectEntryBatchHandler.Handle(command, Settings);
+
+        Assert.False(result.Success);
+        Assert.Null(result.Mappings);
+    }
 }

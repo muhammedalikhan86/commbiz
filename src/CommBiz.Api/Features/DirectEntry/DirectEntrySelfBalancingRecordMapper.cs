@@ -1,3 +1,6 @@
+using CommBiz.Api.Features.Shared;
+using static CommBiz.Api.Features.Shared.MappingUtilities;
+
 namespace CommBiz.Api.Features.DirectEntry;
 
 // Self-balancing (contra) Detail Record mapping (F-014, architecture.md §3/§4 step 5; docs/stash/Direct
@@ -13,18 +16,15 @@ public static class DirectEntrySelfBalancingRecordMapper
 
     public static string Map(IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings)
     {
-        // Inverse of the batch's configured direction, so this record offsets the real detail records.
-        var transactionCode = settings.TransactionCode == DebitTransactionCode
-            ? CreditTransactionCode
-            : DebitTransactionCode;
+        var values = ResolveValues(instructions, settings);
 
         return
             RecordType +
             settings.TraceAccountBsb +
             settings.TraceAccountAccNo.PadLeft(9) +
             Indicator +
-            transactionCode +
-            DirectEntryAmountTotals.SumAmountInCents(instructions).ToString().PadLeft(10, '0') +
+            values.TransactionCode +
+            values.TotalAmountInCents.ToString().PadLeft(10, '0') +
             FixedWidth(settings.Title, 32) +
             FixedWidth(settings.LodgementReferenceDetails, 18) +
             settings.TraceAccountBsb +
@@ -33,7 +33,61 @@ public static class DirectEntrySelfBalancingRecordMapper
             settings.AmountOfWithholdingTax;
     }
 
-    // Truncates rather than overflows the fixed-width record if a config value is longer than its field.
-    private static string FixedWidth(string value, int width) =>
-        value.Length >= width ? value[..width] : value.PadRight(width);
+    // F-021: same resolved values as Map, so the field-mapping breakdown can never drift from ConvertedText.
+    public static IReadOnlyList<FieldMapping> MapFields(
+        IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings)
+    {
+        var values = ResolveValues(instructions, settings);
+
+        return
+        [
+            new(nameof(RecordType), RecordType, "Record Type", RecordType),
+            new(nameof(DirectEntrySettings.TraceAccountBsb), settings.TraceAccountBsb, "BSB Number", settings.TraceAccountBsb),
+            new(
+                nameof(DirectEntrySettings.TraceAccountAccNo),
+                settings.TraceAccountAccNo,
+                "Account Number to be Credited/Debited",
+                settings.TraceAccountAccNo.PadLeft(9)),
+            new(nameof(Indicator), Indicator, "Indicator", Indicator),
+            new(
+                nameof(DirectEntrySettings.TransactionCode),
+                settings.TransactionCode,
+                "Transaction Code",
+                values.TransactionCode),
+            new("Amount", values.TotalAmountInCents.ToString(), "Amount", values.TotalAmountInCents.ToString().PadLeft(10, '0')),
+            new(nameof(DirectEntrySettings.Title), settings.Title, "Title of Account to be Credited/Debited", FixedWidth(settings.Title, 32)),
+            new(
+                nameof(DirectEntrySettings.LodgementReferenceDetails),
+                settings.LodgementReferenceDetails,
+                "Lodgement Reference",
+                FixedWidth(settings.LodgementReferenceDetails, 18)),
+            new(nameof(DirectEntrySettings.TraceAccountBsb), settings.TraceAccountBsb, "Trace BSB Number", settings.TraceAccountBsb),
+            new(
+                nameof(DirectEntrySettings.TraceAccountAccNo),
+                settings.TraceAccountAccNo,
+                "Trace Account Number",
+                settings.TraceAccountAccNo.PadLeft(9)),
+            new(
+                nameof(DirectEntrySettings.NameOfRemitter),
+                settings.NameOfRemitter,
+                "Name of Remitter",
+                FixedWidth(settings.NameOfRemitter, 16)),
+            new(
+                nameof(DirectEntrySettings.AmountOfWithholdingTax),
+                settings.AmountOfWithholdingTax,
+                "Amount of withholding tax",
+                settings.AmountOfWithholdingTax),
+        ];
+    }
+
+    private static (string TransactionCode, long TotalAmountInCents) ResolveValues(
+        IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings)
+    {
+        // Inverse of the batch's configured direction, so this record offsets the real detail records.
+        var transactionCode = settings.TransactionCode == DebitTransactionCode
+            ? CreditTransactionCode
+            : DebitTransactionCode;
+
+        return (transactionCode, DirectEntryAmountTotals.SumAmountInCents(instructions));
+    }
 }

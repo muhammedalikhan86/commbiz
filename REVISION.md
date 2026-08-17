@@ -1,6 +1,11 @@
 # Revision History
 
-**Current Revision:** 3
+**Current Revision:** 4
+## Revision 4
+- **Date:** 2026-08-17
+- **Description:** Shared Field Mapping Model with per-line mapping metadata for all payment types
+- **Features:** F-021
+- **Test Coverage:** 244 passing tests (verified via `dotnet test`)
 ## Revision 3
 - **Date:** 2026-08-17
 - **Description:** Payment Type Router extended to real cross-slice dispatcher; BPAY and IMT batch conversion support

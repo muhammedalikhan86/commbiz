@@ -149,4 +149,48 @@ public class ImtRecordMapperTests
 
         Assert.StartsWith("IMT,10 bps on fx,260423,USD,", record, StringComparison.Ordinal);
     }
+
+    [Fact]
+    public void MapFields_returns_the_18_populated_fields_matching_the_inline_spec_names()
+    {
+        var fields = ImtRecordMapper.MapFields(ValidInstruction(), DebitAccountNumber);
+
+        Assert.Equal(
+            new[]
+            {
+                "Transaction Type",
+                "Transaction Description",
+                "Process Date",
+                "Payment Currency",
+                "Payment Amount",
+                "Debit Amount",
+                "Debit Account - Account Number",
+                "Intermediary Bank - Bank Code",
+                "Intermediary Bank - Name",
+                "Intermediary Institution - Country",
+                "Beneficiary Bank - Bank Code",
+                "Beneficiary Bank - Name",
+                "Beneficiary Bank - Country",
+                "Beneficiary - Account Number",
+                "Beneficiary - Account Name",
+                "Beneficiary - Address line 1",
+                "Beneficiary - Country",
+                "Beneficiary Payment Details",
+            },
+            fields.Select(field => field.CbaResponseField));
+    }
+
+    [Fact]
+    public void MapFields_cba_response_values_match_the_same_values_written_into_the_csv_row()
+    {
+        var record = ImtRecordMapper.Map(ValidInstruction(), DebitAccountNumber);
+        var recordFields = Fields(record);
+        var fields = ImtRecordMapper.MapFields(ValidInstruction(), DebitAccountNumber);
+
+        Assert.Equal(recordFields[0], fields.Single(f => f.CbaResponseField == "Transaction Type").CbaResponseValue);
+        Assert.Equal(recordFields[6], fields.Single(f => f.CbaResponseField == "Debit Account - Account Number").CbaResponseValue);
+        Assert.Equal(recordFields[12], fields.Single(f => f.CbaResponseField == "Intermediary Institution - Country").CbaResponseValue);
+        Assert.Equal(recordFields[19], fields.Single(f => f.CbaResponseField == "Beneficiary - Address line 1").CbaResponseValue);
+        Assert.Equal(recordFields[25], fields.Single(f => f.CbaResponseField == "Beneficiary - Country").CbaResponseValue);
+    }
 }

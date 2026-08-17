@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
+using CommBiz.Api.Features.Shared;
 
 namespace CommBiz.Api.Features.Imt;
 
@@ -53,6 +54,93 @@ public static partial class ImtRecordMapper
             "", // 25: Beneficiary - Postcode - no discrete field available
             beneficiaryCountry, // 26: Beneficiary - Country (same derivation as 17)
             SanitizeFreeText(instruction.PaymentReference)); // 27: Beneficiary Payment Details
+    }
+
+    // F-021: same field values already written into Map's output (same instruction, same
+    // debitAccountNumber, same derivation helpers) - only the populated fields (AC7: fields 8/9/12/16/
+    // 21-25 are reserved/unused and omitted entirely, consistent with the other slices).
+    public static IReadOnlyList<FieldMapping> MapFields(ImtPaymentInstructionRequest instruction, string debitAccountNumber)
+    {
+        var intermediaryCountry = DeriveCountryFromSwift(instruction.IntermediaryBankSwiftCode);
+        var beneficiaryCountry = DeriveCountryFromSwift(instruction.DestinationBankSwiftCode);
+
+        return
+        [
+            new(nameof(TransactionType), TransactionType, "Transaction Type", TransactionType),
+            new(nameof(instruction.Notes), instruction.Notes, "Transaction Description", instruction.Notes),
+            new(
+                nameof(instruction.PaymentDate),
+                instruction.PaymentDate.ToString("O"),
+                "Process Date",
+                instruction.PaymentDate.ToString("yyMMdd", CultureInfo.InvariantCulture)),
+            new(nameof(instruction.SourceCurrency), instruction.SourceCurrency, "Payment Currency", instruction.SourceCurrency),
+            new(
+                nameof(instruction.SourceAmount),
+                instruction.SourceAmount.ToString(CultureInfo.InvariantCulture),
+                "Payment Amount",
+                FormatAmount(instruction.SourceAmount)),
+            new(
+                nameof(instruction.Amount),
+                instruction.Amount.ToString(CultureInfo.InvariantCulture),
+                "Debit Amount",
+                FormatAmount(instruction.Amount)),
+            new("DebitAccountBsb+DebitAccountNumber", debitAccountNumber, "Debit Account - Account Number", debitAccountNumber),
+            new(
+                nameof(instruction.IntermediaryBankSwiftCode),
+                instruction.IntermediaryBankSwiftCode,
+                "Intermediary Bank - Bank Code",
+                instruction.IntermediaryBankSwiftCode ?? ""),
+            new(
+                nameof(instruction.IntermediaryBankName),
+                instruction.IntermediaryBankName,
+                "Intermediary Bank - Name",
+                instruction.IntermediaryBankName ?? ""),
+            new(
+                nameof(instruction.IntermediaryBankSwiftCode),
+                instruction.IntermediaryBankSwiftCode,
+                "Intermediary Institution - Country",
+                intermediaryCountry),
+            new(
+                nameof(instruction.DestinationBankSwiftCode),
+                instruction.DestinationBankSwiftCode,
+                "Beneficiary Bank - Bank Code",
+                instruction.DestinationBankSwiftCode),
+            new(
+                nameof(instruction.DestinationBankName),
+                instruction.DestinationBankName,
+                "Beneficiary Bank - Name",
+                instruction.DestinationBankName),
+            new(
+                nameof(instruction.DestinationBankSwiftCode),
+                instruction.DestinationBankSwiftCode,
+                "Beneficiary Bank - Country",
+                beneficiaryCountry),
+            new(
+                nameof(instruction.DestinationBankAccountNo),
+                instruction.DestinationBankAccountNo,
+                "Beneficiary - Account Number",
+                instruction.DestinationBankAccountNo),
+            new(
+                nameof(instruction.DestinationBankAccountName),
+                instruction.DestinationBankAccountName,
+                "Beneficiary - Account Name",
+                instruction.DestinationBankAccountName),
+            new(
+                nameof(instruction.BeneficiaryAddress),
+                instruction.BeneficiaryAddress,
+                "Beneficiary - Address line 1",
+                SanitizeFreeText(instruction.BeneficiaryAddress)),
+            new(
+                nameof(instruction.DestinationBankSwiftCode),
+                instruction.DestinationBankSwiftCode,
+                "Beneficiary - Country",
+                beneficiaryCountry),
+            new(
+                nameof(instruction.PaymentReference),
+                instruction.PaymentReference,
+                "Beneficiary Payment Details",
+                SanitizeFreeText(instruction.PaymentReference)),
+        ];
     }
 
     // Field 7: last 4 digits of the static ImtSettings BSB (hyphens stripped) + the static account

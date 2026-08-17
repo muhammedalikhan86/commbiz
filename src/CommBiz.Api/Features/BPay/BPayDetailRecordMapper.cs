@@ -1,3 +1,6 @@
+using CommBiz.Api.Features.Shared;
+using static CommBiz.Api.Features.Shared.MappingUtilities;
+
 namespace CommBiz.Api.Features.BPay;
 
 // Payment Details Record mapping (F-016, docs/stash/BPay Payments - CommBiz File Specification.md
@@ -19,6 +22,17 @@ public static class BPayDetailRecordMapper
             AmountToCents(instruction.Amount).ToString(), // field 14: Amount, in cents
             "", "", "", "", "", "", "", "", "", "", ""); // fields 15-25: empty
 
-    private static long AmountToCents(decimal amount) =>
-        (long)Math.Round(amount * 100m, MidpointRounding.AwayFromZero);
+    // F-021: same field values already written into Map's output - only the populated fields (AC7:
+    // reserved/unused fields 2-8/10/12-13/15-25 are omitted entirely, consistent with the other slices).
+    public static IReadOnlyList<FieldMapping> MapFields(BPayPaymentInstructionRequest instruction) =>
+    [
+        new(nameof(RecordType), RecordType, "Record Type", RecordType),
+        new(nameof(instruction.BPayBillerCode), instruction.BPayBillerCode, "Biller Code", instruction.BPayBillerCode),
+        new(nameof(instruction.BPayReference), instruction.BPayReference, "Customer Reference Number", instruction.BPayReference),
+        new(
+            nameof(instruction.Amount),
+            instruction.Amount.ToString(),
+            "Amount",
+            AmountToCents(instruction.Amount).ToString()),
+    ];
 }

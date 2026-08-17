@@ -133,4 +133,67 @@ public class BPayHeaderRecordMapperTests
         Assert.Equal("2", fields[6]);
         Assert.Equal("116923", fields[7]);
     }
+
+    [Fact]
+    public void MapFields_returns_the_8_header_fields_in_spec_order()
+    {
+        var fields = BPayHeaderRecordMapper.MapFields(ValidInstructions(), Settings);
+
+        Assert.Equal(
+            new[]
+            {
+                "Record Type",
+                "File Creation Date",
+                "File Creation Time",
+                "File Number",
+                "Payment Account",
+                "Payment Date",
+                "Number of Payment Records",
+                "Total Amount of Payments",
+            },
+            fields.Select(field => field.CbaResponseField));
+    }
+
+    [Fact]
+    public void MapFields_funding_account_and_file_number_are_attributed_to_the_static_appsettings_field_name()
+    {
+        var fields = BPayHeaderRecordMapper.MapFields(ValidInstructions(), Settings);
+
+        Assert.Equal(nameof(BPaySettings.FundingAccount), fields.Single(f => f.CbaResponseField == "Payment Account").RequestField);
+        Assert.Equal("06200012345678", fields.Single(f => f.CbaResponseField == "Payment Account").RequestValue);
+        Assert.Equal(nameof(BPaySettings.FileNumber), fields.Single(f => f.CbaResponseField == "File Number").RequestField);
+        Assert.Equal("001", fields.Single(f => f.CbaResponseField == "File Number").RequestValue);
+    }
+
+    [Fact]
+    public void MapFields_payment_date_and_record_count_match_the_same_values_written_into_the_text_record()
+    {
+        var instructions = new[]
+        {
+            Instruction(new DateTime(2026, 8, 20, 10, 0, 0)),
+            Instruction(new DateTime(2026, 8, 14, 10, 0, 0)),
+        };
+        var record = BPayHeaderRecordMapper.Map(instructions, Settings);
+        var fields = BPayHeaderRecordMapper.MapFields(instructions, Settings);
+
+        Assert.Equal(Fields(record)[5], fields.Single(f => f.CbaResponseField == "Payment Date").CbaResponseValue);
+        Assert.Equal(Fields(record)[6], fields.Single(f => f.CbaResponseField == "Number of Payment Records").CbaResponseValue);
+        Assert.Equal(Fields(record)[7], fields.Single(f => f.CbaResponseField == "Total Amount of Payments").CbaResponseValue);
+    }
+
+    // F-021 fix: Map and MapFields must share one caller-supplied `now`, not each independently call
+    // DateTime.UtcNow, or the File Creation Date/Time in Mappings can drift from ConvertedText by a second.
+    [Fact]
+    public void Map_and_MapFields_given_the_same_explicit_now_produce_identical_file_creation_date_and_time()
+    {
+        var instructions = ValidInstructions();
+        var now = new DateTime(2026, 8, 20, 23, 59, 59, DateTimeKind.Utc);
+
+        var record = BPayHeaderRecordMapper.Map(instructions, Settings, now);
+        var fields = BPayHeaderRecordMapper.MapFields(instructions, Settings, now);
+
+        Assert.Equal(Fields(record)[1], fields.Single(f => f.CbaResponseField == "File Creation Date").CbaResponseValue);
+        Assert.Equal(Fields(record)[2], fields.Single(f => f.CbaResponseField == "File Creation Time").CbaResponseValue);
+    }
 }
+

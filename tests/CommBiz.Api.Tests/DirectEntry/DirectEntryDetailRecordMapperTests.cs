@@ -162,5 +162,49 @@ public class DirectEntryDetailRecordMapperTests
 
         Assert.Equal("AB" + new string(' ', 14), record[96..112]);
     }
+
+    [Fact]
+    public void MapFields_returns_the_12_populated_detail_fields_in_spec_order()
+    {
+        var fields = DirectEntryDetailRecordMapper.MapFields(ValidInstruction(), Settings);
+
+        Assert.Equal(
+            new[]
+            {
+                "Record Type",
+                "BSB Number",
+                "Account Number to be Credited/Debited",
+                "Indicator",
+                "Transaction Code",
+                "Amount",
+                "Title of Account to be Credited/Debited",
+                "Lodgement Reference",
+                "Trace BSB Number",
+                "Trace Account Number",
+                "Name of Remitter",
+                "Amount of withholding tax",
+            },
+            fields.Select(field => field.CbaResponseField));
+    }
+
+    [Fact]
+    public void MapFields_cba_response_values_match_the_same_values_written_into_the_text_record()
+    {
+        var record = DirectEntryDetailRecordMapper.Map(ValidInstruction(), Settings);
+        var fields = DirectEntryDetailRecordMapper.MapFields(ValidInstruction(), Settings);
+
+        Assert.Equal("015-141", fields.Single(f => f.CbaResponseField == "BSB Number").CbaResponseValue);
+        Assert.Equal("0000750000", fields.Single(f => f.CbaResponseField == "Amount").CbaResponseValue);
+        Assert.Equal(record[112..120], fields.Single(f => f.CbaResponseField == "Amount of withholding tax").CbaResponseValue);
+    }
+
+    [Fact]
+    public void MapFields_request_sourced_fields_carry_the_raw_unformatted_request_value()
+    {
+        var fields = DirectEntryDetailRecordMapper.MapFields(ValidInstruction(), Settings);
+
+        Assert.Equal("015141", fields.Single(f => f.CbaResponseField == "BSB Number").RequestValue);
+        Assert.Equal(nameof(PaymentInstructionRequest.SourceBankBsb), fields.Single(f => f.CbaResponseField == "BSB Number").RequestField);
+    }
 }
 

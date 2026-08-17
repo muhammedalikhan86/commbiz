@@ -1,13 +1,14 @@
 # Test Runbook: Phase 2 — Additional Payment Types I
 
 > Status: DRAFT
-> Version: v1
+> Version: v2
 > Last updated: 2026-08-17
-> Covers: F-015–F-017 (see [docs/project-management.md](../project-management.md))
+> Covers: F-015–F-017, F-021 (see [docs/project-management.md](../project-management.md))
 > Scenario reference: [docs/test-cases.md](../test-cases.md) TC-051–TC-065 (independently numbered
 > range, disjoint from test-cases.md's own TC-033–TC-050 Phase 2 section — some scenarios below are
 > manual walkthroughs of the same underlying rules test-cases.md covers, e.g. TC-051/TC-052 here mirror
-> test-cases.md's TC-004/TC-005 mixed-type/unsupported-type rejections)
+> test-cases.md's TC-004/TC-005 mixed-type/unsupported-type rejections); this runbook's own TC-066–TC-070
+> (F-021 `Mappings` field) have no `test-cases.md` counterpart yet — tracked as PM-009
 > Source data: [docs/stash/BPay Payments - CommBiz File Specification.md](../stash/BPay%20Payments%20-%20CommBiz%20File%20Specification.md) §1.1/§1.3,
 > [docs/stash/CommBiz File Specification - International Money Transfers Priority Payments Non CBA Payment Requests (MT101) v9.md](../stash/CommBiz%20File%20Specification%20-%20International%20Money%20Transfers%20Priority%20Payments%20Non%20CBA%20Payment%20Requests%20%28MT101%29%20v9.md) §1.2/§1.4
 
@@ -631,3 +632,109 @@ fields (Beneficiary Address, Beneficiary Payment Details — see TC-062), which 
 | IMT `BeneficiaryAddress` | must not be blank, ≤40 characters after sanitization |
 | IMT `PaymentReference` | must not be blank, ≤105 characters after sanitization |
 | IMT batch size | 1–350 instructions |
+
+---
+
+## F-021 — Shared Field Mapping Model: verifying the `Mappings` field — TC-066–TC-070
+
+> Added 2026-08-17 — this section did not exist at the runbook's original v1 writing; F-021 retrofitted
+> the already-covered F-016/F-017 responses (and Direct Entry's) with a new field after the fact.
+
+### What `Mappings` is and why it exists
+
+Every successful `/convert` response now carries a second, parallel representation of the output
+alongside `convertedText`: an ordered `mappings` array (`LineMapping[]`, one entry per output line/row),
+where each line breaks down into a `fields` array (`FieldMapping[]`) of
+`{ requestField, requestValue, cbaResponseField, cbaResponseValue }` tuples — see
+[Features/Shared/FieldMapping.cs](../../src/CommBiz.Api/Features/Shared/FieldMapping.cs) (ADR-009). It
+exists purely for tester/reviewer convenience: instead of manually parsing a fixed-width (Direct Entry)
+or CSV (BPAY/IMT) `convertedText` line back apart field-by-field to check "did request field X end up in
+the right place with the right value", `Mappings` states that mapping explicitly, in the same order the
+line was written. It is strictly additive — never a replacement for `convertedText`, and never present
+(`null`) whenever `success` is `false`.
+
+**Automated equivalents:**
+[tests/CommBiz.Api.Tests/DirectEntry/ConvertDirectEntryBatchHandlerTests.cs](../../tests/CommBiz.Api.Tests/DirectEntry/ConvertDirectEntryBatchHandlerTests.cs),
+[tests/CommBiz.Api.Tests/BPay/ConvertBPayBatchHandlerTests.cs](../../tests/CommBiz.Api.Tests/BPay/ConvertBPayBatchHandlerTests.cs),
+[tests/CommBiz.Api.Tests/Imt/ConvertImtBatchHandlerTests.cs](../../tests/CommBiz.Api.Tests/Imt/ConvertImtBatchHandlerTests.cs)
+
+### TC-066 — Direct Entry: `Mappings` line order and header field attribution
+
+POST the TC-056-style 2-instruction happy-path Direct Entry body (or reuse
+[tests/smoke/DirectEntry.http](../../tests/smoke/DirectEntry.http)'s 2-instruction batch) and inspect
+`mappings` instead of `convertedText`:
+
+```powershell
+$result = Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
+  -ContentType 'application/json' -Body $body
+
+$result.mappings.line                      # expect: header, detail1, detail2, selfbalancing, trailer (in this order)
+$detail1 = $result.mappings | Where-Object { $_.line -eq 'detail1' }
+$detail1.fields | Format-Table requestField, requestValue, cbaResponseField, cbaResponseValue
+```
+
+**Expected:** `mappings` has exactly 5 lines, in order `header` → `detail1` → `detail2` → `selfbalancing`
+→ `trailer` — matching `convertedText`'s own line order exactly. Spot-check 2–3 of `detail1.fields`
+against the corresponding `\r\n`-split line of `convertedText` (e.g. the field whose `cbaResponseField`
+is the amount should show the same digits that appear in that position of the raw detail line).
+
+### TC-067 — BPay: `Mappings` line order and config-sourced header fields
+
+POST the TC-056 2-instruction BPay body and inspect `mappings`:
+
+```powershell
+$result.mappings.line                      # expect: header, detail1, detail2 (no trailer, no self-balancing)
+$header = $result.mappings | Where-Object { $_.line -eq 'header' }
+$header.fields | Where-Object { $_.cbaResponseField -in @('File Number', 'Payment Account') } |
+  Format-Table requestField, requestValue, cbaResponseField, cbaResponseValue
+```
+
+**Expected:** `mappings` has exactly 3 lines, in order `header` → `detail1` → `detail2` — no trailer, no
+self-balancing (BPay has neither, per F-016 above). Within the `header` line, the `File Number` and
+`Payment Account` entries' `requestField` is `FileNumber` / `FundingAccount` — the static
+`appsettings.json` `BPay` settings field name — **not** any field from the request body, since those two
+header values are config-sourced, not per-instruction.
+
+### TC-068 — IMT: `Mappings` row order, no header/trailer lines
+
+POST the TC-062 2-instruction IMT body and inspect `mappings`:
+
+```powershell
+$result.mappings.line                      # expect: row1, row2 (no header, no trailer)
+$row2 = $result.mappings | Where-Object { $_.line -eq 'row2' }
+$row2.fields | Format-Table requestField, requestValue, cbaResponseField, cbaResponseValue
+```
+
+**Expected:** `mappings` has exactly 2 lines, named `row1`/`row2` (not `header`/`detail*` — IMT has no
+header or trailer record, per F-017 above). Spot-check `row2.fields` against `convertedText`'s second
+CSV row (e.g. the field whose `cbaResponseField` is Beneficiary Address should show the sanitized
+`"27 Oxford Street London W1D 2DZ"` value, matching TC-062).
+
+### TC-069 — Edge case: single-instruction Direct Entry batch has no `detail2`
+
+POST the TC-055 (or F-014) single-instruction Direct Entry body and inspect `mappings`:
+
+```powershell
+$result.mappings.line                      # expect: header, detail1, selfbalancing, trailer — no detail2
+```
+
+**Expected:** exactly 4 lines — `detail2` is entirely absent (not present-with-empty-fields), consistent
+with `convertedText` splitting into 4 lines for a single-instruction batch (per F-014 above).
+
+### TC-070 — Regression: a validation-failure response has `Mappings: null`
+
+Reuse any Field validation failure body from this runbook (e.g. TC-058, BPay `AccountNo = ""`) or from
+[phase-1-direct-entry-conversion-core.md](phase-1-direct-entry-conversion-core.md):
+
+```powershell
+$result = Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
+  -ContentType 'application/json' -Body $body
+
+$result.success                            # expect: False
+$result.mappings                           # expect: $null
+```
+
+**Expected:** `success: false` and `mappings: null` together, for every rejection scenario in this
+runbook and in [phase-1-direct-entry-conversion-core.md](phase-1-direct-entry-conversion-core.md) —
+`Mappings` is only ever populated alongside a successful conversion, never as a partial/best-effort
+result on a rejected batch.

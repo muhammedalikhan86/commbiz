@@ -1,3 +1,5 @@
+using CommBiz.Api.Features.Shared;
+
 namespace CommBiz.Api.Features.Imt;
 
 public record ConvertImtBatchCommand(IReadOnlyList<ImtPaymentInstructionRequest> Instructions);
@@ -24,6 +26,12 @@ public static class ConvertImtBatchHandler
             "\r\n",
             instructions.Select(instruction => ImtRecordMapper.Map(instruction, debitAccountNumber)));
 
-        return new ConvertImtBatchResponse(true, convertedText, null);
+        // F-021: Mappings mirrors ConvertedText's row order exactly - one row per instruction, no header/trailer.
+        var mappings = instructions
+            .Select((instruction, index) => new LineMapping(
+                $"row{index + 1}", ImtRecordMapper.MapFields(instruction, debitAccountNumber)))
+            .ToList();
+
+        return new ConvertImtBatchResponse(true, convertedText, null, mappings);
     }
 }

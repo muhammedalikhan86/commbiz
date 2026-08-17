@@ -1,3 +1,5 @@
+using CommBiz.Api.Features.Shared;
+
 namespace CommBiz.Api.Features.DirectEntry;
 
 public record ConvertDirectEntryBatchCommand(IReadOnlyList<PaymentInstructionRequest> Instructions);
@@ -28,6 +30,18 @@ public static class ConvertDirectEntryBatchHandler
             DirectEntrySelfBalancingRecordMapper.Map(instructions, settings) + "\r\n" +
             DirectEntryTrailerRecordMapper.Map(instructions, settings) + "\r\n";
 
-        return new ConvertDirectEntryBatchResponse(true, convertedText, null);
+        // F-021: Mappings mirrors ConvertedText's line order exactly - header, one per instruction, self-balancing, trailer.
+        var mappings = new List<LineMapping>
+        {
+            new("header", DirectEntryHeaderRecordMapper.MapFields(instructions, settings)),
+        };
+        mappings.AddRange(instructions.Select(
+            (instruction, index) => new LineMapping(
+                $"detail{index + 1}", DirectEntryDetailRecordMapper.MapFields(instruction, settings))));
+        mappings.Add(new LineMapping("selfbalancing", DirectEntrySelfBalancingRecordMapper.MapFields(instructions, settings)));
+        mappings.Add(new LineMapping("trailer", DirectEntryTrailerRecordMapper.MapFields(instructions, settings)));
+
+        return new ConvertDirectEntryBatchResponse(true, convertedText, null, mappings);
     }
 }
+

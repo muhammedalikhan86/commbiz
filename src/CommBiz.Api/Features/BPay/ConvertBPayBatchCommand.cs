@@ -1,3 +1,5 @@
+using CommBiz.Api.Features.Shared;
+
 namespace CommBiz.Api.Features.BPay;
 
 public record ConvertBPayBatchCommand(IReadOnlyList<BPayPaymentInstructionRequest> Instructions);
@@ -19,10 +21,22 @@ public static class ConvertBPayBatchHandler
         var detailRecords = string.Concat(
             instructions.Select(instruction => BPayDetailRecordMapper.Map(instruction) + "\r\n"));
 
+        // F-021: resolved once and passed to both Map and MapFields below so ConvertedText and Mappings
+        // can never disagree on the header's File Creation Date/Time (AC5).
+        var now = DateTime.UtcNow;
+
         var convertedText =
-            BPayHeaderRecordMapper.Map(instructions, settings) + "\r\n" +
+            BPayHeaderRecordMapper.Map(instructions, settings, now) + "\r\n" +
             detailRecords;
 
-        return new ConvertBPayBatchResponse(true, convertedText, null);
+        // F-021: Mappings mirrors ConvertedText's line order exactly - header, then one per instruction.
+        var mappings = new List<LineMapping>
+        {
+            new("header", BPayHeaderRecordMapper.MapFields(instructions, settings, now)),
+        };
+        mappings.AddRange(instructions.Select(
+            (instruction, index) => new LineMapping($"detail{index + 1}", BPayDetailRecordMapper.MapFields(instruction))));
+
+        return new ConvertBPayBatchResponse(true, convertedText, null, mappings);
     }
 }

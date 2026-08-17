@@ -104,5 +104,36 @@ public class DirectEntryTrailerRecordMapperTests
         Assert.Equal("0000000000", record[40..50]);
         Assert.Equal("000001", record[74..80]);
     }
+
+    [Fact]
+    public void MapFields_returns_the_6_populated_trailer_fields_in_spec_order()
+    {
+        var fields = DirectEntryTrailerRecordMapper.MapFields([Instruction(100.50m)], DebitSettings);
+
+        Assert.Equal(
+            new[]
+            {
+                "Record Type",
+                "BSB Number",
+                "File (User) Net Total Amount",
+                "File (User) Credit Total Amount",
+                "File (User) Debit Total Amount",
+                "File (User) Count of Record Type 1",
+            },
+            fields.Select(field => field.CbaResponseField));
+    }
+
+    [Fact]
+    public void MapFields_cba_response_values_match_the_same_values_written_into_the_text_record()
+    {
+        var instructions = new[] { Instruction(100.00m), Instruction(50.00m) };
+        var record = DirectEntryTrailerRecordMapper.Map(instructions, DebitSettings);
+        var fields = DirectEntryTrailerRecordMapper.MapFields(instructions, DebitSettings);
+
+        Assert.Equal(record[20..30], fields.Single(f => f.CbaResponseField == "File (User) Net Total Amount").CbaResponseValue);
+        Assert.Equal(record[30..40], fields.Single(f => f.CbaResponseField == "File (User) Credit Total Amount").CbaResponseValue);
+        Assert.Equal(record[40..50], fields.Single(f => f.CbaResponseField == "File (User) Debit Total Amount").CbaResponseValue);
+        Assert.Equal(record[74..80], fields.Single(f => f.CbaResponseField == "File (User) Count of Record Type 1").CbaResponseValue);
+    }
 }
 

@@ -109,4 +109,53 @@ public class ConvertBPayBatchHandlerTests
         Assert.Equal(BPayDetailRecordMapper.Map(first), recordLines[1]);
         Assert.Equal(BPayDetailRecordMapper.Map(second), recordLines[2]);
     }
+
+    [Fact]
+    public void Two_instruction_batch_mappings_has_one_line_per_detail_plus_header_in_order()
+    {
+        var command = CommandWith([ValidInstruction(), ValidInstruction()]);
+
+        var result = ConvertBPayBatchHandler.Handle(command, Settings);
+
+        Assert.True(result.Success);
+        Assert.Equal(["header", "detail1", "detail2"], result.Mappings!.Select(line => line.Line));
+    }
+
+    [Fact]
+    public void Mappings_header_line_attributes_funding_account_and_file_number_to_the_static_config_field_name()
+    {
+        var command = CommandWith([ValidInstruction()]);
+
+        var result = ConvertBPayBatchHandler.Handle(command, Settings);
+
+        var header = result.Mappings!.Single(line => line.Line == "header");
+        Assert.Equal(nameof(BPaySettings.FundingAccount), header.Fields.Single(f => f.CbaResponseField == "Payment Account").RequestField);
+        Assert.Equal(nameof(BPaySettings.FileNumber), header.Fields.Single(f => f.CbaResponseField == "File Number").RequestField);
+    }
+
+    [Fact]
+    public void Mappings_is_null_when_validation_fails()
+    {
+        var command = CommandWith([ValidInstruction() with { BPayBillerCode = "" }]);
+
+        var result = ConvertBPayBatchHandler.Handle(command, Settings);
+
+        Assert.False(result.Success);
+        Assert.Null(result.Mappings);
+    }
+
+    // F-021 fix: guards against ConvertedText and Mappings header line being built from independently
+    // resolved DateTime.UtcNow calls, which could disagree by a second across a clock-second boundary.
+    [Fact]
+    public void Mappings_header_file_creation_date_and_time_match_the_values_written_into_converted_text()
+    {
+        var command = CommandWith([ValidInstruction()]);
+
+        var result = ConvertBPayBatchHandler.Handle(command, Settings);
+
+        var headerLine = result.ConvertedText!.Split("\r\n")[0].Split(",");
+        var header = result.Mappings!.Single(line => line.Line == "header");
+        Assert.Equal(headerLine[1], header.Fields.Single(f => f.CbaResponseField == "File Creation Date").CbaResponseValue);
+        Assert.Equal(headerLine[2], header.Fields.Single(f => f.CbaResponseField == "File Creation Time").CbaResponseValue);
+    }
 }

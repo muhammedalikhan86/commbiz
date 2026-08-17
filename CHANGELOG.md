@@ -5,6 +5,72 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] — 2026-08-17
+
+### Added
+
+#### Shared Field Mapping Model & Response Enrichment
+- **F-021:** Unified `FieldMapping` and `LineMapping` model suite for all payment types
+  - New `Mappings` field in all conversion responses (Direct Entry, BPAY, IMT)
+  - Per-line request vs. CBA-spec breakdown for testing and audit trails
+  - Ordered parallel to `ConvertedText` for precise field traceability
+  - Covers field extraction, validation results, and mapping decisions per instruction
+  
+- **F-021 Follow-up Refactor:** Extracted duplicated field/width helpers to `Features/Shared/MappingUtilities.cs`
+  - `AmountToCents()` and `FixedWidth()` utilities now shared across all three payment type mappers
+  - Zero behavior change; pure internal consolidation
+
+### Modules/Files Modified
+- `src/CommBiz.Api/Features/Shared/`
+  - `FieldMapping.cs` [new] — Defines FieldMapping model for individual field mapping metadata
+  - `LineMapping.cs` [new] — Defines LineMapping model for per-line aggregation
+  - `MappingUtilities.cs` [new] — Extracted AmountToCents and FixedWidth helpers
+  
+- `src/CommBiz.Api/Features/DirectEntry/`
+  - `ConvertDirectEntryBatchHandler.cs` — Added Mappings field to response
+  - `DirectEntryMapper.cs` — Enhanced to populate LineMapping for each line
+  - `ConvertDirectEntryBatchCommand.cs` — Response shape updated
+  
+- `src/CommBiz.Api/Features/BPay/`
+  - `ConvertBPayBatchHandler.cs` — Added Mappings field to response
+  - `BPayDetailRecordMapper.cs` — Enhanced to populate LineMapping for each detail
+  - `ConvertBPayBatchCommand.cs` — Response shape updated
+  
+- `src/CommBiz.Api/Features/Imt/`
+  - `ConvertImtBatchHandler.cs` — Added Mappings field to response
+  - `ImtCsvMapper.cs` — Enhanced to populate LineMapping for each CSV row
+  - `ConvertImtBatchCommand.cs` — Response shape updated
+  
+- `tests/CommBiz.Api.Tests/`
+  - `DirectEntry/ConvertDirectEntryBatchHandlerTests.cs` — Updated to verify Mappings population
+  - `BPay/ConvertBPayBatchHandlerTests.cs` — Updated to verify Mappings population
+  - `Imt/ConvertImtBatchHandlerTests.cs` — Updated to verify Mappings population
+
+### Breaking Changes
+None — `Mappings` field is purely additive to all existing response contracts; no modification to existing fields or request shapes.
+
+### Test Coverage
+**244 passing tests** (verified via `dotnet test`, 0 failed, 0 skipped; 0 vulnerabilities):
+
+1. **Happy Path — Multi-Instruction Batch with Populated Mappings**
+   - POST valid multi-instruction Direct Entry, BPAY, or IMT batch to `POST /convert`
+   - Verify response includes `ConvertedText` (existing, unchanged) AND `Mappings` array (new, populated)
+   - Confirm `Mappings` is ordered and parallel to `ConvertedText` line-by-line
+   - Each LineMapping includes per-field request vs. CBA-spec breakdown and mapping decisions
+   
+2. **Edge Case — Single-Instruction Batch Mappings**
+   - POST Direct Entry batch with exactly 1 instruction
+   - Verify `Mappings` array contains 1 LineMapping
+   - Confirm LineMapping does NOT include `detail2` entry (single-line scenario)
+   - Validate Mappings structure matches schema for single-instruction case
+
+3. **Regression-Sensitive — Validation Failure Mappings Null**
+   - POST batch with validation error (e.g., invalid instruction code)
+   - Verify response has `Mappings: null` for all three payment slices
+   - Confirm `ConvertedText: null` and error structure unchanged
+   - POST same instruction set with F-001–F-020 behavior (pre-F-021)
+   - Verify output byte-for-byte identical to Revision 3 for all passing scenarios
+
 ## [1.2.0] — 2026-08-17
 
 ### Added
