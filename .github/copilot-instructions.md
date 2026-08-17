@@ -66,6 +66,13 @@ to `adr-directory`, `diagrams-mmd-dir`, and `diagrams-img-dir`.
 ### graphify
 - Graph report: `graphify-out/GRAPH_REPORT.md` (after first run)
 - Use before starting any feature that touches multiple modules.
+- **This repo has its own scoped update script — prefer it over the generic graphify skill's full
+  pipeline.** Run `.github/scripts/graphify-update.ps1` (wraps `graphify_update_run.py`, scoped to
+  `src/`, merges into the existing `graphify-out/graph.json`, regenerates `GRAPH_REPORT.md`) from the
+  repository root instead of invoking the `graphify` skill directly. Only fall back to the skill's own
+  pipeline if this script is missing or fails — the skill's pipeline produces extra artifacts this repo
+  doesn't otherwise use (`graph.html`, `cost.json`, `manifest.json`, `.graphify_python/`) at extra
+  token/time cost for no benefit here.
 
 ### find-skills
 - Use to discover installed skills by name or capability.

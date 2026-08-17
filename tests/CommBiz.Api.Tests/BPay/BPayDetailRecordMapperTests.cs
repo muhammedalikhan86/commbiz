@@ -106,13 +106,79 @@ public class BPayDetailRecordMapperTests
     }
 
     [Fact]
-    public void MapFields_returns_only_the_4_populated_fields_in_spec_order()
+    public void MapFields_returns_all_25_fields_in_spec_order()
     {
         var fields = BPayDetailRecordMapper.MapFields(ValidInstruction());
 
         Assert.Equal(
-            new[] { "Record Type", "Biller Code", "Customer Reference Number", "Amount" },
+            new[]
+            {
+                "Record Type",
+                "File Creation Date",
+                "File Creation Time",
+                "File Number",
+                "Payment Account",
+                "Payment Date",
+                "Number of Payment Records",
+                "Currency Code of Payment",
+                "Biller Code",
+                "Service Code",
+                "Customer Reference Number",
+                "Payment Method",
+                "Entry Method",
+                "Amount",
+                "Transaction Reference Number",
+                "Original Reference Number",
+                "BPAY Settlement Date",
+                "Date Payment Accepted",
+                "Time Payment Accepted",
+                "Payer Name",
+                "Additional Reference Code",
+                "Error Correction Reason",
+                "Discount Method",
+                "Discount Reference",
+                "Discretionary Data",
+            },
             fields.Select(field => field.CbaResponseField));
+    }
+
+    [Fact]
+    public void MapFields_previously_missing_unused_fields_appear_at_their_spec_position_with_empty_values()
+    {
+        var fields = BPayDetailRecordMapper.MapFields(ValidInstruction());
+
+        var expected = new (int Index, string Name)[]
+        {
+            (1, "File Creation Date"),
+            (2, "File Creation Time"),
+            (3, "File Number"),
+            (4, "Payment Account"),
+            (5, "Payment Date"),
+            (6, "Number of Payment Records"),
+            (7, "Currency Code of Payment"),
+            (9, "Service Code"),
+            (11, "Payment Method"),
+            (12, "Entry Method"),
+            (14, "Transaction Reference Number"),
+            (15, "Original Reference Number"),
+            (16, "BPAY Settlement Date"),
+            (17, "Date Payment Accepted"),
+            (18, "Time Payment Accepted"),
+            (19, "Payer Name"),
+            (20, "Additional Reference Code"),
+            (21, "Error Correction Reason"),
+            (22, "Discount Method"),
+            (23, "Discount Reference"),
+            (24, "Discretionary Data"),
+        };
+
+        foreach (var (index, name) in expected)
+        {
+            Assert.Equal(name, fields[index].CbaResponseField);
+            Assert.Equal("", fields[index].RequestField);
+            Assert.Equal("", fields[index].RequestValue);
+            Assert.Equal("", fields[index].CbaResponseValue);
+        }
     }
 
     [Fact]

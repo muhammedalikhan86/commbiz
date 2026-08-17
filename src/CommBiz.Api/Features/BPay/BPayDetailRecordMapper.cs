@@ -22,17 +22,39 @@ public static class BPayDetailRecordMapper
             AmountToCents(instruction.Amount).ToString(), // field 14: Amount, in cents
             "", "", "", "", "", "", "", "", "", "", ""); // fields 15-25: empty
 
-    // F-021: same field values already written into Map's output - only the populated fields (AC7:
-    // reserved/unused fields 2-8/10/12-13/15-25 are omitted entirely, consistent with the other slices).
+    // F-021 correction: one entry per Payment Details field position (25 total, same order as Map),
+    // including reserved/unused fields 2-8/10/12-13/15-25 - a dropped position would break
+    // correspondence between Fields and the raw comma-separated output line.
     public static IReadOnlyList<FieldMapping> MapFields(BPayPaymentInstructionRequest instruction) =>
     [
         new(nameof(RecordType), RecordType, "Record Type", RecordType),
+        new("", "", "File Creation Date", ""),
+        new("", "", "File Creation Time", ""),
+        new("", "", "File Number", ""),
+        new("", "", "Payment Account", ""),
+        new("", "", "Payment Date", ""),
+        new("", "", "Number of Payment Records", ""),
+        new("", "", "Currency Code of Payment", ""),
         new(nameof(instruction.BPayBillerCode), instruction.BPayBillerCode, "Biller Code", instruction.BPayBillerCode),
+        new("", "", "Service Code", ""),
         new(nameof(instruction.BPayReference), instruction.BPayReference, "Customer Reference Number", instruction.BPayReference),
+        new("", "", "Payment Method", ""),
+        new("", "", "Entry Method", ""),
         new(
             nameof(instruction.Amount),
             instruction.Amount.ToString(),
             "Amount",
             AmountToCents(instruction.Amount).ToString()),
+        new("", "", "Transaction Reference Number", ""),
+        new("", "", "Original Reference Number", ""),
+        new("", "", "BPAY Settlement Date", ""),
+        new("", "", "Date Payment Accepted", ""),
+        new("", "", "Time Payment Accepted", ""),
+        new("", "", "Payer Name", ""),
+        new("", "", "Additional Reference Code", ""),
+        new("", "", "Error Correction Reason", ""),
+        new("", "", "Discount Method", ""),
+        new("", "", "Discount Reference", ""),
+        new("", "", "Discretionary Data", ""),
     ];
 }

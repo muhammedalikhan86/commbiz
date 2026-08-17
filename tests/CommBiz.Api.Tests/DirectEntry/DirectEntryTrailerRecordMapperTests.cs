@@ -106,7 +106,7 @@ public class DirectEntryTrailerRecordMapperTests
     }
 
     [Fact]
-    public void MapFields_returns_the_6_populated_trailer_fields_in_spec_order()
+    public void MapFields_returns_all_9_trailer_fields_in_spec_order()
     {
         var fields = DirectEntryTrailerRecordMapper.MapFields([Instruction(100.50m)], DebitSettings);
 
@@ -115,12 +115,25 @@ public class DirectEntryTrailerRecordMapperTests
             {
                 "Record Type",
                 "BSB Number",
+                "Blank",
                 "File (User) Net Total Amount",
                 "File (User) Credit Total Amount",
                 "File (User) Debit Total Amount",
+                "Blank",
                 "File (User) Count of Record Type 1",
+                "Blank",
             },
             fields.Select(field => field.CbaResponseField));
+    }
+
+    [Fact]
+    public void MapFields_previously_missing_blank_filler_fields_hold_the_literal_spaces_value_at_their_spec_position()
+    {
+        var fields = DirectEntryTrailerRecordMapper.MapFields([Instruction(100.50m)], DebitSettings);
+
+        Assert.Equal(new string(' ', 12), fields[2].CbaResponseValue);
+        Assert.Equal(new string(' ', 24), fields[6].CbaResponseValue);
+        Assert.Equal(new string(' ', 40), fields[8].CbaResponseValue);
     }
 
     [Fact]

@@ -1,7 +1,7 @@
 # Architecture: Shaw and Partners → CommBank Payment File Conversion Service
 
 > Status: APPROVED
-> Version: v8
+> Version: v9
 > Last updated: 2026-08-17
 > PRD: docs/prd.md (built against v8)
 
@@ -139,7 +139,10 @@ contains the data that genuinely varies per instruction (see §3, Direct Entry C
   within a line's entry records both sides of the mapping: the request-side origin (the request
   object's field name or the static appsettings field name, plus the value that was used) and
   the CBA response side (the field name per the relevant CommBank spec, plus whatever value was
-  actually placed in the output — which may be null/empty).
+  actually placed in the output — which may be null/empty). A line's field list covers every
+  spec-defined field position for that record type, including reserved/blank/unused positions,
+  not only the ones a given instruction happens to populate — so a line's `Fields` entries stay
+  in 1:1 positional correspondence with that line's own `ConvertedText` output.
 - **Inputs:** The same per-instruction request fields and static configuration values each
   slice's existing mapper already consumes.
 - **Outputs:** An ordered list of line entries (`LineMapping`), each carrying an ordered list of
@@ -279,3 +282,4 @@ in §3 for their full field/output rules.
 | v6 | 2026-08-13 | Added the self-balancing (contra) detail record requirement (FR-007): the Direct Entry Conversion Slice now emits a config-derived contra detail record, posted against the settlement (Trace BSB/Account) account in the direction opposite the batch's Transaction Code, immediately before the trailer; reduced the batch-level minimum from 2 to 1 instruction (FR-008), since this new record itself satisfies the spec's minimum-2-detail-record rule; updated Validation Component, Data Flow steps 3/5, and FR-005 accordingly | User requirement change |
 | v7 | 2026-08-17 | Documentation catch-up for F-015/F-016/F-017 (Reviewer-PASS'd since 2026-08-14) — architecture.md had not been updated since v6/Phase 1. Replaced the Payment Type Router entry (was DE-only) with its real cross-slice dispatcher behaviour (empty/mixed/unsupported rejection, ADR-002 exception); added BPay Conversion Slice and IMT Conversion Slice component entries, each with its own slice-owned validator; updated Data Flow to reflect fan-out to DE/BPAY/IMT with a note on BPay/IMT's differing output shapes (no trailer; IMT also has no header and no trailing CRLF); confirmed FR-006 and §7 Technology Decisions still read correctly for the now-multi-type reality, no changes needed | Documentation catch-up |
 | v8 | 2026-08-17 | Added FR-009 and a new shared Field Mapping Model component (`FieldMapping`/`LineMapping` records) exposing a per-line, per-field breakdown of every conversion response (request field/value + CBA response field/value), parallel to `ConvertedText`; a second sanctioned ADR-002 exception (added ADR-009); updated API Host outputs and Data Flow step 6 accordingly. Applies to DE, BPay, and IMT (retrofit — all already Done) and to the not-yet-built F-018 (Priority Payments), tracked as new PMBook item F-021 | Triage edit — user requirement change; upward ripple to PRD v8 |
+| v9 | 2026-08-17 | Clarified the Field Mapping Model description to state explicitly that a line's field list covers every spec-defined field position for that record type (including reserved/blank/unused positions), not only populated ones — the wording previously left this ambiguous, which is what let the original F-021 implementation silently skip unpopulated positions until PMBook v17's correction fixed the code | Integration Agent Documentation Drift finding on the F-021 correction |

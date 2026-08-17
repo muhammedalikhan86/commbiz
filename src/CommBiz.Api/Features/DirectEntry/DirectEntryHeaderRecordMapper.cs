@@ -29,7 +29,9 @@ public static class DirectEntryHeaderRecordMapper
             new string(' ', 40);
     }
 
-    // F-021: same resolved values as Map, so the field-mapping breakdown can never drift from ConvertedText.
+    // F-021 correction: same resolved values as Map, so the field-mapping breakdown can never drift
+    // from ConvertedText - one entry per Header field position (10 total), including the 3 Blank
+    // filler positions whose cbaResponseValue is the literal spaces Map writes, not an empty string.
     public static IReadOnlyList<FieldMapping> MapFields(
         IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings)
     {
@@ -38,12 +40,14 @@ public static class DirectEntryHeaderRecordMapper
         return
         [
             new(nameof(RecordType), RecordType, "Record Type", RecordType),
+            new("", "", "Blank", new string(' ', 17)),
             new(nameof(ReelSequenceNumber), ReelSequenceNumber, "Reel Sequence Number", ReelSequenceNumber),
             new(
                 nameof(DirectEntrySettings.InstitutionCode),
                 values.InstitutionCode,
                 "Name Of User Financial Institution",
                 values.InstitutionCode),
+            new("", "", "Blank", new string(' ', 7)),
             new(
                 nameof(DirectEntrySettings.NameOfUserSupplyingFile),
                 values.NameOfUserSupplyingFile,
@@ -64,6 +68,7 @@ public static class DirectEntryHeaderRecordMapper
                 values.DateToBeProcessed.ToString("O"),
                 "Date to be Processed",
                 values.DateToBeProcessed.ToString("ddMMyy")),
+            new("", "", "Blank", new string(' ', 40)),
         ];
     }
 

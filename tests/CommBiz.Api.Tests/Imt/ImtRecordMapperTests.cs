@@ -151,7 +151,7 @@ public class ImtRecordMapperTests
     }
 
     [Fact]
-    public void MapFields_returns_the_18_populated_fields_matching_the_inline_spec_names()
+    public void MapFields_returns_all_27_fields_in_spec_order()
     {
         var fields = ImtRecordMapper.MapFields(ValidInstruction(), DebitAccountNumber);
 
@@ -165,19 +165,55 @@ public class ImtRecordMapperTests
                 "Payment Amount",
                 "Debit Amount",
                 "Debit Account - Account Number",
+                "Dealer Code",
+                "Dealer Exchange Rate",
                 "Intermediary Bank - Bank Code",
                 "Intermediary Bank - Name",
+                "Intermediary Bank - City",
                 "Intermediary Institution - Country",
                 "Beneficiary Bank - Bank Code",
                 "Beneficiary Bank - Name",
+                "Beneficiary Bank - City",
                 "Beneficiary Bank - Country",
                 "Beneficiary - Account Number",
                 "Beneficiary - Account Name",
                 "Beneficiary - Address line 1",
+                "Reserved for future use",
+                "Reserved for future use",
+                "Beneficiary - City",
+                "Beneficiary - State",
+                "Beneficiary - Postcode",
                 "Beneficiary - Country",
                 "Beneficiary Payment Details",
             },
             fields.Select(field => field.CbaResponseField));
+    }
+
+    [Fact]
+    public void MapFields_previously_missing_reserved_and_unused_fields_appear_at_their_spec_position_with_empty_values()
+    {
+        var fields = ImtRecordMapper.MapFields(ValidInstruction(), DebitAccountNumber);
+
+        var expected = new (int Index, string Name)[]
+        {
+            (7, "Dealer Code"),
+            (8, "Dealer Exchange Rate"),
+            (11, "Intermediary Bank - City"),
+            (15, "Beneficiary Bank - City"),
+            (20, "Reserved for future use"),
+            (21, "Reserved for future use"),
+            (22, "Beneficiary - City"),
+            (23, "Beneficiary - State"),
+            (24, "Beneficiary - Postcode"),
+        };
+
+        foreach (var (index, name) in expected)
+        {
+            Assert.Equal(name, fields[index].CbaResponseField);
+            Assert.Equal("", fields[index].RequestField);
+            Assert.Equal("", fields[index].RequestValue);
+            Assert.Equal("", fields[index].CbaResponseValue);
+        }
     }
 
     [Fact]

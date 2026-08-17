@@ -56,9 +56,9 @@ public static partial class ImtRecordMapper
             SanitizeFreeText(instruction.PaymentReference)); // 27: Beneficiary Payment Details
     }
 
-    // F-021: same field values already written into Map's output (same instruction, same
-    // debitAccountNumber, same derivation helpers) - only the populated fields (AC7: fields 8/9/12/16/
-    // 21-25 are reserved/unused and omitted entirely, consistent with the other slices).
+    // F-021 correction: one entry per IMT CSV field position (27 total, same order as Map), including
+    // reserved/unused fields 8/9/12/16/21-25 - a dropped position would break correspondence between
+    // Fields and the raw comma-separated output line.
     public static IReadOnlyList<FieldMapping> MapFields(ImtPaymentInstructionRequest instruction, string debitAccountNumber)
     {
         var intermediaryCountry = DeriveCountryFromSwift(instruction.IntermediaryBankSwiftCode);
@@ -85,6 +85,8 @@ public static partial class ImtRecordMapper
                 "Debit Amount",
                 FormatAmount(instruction.Amount)),
             new("DebitAccountBsb+DebitAccountNumber", debitAccountNumber, "Debit Account - Account Number", debitAccountNumber),
+            new("", "", "Dealer Code", ""),
+            new("", "", "Dealer Exchange Rate", ""),
             new(
                 nameof(instruction.IntermediaryBankSwiftCode),
                 instruction.IntermediaryBankSwiftCode,
@@ -95,6 +97,7 @@ public static partial class ImtRecordMapper
                 instruction.IntermediaryBankName,
                 "Intermediary Bank - Name",
                 instruction.IntermediaryBankName ?? ""),
+            new("", "", "Intermediary Bank - City", ""),
             new(
                 nameof(instruction.IntermediaryBankSwiftCode),
                 instruction.IntermediaryBankSwiftCode,
@@ -110,6 +113,7 @@ public static partial class ImtRecordMapper
                 instruction.DestinationBankName,
                 "Beneficiary Bank - Name",
                 instruction.DestinationBankName),
+            new("", "", "Beneficiary Bank - City", ""),
             new(
                 nameof(instruction.DestinationBankSwiftCode),
                 instruction.DestinationBankSwiftCode,
@@ -130,6 +134,11 @@ public static partial class ImtRecordMapper
                 instruction.BeneficiaryAddress,
                 "Beneficiary - Address line 1",
                 SanitizeFreeText(instruction.BeneficiaryAddress)),
+            new("", "", "Reserved for future use", ""),
+            new("", "", "Reserved for future use", ""),
+            new("", "", "Beneficiary - City", ""),
+            new("", "", "Beneficiary - State", ""),
+            new("", "", "Beneficiary - Postcode", ""),
             new(
                 nameof(instruction.DestinationBankSwiftCode),
                 instruction.DestinationBankSwiftCode,

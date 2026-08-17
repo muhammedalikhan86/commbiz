@@ -29,7 +29,9 @@ public static class DirectEntryTrailerRecordMapper
             new string(' ', 40);
     }
 
-    // F-021: same resolved values as Map, so the field-mapping breakdown can never drift from ConvertedText.
+    // F-021 correction: same resolved values as Map, so the field-mapping breakdown can never drift
+    // from ConvertedText - one entry per Trailer field position (9 total), including the 3 Blank
+    // filler positions whose cbaResponseValue is the literal spaces Map writes, not an empty string.
     public static IReadOnlyList<FieldMapping> MapFields(
         IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings)
     {
@@ -39,6 +41,7 @@ public static class DirectEntryTrailerRecordMapper
         [
             new(nameof(RecordType), RecordType, "Record Type", RecordType),
             new(nameof(BsbNumber), BsbNumber, "BSB Number", BsbNumber),
+            new("", "", "Blank", new string(' ', 12)),
             new(nameof(NetTotalAmount), NetTotalAmount, "File (User) Net Total Amount", NetTotalAmount),
             new(
                 "Amount",
@@ -50,11 +53,13 @@ public static class DirectEntryTrailerRecordMapper
                 values.AmountTotalInCents.ToString(),
                 "File (User) Debit Total Amount",
                 values.AmountTotalField),
+            new("", "", "Blank", new string(' ', 24)),
             new(
                 "Instructions.Count",
                 instructions.Count.ToString(),
                 "File (User) Count of Record Type 1",
                 values.RecordCountField),
+            new("", "", "Blank", new string(' ', 40)),
         ];
     }
 

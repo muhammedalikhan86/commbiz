@@ -134,7 +134,7 @@ public class DirectEntryHeaderRecordMapperTests
     }
 
     [Fact]
-    public void MapFields_returns_the_7_populated_header_fields_in_spec_order()
+    public void MapFields_returns_all_10_header_fields_in_spec_order()
     {
         var fields = DirectEntryHeaderRecordMapper.MapFields(ValidInstructions(), Settings);
 
@@ -142,14 +142,27 @@ public class DirectEntryHeaderRecordMapperTests
             new[]
             {
                 "Record Type",
+                "Blank",
                 "Reel Sequence Number",
                 "Name Of User Financial Institution",
+                "Blank",
                 "Name of User Supplying File",
                 "Number of User Supplying File",
                 "Description of Entries on File",
                 "Date to be Processed",
+                "Blank",
             },
             fields.Select(field => field.CbaResponseField));
+    }
+
+    [Fact]
+    public void MapFields_previously_missing_blank_filler_fields_hold_the_literal_spaces_value_at_their_spec_position()
+    {
+        var fields = DirectEntryHeaderRecordMapper.MapFields(ValidInstructions(), Settings);
+
+        Assert.Equal(new string(' ', 17), fields[1].CbaResponseValue);
+        Assert.Equal(new string(' ', 7), fields[4].CbaResponseValue);
+        Assert.Equal(new string(' ', 40), fields[9].CbaResponseValue);
     }
 
     [Fact]
