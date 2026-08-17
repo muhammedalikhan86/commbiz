@@ -46,7 +46,7 @@ open product-decision item, not a bug in this runbook or in the implementation i
    [src/CommBiz.Api/Properties/launchSettings.json](../../src/CommBiz.Api/Properties/launchSettings.json), `http` profile).
 3. All examples below use PowerShell's `Invoke-RestMethod`. A `curl.exe` equivalent is noted where
    useful. Ready-to-run equivalents for every scenario below also live in
-   [tests/smoke/requests.http](../../tests/smoke/requests.http).
+   [tests/smoke/DirectEntry.http](../../tests/smoke/DirectEntry.http).
 4. The `DirectEntry` configuration section (`src/CommBiz.Api/appsettings.json`) supplies every
    organisation-level field used in mapping — `TraceAccountBsb`/`TraceAccountAccNo` (settlement
    account), `TransactionCode` (the direction applied to every real detail record), `Title`,
@@ -70,7 +70,7 @@ Invoke-RestMethod -Uri http://localhost:5182/health -Method Get
 
 There is no standalone diagnostics endpoint any more — `POST /convert` is itself the smoke test for
 Wolverine dispatch (`Program.cs` routes it through `IMessageBus.InvokeAsync`, not directly). The
-sample data below is drawn from [tests/smoke/requests.http](../../tests/smoke/requests.http) and
+sample data below is drawn from [tests/smoke/DirectEntry.http](../../tests/smoke/DirectEntry.http) and
 mirrors a real two-instruction batch. Because F-014 dropped the minimum batch size to 1, a
 single-instruction batch (TC-028) is also a valid happy-path case in its own right and is shown first.
 
@@ -120,7 +120,7 @@ field-level verification of each.
 ## F-003 — Happy path: multi-instruction batch — TC-003
 
 Two-instruction variant of the baseline above (also in
-[tests/smoke/requests.http](../../tests/smoke/requests.http)):
+[tests/smoke/DirectEntry.http](../../tests/smoke/DirectEntry.http)):
 
 ```powershell
 $body = @'

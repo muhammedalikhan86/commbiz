@@ -1,9 +1,9 @@
 # Architecture: Shaw and Partners → CommBank Payment File Conversion Service
 
 > Status: APPROVED
-> Version: v6
-> Last updated: 2026-08-13
-> PRD: docs/prd.md (built against v7)
+> Version: v8
+> Last updated: 2026-08-17
+> PRD: docs/prd.md (built against v8)
 
 ## 1. System Context
 Shaw and Partners' internal systems call this service with a group of payment instructions to
@@ -39,19 +39,30 @@ contains the data that genuinely varies per instruction (see §3, Direct Entry C
   and Partners' own native payload shape (e.g. `paymentTypeCode`, `accountNo`,
   `sourceBankAccountName`, `sourceBankAccountNo`, `sourceBankBSB`, `paymentDate`, `amount`,
   `createBy`) — not a shape pre-mapped to any single bank format's fields.
-- **Outputs:** JSON response containing either the converted output content as text, or
-  a validation failure with a reason per invalid instruction.
+- **Outputs:** JSON response containing either the converted output content as text plus its
+  parallel field-by-field mapping breakdown (see Field Mapping Model below), or a validation
+  failure with a reason per invalid instruction.
 - **Dependencies:** Wolverine pipeline for dispatching the request to the correct slice.
 - **Technology:** ASP.NET Core Minimal API, .NET 10, Kestrel.
 
 ### Payment Type Router
-- **Responsibility:** Inspects each instruction's declared payment type code and dispatches the
-  batch to the corresponding slice. Rejects the batch if it contains a payment type not yet
-  supported (only Direct Entry, code `DE`, in this tranche).
-- **Inputs:** Parsed batch of payment instructions.
-- **Outputs:** Dispatch to a specific slice's Wolverine command, or a rejection.
-- **Dependencies:** Direct Entry Conversion Slice (today); future slices as added.
-- **Technology:** Wolverine command routing.
+- **Responsibility:** The single top-level, cross-slice dispatcher — explicitly not a vertical
+  slice itself (ADR-002 exception: this is the one genuinely shared, cross-slice component,
+  since routing has to see across all payment types before any single slice can own the
+  request). Peeks each instruction's `paymentTypeCode` on the raw JSON batch and rejects the
+  whole batch outright if: the batch is empty; instructions declare more than one distinct
+  payment type (a mixed batch); or every instruction shares a single type that isn't wired to a
+  slice yet. Once a single, recognised type is confirmed for the whole batch, deserializes the
+  raw JSON into that slice's own request shape and dispatches to that slice's own Wolverine
+  command, untouched — each slice still owns its own request/response/validator/mapper end to
+  end; this component only owns the dispatch decision.
+- **Inputs:** Parsed batch of payment instructions (raw JSON array).
+- **Outputs:** Dispatch to the corresponding slice's Wolverine command (Direct Entry, BPay, or
+  IMT), or a rejection — batch-level reason for empty/mixed batches, per-instruction reason for
+  an unsupported type.
+- **Dependencies:** Direct Entry Conversion Slice; BPay Conversion Slice; IMT Conversion Slice.
+- **Technology:** Wolverine command routing; `System.Text.Json` for the `paymentTypeCode` peek
+  and per-slice deserialization.
 
 ### Direct Entry Conversion Slice
 - **Responsibility:** Validates and converts a batch of Direct-Entry-typed instructions into a
@@ -71,10 +82,75 @@ contains the data that genuinely varies per instruction (see §3, Direct Entry C
 - **Inputs:** Validated batch of Direct-Entry-typed payment instructions; Direct Entry
   Configuration.
 - **Outputs:** Assembled Direct Entry file content (header + details + self-balancing detail
-  record + trailer, CRLF-terminated 120-character records).
+  record + trailer, CRLF-terminated 120-character records), plus its parallel `LineMapping`
+  breakdown (header/detail(s)/selfbalancing/trailer — see Field Mapping Model).
 - **Dependencies:** Validation component; Direct Entry Configuration.
 - **Technology:** Plain C# mapping code (no AutoMapper/commercial mapping library, per
   Technology Decisions).
+
+### BPay Conversion Slice
+- **Responsibility:** Validates and converts a batch of BPAY-typed instructions into a CommBank
+  BPAY Batch Payments CSV file: one header record plus one Payment Details record (`50,`) per
+  instruction, comma-delimited and CRLF-terminated. Unlike Direct Entry, there is no trailer or
+  self-balancing record — the file is simply Header + Details, per the BPay spec. Fields the
+  upstream payload does not carry (funding account, file number) are sourced from BPay
+  Configuration, not the request.
+- **Inputs:** Validated batch of BPAY-typed payment instructions; BPay Configuration.
+- **Outputs:** Assembled BPAY CSV file content (header record + one Payment Details record per
+  instruction, CRLF-terminated), plus its parallel `LineMapping` breakdown (header/detail(s) —
+  see Field Mapping Model).
+- **Dependencies:** BPayValidator — this slice's own validation logic, not shared with Direct
+  Entry or IMT; BPay Configuration (`BPaySettings`: funding account, file number).
+- **Technology:** Plain C# mapping code (`BPayHeaderRecordMapper` / `BPayDetailRecordMapper`),
+  no AutoMapper/commercial mapping library, per Technology Decisions.
+
+### IMT Conversion Slice
+- **Responsibility:** Validates and converts a batch of IMT-typed instructions (routed on Shaw
+  and Partners' internal `TT`/"Telegraphic Transfer" code; every output row still writes the
+  literal constant `IMT` per the CBA file spec) into a CommBank IMT/MT101-family file: one
+  27-field CSV row per instruction, CRLF-separated between rows, with no trailing CRLF after the
+  last row. Unlike Direct Entry and BPay, there is no header or trailer record at all. Country
+  code fields are derived from characters 5-6 of the relevant SWIFT BIC rather than a discrete
+  payload field; the debit account number field is sourced entirely from IMT Configuration,
+  never the request. Legal/identity fields (account number/name, bank names, SWIFT codes) are
+  rejected outright on invalid characters or overlong values; free-text fields (beneficiary
+  address, payment details) are sanitized (disallowed characters replaced with a space) instead
+  of rejected.
+- **Inputs:** Validated batch of IMT-typed payment instructions; IMT Configuration.
+- **Outputs:** Assembled IMT file content (one 27-field CSV row per instruction, CRLF-separated,
+  no trailing CRLF, no header/trailer record), plus its parallel `LineMapping` breakdown (one
+  `row1`/`row2`... entry per instruction \u2014 see Field Mapping Model).
+- **Dependencies:** ImtValidator — this slice's own validation logic, not shared with Direct
+  Entry or BPay; IMT Configuration (`ImtSettings`: debit account BSB/number/name).
+- **Technology:** Plain C# mapping code (`ImtRecordMapper`), no AutoMapper/commercial mapping
+  library, per Technology Decisions.
+
+### Field Mapping Model
+- **Responsibility:** A shared, cross-slice type representing a field-by-field breakdown of a
+  converted line — the second explicit exception to ADR-002's no-shared-layer rule (alongside
+  the Payment Type Router), justified because the shape is identical across every conversion
+  slice and has no per-type variation. Every conversion slice's mapper is extended to build this
+  breakdown alongside (not instead of) its existing raw text/CSV output, from the same field
+  values it already maps. Each line of the converted output (header, one entry per detail
+  record, self-balancing record, trailer — whichever apply to that payment type) gets one entry
+  in an ordered list, keyed by record type and, for repeating records, occurrence (e.g.
+  `header`, `detail1`, `detail2`, `selfbalancing`, `trailer` for Direct Entry) — never a raw
+  positional line number, so the key stays meaningful independent of file position. Each field
+  within a line's entry records both sides of the mapping: the request-side origin (the request
+  object's field name or the static appsettings field name, plus the value that was used) and
+  the CBA response side (the field name per the relevant CommBank spec, plus whatever value was
+  actually placed in the output — which may be null/empty).
+- **Inputs:** The same per-instruction request fields and static configuration values each
+  slice's existing mapper already consumes.
+- **Outputs:** An ordered list of line entries (`LineMapping`), each carrying an ordered list of
+  field entries (`FieldMapping`: request field, request value, CBA response field, CBA response
+  value) — returned as `Mappings` in the response, parallel to `ConvertedText`. A List, not a
+  Dictionary, is used at both levels so line order (matching the assembled file's own order) and
+  field order (matching the spec's field order) are preserved deterministically — JSON object/
+  dictionary key order is not a reliable guarantee.
+- **Dependencies:** None (pure data-shape type consumed by every Conversion Slice's mapper).
+- **Technology:** Plain C# records (`FieldMapping`, `LineMapping`), no AutoMapper/commercial
+  mapping library, per Technology Decisions and ADR-009.
 
 ### Validation Component
 - **Responsibility:** Validates every instruction in the batch against the field rules that
@@ -106,16 +182,21 @@ contains the data that genuinely varies per instruction (see §3, Direct Entry C
 
 ## 4. Data Flow
 
-Primary use case — converting a batch of Direct Entry payment instructions:
+Routing now fans out to three slices — Direct Entry (`DE`), BPay (`BPAY`), and IMT (`TT`) — all
+dispatched through the same Payment Type Router. Direct Entry remains the primary worked example
+below, since it is the most structurally involved (header + details + self-balancing record +
+trailer); see the note after step 6 for how BPay and IMT differ.
 
 1. Shaw and Partners' system sends a batch of payment instructions, in its own native payload
    shape, to the API Host's `POST /convert` endpoint.
-2. The Payment Type Router checks every instruction's declared payment type code. If any
-   instruction's type isn't supported yet, the whole batch is rejected.
-3. The Direct Entry Conversion Slice's Validation Component checks every instruction against the
-   field rules that apply to the data the payload carries, plus the batch-level minimum-1-instruction
-   structural rule (the output's own self-balancing detail record accounts for the Direct Entry
-   spec's minimum-2-detail-record rule).
+2. The Payment Type Router checks every instruction's declared payment type code, rejecting the
+   batch outright if it's empty, mixes payment types, or if every instruction shares a single
+   type that isn't wired to a slice yet. If the batch passes, it is dispatched to that type's own
+   conversion slice.
+3. The dispatched slice's own Validation Component checks every instruction against the field
+   rules that apply to the data the payload carries, plus the batch-level minimum-1-instruction
+   structural rule (Direct Entry's output's own self-balancing detail record accounts for the
+   Direct Entry spec's minimum-2-detail-record rule).
 4. If any instruction is invalid, the batch is rejected in full, with a validation reason
    returned for every invalid instruction. No output is produced.
 5. If all instructions are valid, each is mapped to a Direct Entry detail record — combining the
@@ -128,6 +209,17 @@ Primary use case — converting a batch of Direct Entry payment instructions:
    detail record) so the file is self-balancing.
 6. The assembled file content is returned to the caller directly, as text within the JSON
    response body, alongside a success indicator — no download link, no temporary storage.
+   Alongside it, the same mapping step that populated each record's fields also emits that
+   record's `LineMapping` entry (see Field Mapping Model), so the response carries an ordered,
+   parallel `Mappings` list — one entry per line of the converted output — for the testing team
+   to verify the output field-by-field without parsing the raw fixed-width/CSV text.
+
+**BPay and IMT follow the same overall shape** (validate → map → assemble → return inline) but
+with slice-specific field rules and output formats: BPay assembles a CSV Header + one Payment
+Details record per instruction, with no trailer or self-balancing record; IMT assembles one
+27-field CSV row per instruction, CRLF-separated, with no header or trailer record and no
+trailing CRLF after the last row. See the BPay Conversion Slice and IMT Conversion Slice entries
+in §3 for their full field/output rules.
 
 ## 5. Functional Requirements
 
@@ -141,6 +233,7 @@ Primary use case — converting a batch of Direct Entry payment instructions:
 | FR-006 | Reject a batch containing a payment type not yet supported, rather than silently dropping or mis-converting it | Phased payment-type rollout goal | Must |
 | FR-007 | Generate a self-balancing (contra) detail record — posting the batch's total amount against the configured settlement account, in the direction opposite the batch's Transaction Code — immediately before the trailer record, on every conversion | Direct Entry spec's self-balancing/contra-entry requirement; PRD v7 | Must |
 | FR-008 | Accept a batch of as few as 1 valid instruction — the minimum-2-detail-record structural rule is satisfied by FR-007's self-balancing detail record, not by the batch's own size | PRD v7 (single-instruction runs are a fully supported batch size) | Must |
+| FR-009 | Every successful conversion response includes an ordered, parallel `Mappings` list — one entry per line of the converted output (header/detail/self-balancing/trailer as applicable), each with a request-field/value and CBA-response-field/value breakdown per field — regardless of payment type | PRD v8 (testing-team convenience goal) | Must |
 
 ## 6. Non-Functional Requirements
 
@@ -163,6 +256,7 @@ Primary use case — converting a batch of Direct Entry payment instructions:
 | Hosting/deployment | Self-hosted directly on Kestrel; no containerization, no database | ADR-005 | Directed choice; service is stateless and simple enough not to need a database or container runtime |
 | Logging/observability | Shaw.Diagnostics (in-house NuGet, from `\\sic2tfs1\nuget\Packages`), version 2.0.0 | ADR-006 | Directed choice; standardises on the organisation's existing diagnostics package rather than a general-purpose logging library |
 | Response format for converted output | Return the assembled Direct Entry content inline as text within a JSON response body | ADR-008 | Directed choice; simpler than a download link and avoids any server-side result caching (see rejected ADR-007) |
+| Field-level mapping breakdown | Shared `FieldMapping`/`LineMapping` records, one shared type reused by every conversion slice, returned as an ordered `Mappings` list parallel to `ConvertedText` | ADR-009 | Identical shape needed across all payment types with no per-type variation; a second sanctioned ADR-002 exception, alongside the Payment Type Router |
 
 ## 8. Open Questions & Risks
 
@@ -183,3 +277,5 @@ Primary use case — converting a batch of Direct Entry payment instructions:
 | v4 | 2026-08-13 | Architecture approved (A4 remains open, deferred by user request) | Gate approval |
 | v5 | 2026-08-13 | Reshaped the API Host/Payment Type Router/Direct Entry Conversion Slice/Validation Component descriptions to match the real upstream payload contract (`POST /convert`, payment-type-code-driven routing rather than a per-type URL path); added a new Direct Entry Configuration component documenting that organisation-level constants (institution code, remitter, trace account, transaction code, etc.) are sourced from application configuration rather than the request; updated Data Flow accordingly | Implementation-driven correction |
 | v6 | 2026-08-13 | Added the self-balancing (contra) detail record requirement (FR-007): the Direct Entry Conversion Slice now emits a config-derived contra detail record, posted against the settlement (Trace BSB/Account) account in the direction opposite the batch's Transaction Code, immediately before the trailer; reduced the batch-level minimum from 2 to 1 instruction (FR-008), since this new record itself satisfies the spec's minimum-2-detail-record rule; updated Validation Component, Data Flow steps 3/5, and FR-005 accordingly | User requirement change |
+| v7 | 2026-08-17 | Documentation catch-up for F-015/F-016/F-017 (Reviewer-PASS'd since 2026-08-14) — architecture.md had not been updated since v6/Phase 1. Replaced the Payment Type Router entry (was DE-only) with its real cross-slice dispatcher behaviour (empty/mixed/unsupported rejection, ADR-002 exception); added BPay Conversion Slice and IMT Conversion Slice component entries, each with its own slice-owned validator; updated Data Flow to reflect fan-out to DE/BPAY/IMT with a note on BPay/IMT's differing output shapes (no trailer; IMT also has no header and no trailing CRLF); confirmed FR-006 and §7 Technology Decisions still read correctly for the now-multi-type reality, no changes needed | Documentation catch-up |
+| v8 | 2026-08-17 | Added FR-009 and a new shared Field Mapping Model component (`FieldMapping`/`LineMapping` records) exposing a per-line, per-field breakdown of every conversion response (request field/value + CBA response field/value), parallel to `ConvertedText`; a second sanctioned ADR-002 exception (added ADR-009); updated API Host outputs and Data Flow step 6 accordingly. Applies to DE, BPay, and IMT (retrofit — all already Done) and to the not-yet-built F-018 (Priority Payments), tracked as new PMBook item F-021 | Triage edit — user requirement change; upward ripple to PRD v8 |

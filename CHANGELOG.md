@@ -5,6 +5,103 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] — 2026-08-17
+
+### Added
+
+#### Payment Type Router Extension — Cross-Slice Dispatcher
+- **F-015:** Payment Type Router promoted from static endpoint pattern to a real, extensible top-level dispatcher
+  - Routes all payment types through a unified command pipeline
+  - Integrates Direct Entry, BPAY, and IMT into a single request/response surface
+  - Maintains backward compatibility with existing Direct Entry behavior
+
+#### BPAY Batch Payments Conversion
+- **F-016:** BPAY batch conversion pipeline (Header + Details only, no trailer)
+  - Validator enforces BPAY-specific batch constraints and instruction rules
+  - `BPayHeaderRecordMapper` converts batch metadata to BPAY fixed-width header
+  - `BPayDetailRecordMapper` converts individual payment instructions to detail records
+  - Handler orchestrates validation, mapping, and assembly into final BPAY file content
+  - Ready for trailer record addition in future phases
+
+#### International Money Transfers (IMT) Conversion
+- **F-017:** IMT batch conversion pipeline (27-field MT101-family CSV format)
+  - Supports 27-field MT101-derived CSV structure for international money transfers
+  - Implements SWIFT country code derivation from payment instruction data
+  - Reject-vs-sanitize field handling: invalid fields rejected at validation vs. sanitized at mapping per field spec
+  - CSV header and detail rows with structured field ordering for banking system compliance
+
+### Modules/Files Modified
+- `src/CommBiz.Api/`
+  - `Program.cs` — Registered BPAY and IMT handlers into Wolverine command pipeline
+  
+- `src/CommBiz.Api/Features/PaymentRouting/`
+  - `PaymentTypeRouter.cs` [new] — Central dispatcher routing to DE/BPAY/IMT handlers
+  - `DispatchPaymentTypeCommand.cs` [new] — Command to route payment type selection
+  - `DispatchPaymentTypeHandler.cs` [new] — Handler executing router logic
+  
+- `src/CommBiz.Api/Features/BPay/`
+  - `BPayConvertCommand.cs` [new] — Command encapsulating BPAY batch conversion request
+  - `BPayValidator.cs` [new] — Batch and instruction-level validation rules
+  - `BPayHeaderRecordMapper.cs` [new] — Maps batch metadata to fixed-width header
+  - `BPayDetailRecordMapper.cs` [new] — Maps instruction to detail record
+  - `ConvertBPayBatchHandler.cs` [new] — Orchestrates BPAY conversion pipeline
+  
+- `src/CommBiz.Api/Features/Imt/`
+  - `ImtConvertCommand.cs` [new] — Command encapsulating IMT batch conversion request
+  - `ImtValidator.cs` [new] — Batch and instruction-level validation rules
+  - `ImtCsvMapper.cs` [new] — Maps batch to 27-field MT101-derived CSV
+  - `ImtCountryCodeResolver.cs` [new] — Derives SWIFT country codes from instruction data
+  - `ConvertImtBatchHandler.cs` [new] — Orchestrates IMT conversion pipeline
+  
+- `tests/CommBiz.Api.Tests/`
+  - `PaymentRouting/DispatchPaymentTypeHandlerTests.cs` [new] — Router dispatch logic tests
+  
+  - `BPay/BPayConvertEndpointTests.cs` [new] — Full integration tests (POST endpoint)
+  - `BPay/BPayValidator.cs` [new] — Validator constraint tests
+  - `BPay/BPayHeaderRecordMapperTests.cs` [new] — Header mapping tests
+  - `BPay/BPayDetailRecordMapperTests.cs` [new] — Detail record mapping tests
+  - `BPay/ConvertBPayBatchHandlerTests.cs` [new] — Handler orchestration tests
+  
+  - `Imt/ImtConvertEndpointTests.cs` [new] — Full integration tests (POST endpoint)
+  - `Imt/ImtValidator.cs` [new] — Validator constraint tests
+  - `Imt/ImtCsvMapperTests.cs` [new] — CSV mapping and field ordering tests
+  - `Imt/ImtCountryCodeResolverTests.cs` [new] — Country code derivation tests
+  - `Imt/ConvertImtBatchHandlerTests.cs` [new] — Handler orchestration tests
+
+### Breaking Changes
+None — Direct Entry behavior unchanged; BPAY and IMT are net-new payment types extending the existing API surface without modifying existing routes or contracts.
+
+### Test Coverage
+**206 passing tests** (verified via `dotnet test`, 0 failed, 0 skipped):
+
+1. **Happy Path — BPAY Header + Details Assembly**
+   - POST valid BPAY batch (2+ instructions) to `POST /convert` with BPAY payment type
+   - Verify response includes correctly formatted fixed-width BPAY header and detail records
+   - Confirm batch amount totals and instruction count match header
+   - Validate response JSON structure unchanged from Direct Entry contract
+
+2. **Happy Path — IMT 27-Field CSV Generation**
+   - POST valid IMT batch (2+ instructions) to `POST /convert` with IMT payment type
+   - Verify response includes CSV header row and correctly ordered 27-field detail rows
+   - Confirm SWIFT country codes resolved correctly from payment instruction data
+   - Validate CSV field ordering and character encoding compliance
+
+3. **Edge Case — BPAY Single-Instruction Batch Success**
+   - POST batch with exactly 1 BPAY instruction
+   - Verify request succeeds and includes header + single detail record
+   - Confirm self-balancing record placement follows BPAY format rules
+
+4. **Edge Case — IMT Field Rejection vs. Sanitization**
+   - POST IMT batch with invalid values in reject-on-error fields
+   - Verify validation fails with clear field error message
+   - POST same batch with invalid values in sanitize-on-error fields
+   - Verify request succeeds and sanitized values appear in output
+
+5. **Regression-Sensitive — Direct Entry Behavior Unchanged**
+   - POST Direct Entry batch via existing route
+   - Confirm output, self-balancing record, and response structure identical to Revision 2
+   - Verify router correctly dispatches DE instructions without modification
+
 ## [1.1.0] — 2026-08-14
 
 ### Added

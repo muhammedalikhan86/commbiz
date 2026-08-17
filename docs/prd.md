@@ -1,8 +1,8 @@
 # PRD: Shaw and Partners → CommBank Payment File Conversion Service
 
 > Status: APPROVED
-> Version: v7
-> Last updated: 2026-08-13
+> Version: v8
+> Last updated: 2026-08-17
 
 ## Problem Statement
 Shaw and Partners raises individual client payment instructions from its own platform — each
@@ -31,6 +31,8 @@ straight-through processing.
   rather than being discovered as a bank-side rejection.
 - Reduce the turnaround time between a payment run being raised internally and it being
   submitted to the bank.
+- Every conversion also exposes a field-by-field breakdown of the converted output, for the
+  convenience of the testing team validating conversions against source data.
 
 ## Non-Goals
 - Payment types other than Direct Entry are out of scope for the initial release — planned as
@@ -97,4 +99,6 @@ straight-through processing.
 | v2 | 2026-08-13 | Confirmed business-level shape of Shaw and Partners input (discrete structured payment records with a payment-type indicator); refined Q1 to ask whether v1 scope is domestic-only or multi payment-type; refined Q3 to ask single-instruction vs. batch trigger | Triage edit |
 | v3 | 2026-08-13 | Resolved Q1 (Direct Entry first, other types phased in later) and Q3 (on-demand, submitted as a group); added phased-rollout and group-submission goals; added Q5 on partial-batch-failure handling. Webapp/endpoint/output-format implementation details acknowledged but deferred to Architecture per document boundaries | Triage edit |
 | v4 | 2026-08-13 | Resolved Q5 (whole-group rejection with per-instruction validation reasons, no partial conversion); added corresponding user story, success metric, and constraint; clarified Q4 with an explanation of what bank return/status files are | Triage edit |
-| v5 | 2026-08-13 | Resolved Q4: bank return/status handling is permanently out of scope, not deferred \u2014 product is conversion-only. Non-Goals updated accordingly. All open questions resolved | Triage edit || v6 | 2026-08-13 | PRD approved | Gate approval |
+| v5 | 2026-08-13 | Resolved Q4: bank return/status handling is permanently out of scope, not deferred — product is conversion-only. Non-Goals updated accordingly. All open questions resolved | Triage edit |
+| v6 | 2026-08-13 | PRD approved | Gate approval |
+| v8 | 2026-08-17 | Added Goal: every conversion also exposes a field-by-field breakdown of the converted output, for the testing team's convenience validating conversions against source data | Triage edit — downstream Architecture change (field-level mapping response contract) |

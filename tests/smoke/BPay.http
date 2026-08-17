@@ -1,8 +1,8 @@
 @baseUrl = http://localhost:5182
 
 ### Valid batch: 2 real sample instructions. Every field satisfies the validation rules.
-### Expect: 200 OK, Success: true, ConvertedText populated (header + 2 details + self-balancing
-### contra record + trailer, per F-014), Errors: null.
+### Expect: 200 OK, Success: true, ConvertedText populated (header + 2 details only — BPay has no
+### trailer/self-balancing record, per F-016), Errors: null.
 POST {{baseUrl}}/convert
 Content-Type: application/json
 
@@ -27,11 +27,9 @@ Content-Type: application/json
   }
 ]
 
-### Only 1 instruction — F-014 reduced the minimum from 2 to 1, since the self-balancing contra
-### record the service now adds itself already satisfies the Direct Entry spec's minimum-2-detail-
-### record structural rule. The single instruction is fully valid, so the batch now succeeds.
-### Expect: 200 OK, Success: true, ConvertedText populated (header + 1 detail + self-balancing
-### contra record + trailer), Errors: null.
+### Only 1 instruction — BPay's own minimum is 1 (BPayValidator.MinimumInstructionCount), unrelated
+### to Direct Entry's F-014 self-balancing rule (BPay has no trailer/self-balancing record at all).
+### Expect: 200 OK, Success: true, ConvertedText populated (header + 1 detail only), Errors: null.
 POST {{baseUrl}}/convert
 Content-Type: application/json
 

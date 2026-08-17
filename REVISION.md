@@ -1,6 +1,11 @@
 # Revision History
 
-**Current Revision:** 2
+**Current Revision:** 3
+## Revision 3
+- **Date:** 2026-08-17
+- **Description:** Payment Type Router extended to real cross-slice dispatcher; BPAY and IMT batch conversion support
+- **Features:** F-015, F-016, F-017
+- **Test Coverage:** 206 passing tests (verified via `dotnet test`)
 ## Revision 2
 - **Date:** 2026-08-14
 - **Description:** Self-balancing record support and minimum batch size reduction
