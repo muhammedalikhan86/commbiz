@@ -1,6 +1,12 @@
 # Revision History
 
-**Current Revision:** 5
+**Current Revision:** 6
+## Revision 6
+- **Date:** 2026-08-18
+- **Description:** FX conversion pipeline for FOREX payment type; fifth payment type added
+- **Features:** F-022, F-023 (Payment Type Router FOREX extension, FX batch conversion pipeline)
+- **Test Coverage:** 374 passing tests (verified via `dotnet test`); 0 vulnerabilities
+
 ## Revision 5
 - **Date:** 2026-08-18
 - **Description:** Priority Payments conversion pipeline; Phase 2 (Additional Payment Types) complete

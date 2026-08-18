@@ -22,22 +22,22 @@
       "id": "features_directentry_convertdirectentrybatchrequest_commbiz_api_features_directentry_paymentinstructionrequest"
     },
     {
-      "label": "DirectEntryDetailRecordMapper",
+      "label": "DirectEntryAmountTotals",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
-      "source_location": "L9",
+      "source_file": "Features/DirectEntry/DirectEntryAmountTotals.cs",
+      "source_location": "L8",
       "metadata": {
         "namespace": "CommBiz.Api.Features.DirectEntry",
         "scope_chain": [
-          "s98"
+          "s62"
         ]
       },
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 0,
-      "norm_label": "directentrydetailrecordmapper",
-      "id": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper"
+      "norm_label": "directentryamounttotals",
+      "id": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals"
     },
     {
       "label": "DirectEntryHeaderRecordMapper",
@@ -112,186 +112,19 @@
       "id": "features_directentry_directentrytrailerrecordmapper_commbiz_api_features_directentry_directentrytrailerrecordmapper"
     },
     {
-      "label": "FieldMapping",
+      "label": "Program",
       "file_type": "code",
-      "source_file": "Features/Shared/FieldMapping.cs",
-      "source_location": "L5",
+      "source_file": "Program.cs",
+      "source_location": "L35",
       "metadata": {
-        "namespace": "CommBiz.Api.Features.Shared",
-        "scope_chain": [
-          "s0"
-        ]
+        "is_partial": true
       },
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 0,
-      "norm_label": "fieldmapping",
-      "id": "features_shared_fieldmapping_commbiz_api_features_shared_fieldmapping"
-    },
-    {
-      "label": "MappingUtilities",
-      "file_type": "code",
-      "source_file": "Features/Shared/MappingUtilities.cs",
-      "source_location": "L5",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.Shared",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": "mappingutilities",
-      "id": "features_shared_mappingutilities_commbiz_api_features_shared_mappingutilities"
-    },
-    {
-      "label": "ConvertPriorityPaymentBatchCommand",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchCommand.cs",
-      "source_location": "L5",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s38"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_convertprioritypaymentbatchcommand_commbiz_api_features_prioritypayments_convertprioritypaymentbatchcommand",
-      "community": 1,
-      "norm_label": "convertprioritypaymentbatchcommand"
-    },
-    {
-      "label": "ConvertPriorityPaymentBatchHandler",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchCommand.cs",
-      "source_location": "L7",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s38"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_convertprioritypaymentbatchcommand_commbiz_api_features_prioritypayments_convertprioritypaymentbatchhandler",
-      "community": 1,
-      "norm_label": "convertprioritypaymentbatchhandler"
-    },
-    {
-      "label": "ConvertPriorityPaymentBatchResponse",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchResponse.cs",
-      "source_location": "L7",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s38"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_convertprioritypaymentbatchresponse_commbiz_api_features_prioritypayments_convertprioritypaymentbatchresponse",
-      "community": 1,
-      "norm_label": "convertprioritypaymentbatchresponse"
-    },
-    {
-      "label": "PaymentInstructionError",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchResponse.cs",
-      "source_location": "L13",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s38"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_convertprioritypaymentbatchresponse_commbiz_api_features_prioritypayments_paymentinstructionerror",
-      "community": 1,
-      "norm_label": "paymentinstructionerror"
-    },
-    {
-      "label": "PriorityPaymentInstructionRequest",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentInstructionRequest.cs",
-      "source_location": "L8",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentinstructionrequest_commbiz_api_features_prioritypayments_prioritypaymentinstructionrequest",
-      "community": 1,
-      "norm_label": "prioritypaymentinstructionrequest"
-    },
-    {
-      "label": "PriorityPaymentRecordMapper",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
-      "source_location": "L11",
-      "metadata": {
-        "is_partial": true,
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s106"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentrecordmapper_commbiz_api_features_prioritypayments_prioritypaymentrecordmapper",
-      "community": 1,
-      "norm_label": "prioritypaymentrecordmapper"
-    },
-    {
-      "label": "PriorityPaymentsSettings",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentsSettings.cs",
-      "source_location": "L7",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentssettings_commbiz_api_features_prioritypayments_prioritypaymentssettings",
-      "community": 1,
-      "norm_label": "prioritypaymentssettings"
-    },
-    {
-      "label": "PriorityPaymentValidator",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
-      "source_location": "L11",
-      "metadata": {
-        "is_partial": true,
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s70"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator",
-      "community": 1,
-      "norm_label": "prioritypaymentvalidator"
+      "norm_label": "program",
+      "id": "program_program"
     },
     {
       "label": "ConvertImtBatchCommand",
@@ -307,7 +140,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "convertimtbatchcommand",
       "id": "features_imt_convertimtbatchcommand_commbiz_api_features_imt_convertimtbatchcommand"
     },
@@ -325,7 +158,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "convertimtbatchhandler",
       "id": "features_imt_convertimtbatchcommand_commbiz_api_features_imt_convertimtbatchhandler"
     },
@@ -343,7 +176,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "convertimtbatchresponse",
       "id": "features_imt_convertimtbatchresponse_commbiz_api_features_imt_convertimtbatchresponse"
     },
@@ -361,7 +194,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "paymentinstructionerror",
       "id": "features_imt_convertimtbatchresponse_commbiz_api_features_imt_paymentinstructionerror"
     },
@@ -379,7 +212,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "imtpaymentinstructionrequest",
       "id": "features_imt_imtpaymentinstructionrequest_commbiz_api_features_imt_imtpaymentinstructionrequest"
     },
@@ -398,7 +231,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "imtrecordmapper",
       "id": "features_imt_imtrecordmapper_commbiz_api_features_imt_imtrecordmapper"
     },
@@ -416,7 +249,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "imtsettings",
       "id": "features_imt_imtsettings_commbiz_api_features_imt_imtsettings"
     },
@@ -434,27 +267,9 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "imtvalidator",
       "id": "features_imt_imtvalidator_commbiz_api_features_imt_imtvalidator"
-    },
-    {
-      "label": "BPayDetailRecordMapper",
-      "file_type": "code",
-      "source_file": "Features/BPay/BPayDetailRecordMapper.cs",
-      "source_location": "L9",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.BPay",
-        "scope_chain": [
-          "s98"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "norm_label": "bpaydetailrecordmapper",
-      "id": "features_bpay_bpaydetailrecordmapper_commbiz_api_features_bpay_bpaydetailrecordmapper"
     },
     {
       "label": "BPayHeaderRecordMapper",
@@ -470,7 +285,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "bpayheaderrecordmapper",
       "id": "features_bpay_bpayheaderrecordmapper_commbiz_api_features_bpay_bpayheaderrecordmapper"
     },
@@ -488,7 +303,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "bpaypaymentinstructionrequest",
       "id": "features_bpay_bpaypaymentinstructionrequest_commbiz_api_features_bpay_bpaypaymentinstructionrequest"
     },
@@ -506,7 +321,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "bpaysettings",
       "id": "features_bpay_bpaysettings_commbiz_api_features_bpay_bpaysettings"
     },
@@ -524,7 +339,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "bpayvalidator",
       "id": "features_bpay_bpayvalidator_commbiz_api_features_bpay_bpayvalidator"
     },
@@ -542,7 +357,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "convertbpaybatchcommand",
       "id": "features_bpay_convertbpaybatchcommand_commbiz_api_features_bpay_convertbpaybatchcommand"
     },
@@ -560,7 +375,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "convertbpaybatchhandler",
       "id": "features_bpay_convertbpaybatchcommand_commbiz_api_features_bpay_convertbpaybatchhandler"
     },
@@ -578,7 +393,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "bpayinstructionerror",
       "id": "features_bpay_convertbpaybatchresponse_commbiz_api_features_bpay_bpayinstructionerror"
     },
@@ -596,17 +411,17 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "convertbpaybatchresponse",
       "id": "features_bpay_convertbpaybatchresponse_commbiz_api_features_bpay_convertbpaybatchresponse"
     },
     {
-      "label": "ConvertDirectEntryBatchCommand",
+      "label": "ConvertFxBatchCommand",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
       "source_location": "L5",
       "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "namespace": "CommBiz.Api.Features.Fx",
         "scope_chain": [
           "s38"
         ]
@@ -614,17 +429,17 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 4,
-      "norm_label": "convertdirectentrybatchcommand",
-      "id": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchcommand"
+      "id": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchcommand",
+      "community": 3,
+      "norm_label": "convertfxbatchcommand"
     },
     {
-      "label": "ConvertDirectEntryBatchHandler",
+      "label": "ConvertFxBatchHandler",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
       "source_location": "L7",
       "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "namespace": "CommBiz.Api.Features.Fx",
         "scope_chain": [
           "s38"
         ]
@@ -632,17 +447,17 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 4,
-      "norm_label": "convertdirectentrybatchhandler",
-      "id": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchhandler"
+      "id": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler",
+      "community": 3,
+      "norm_label": "convertfxbatchhandler"
     },
     {
-      "label": "ConvertDirectEntryBatchResponse",
+      "label": "ConvertFxBatchResponse",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchResponse.cs",
+      "source_file": "Features/Fx/ConvertFxBatchResponse.cs",
       "source_location": "L8",
       "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "namespace": "CommBiz.Api.Features.Fx",
         "scope_chain": [
           "s38"
         ]
@@ -650,17 +465,144 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 4,
-      "norm_label": "convertdirectentrybatchresponse",
-      "id": "features_directentry_convertdirectentrybatchresponse_commbiz_api_features_directentry_convertdirectentrybatchresponse"
+      "id": "features_fx_convertfxbatchresponse_commbiz_api_features_fx_convertfxbatchresponse",
+      "community": 3,
+      "norm_label": "convertfxbatchresponse"
     },
     {
       "label": "PaymentInstructionError",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchResponse.cs",
+      "source_file": "Features/Fx/ConvertFxBatchResponse.cs",
       "source_location": "L14",
       "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s38"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "features_fx_convertfxbatchresponse_commbiz_api_features_fx_paymentinstructionerror",
+      "community": 3,
+      "norm_label": "paymentinstructionerror"
+    },
+    {
+      "label": "FxPaymentInstructionRequest",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxPaymentInstructionRequest.cs",
+      "source_location": "L7",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "features_fx_fxpaymentinstructionrequest_commbiz_api_features_fx_fxpaymentinstructionrequest",
+      "community": 3,
+      "norm_label": "fxpaymentinstructionrequest"
+    },
+    {
+      "label": "FxRecordMapper",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L11",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s67"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper",
+      "community": 3,
+      "norm_label": "fxrecordmapper"
+    },
+    {
+      "label": "FxSettings",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxSettings.cs",
+      "source_location": "L6",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "features_fx_fxsettings_commbiz_api_features_fx_fxsettings",
+      "community": 3,
+      "norm_label": "fxsettings"
+    },
+    {
+      "label": "FxValidator",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L12",
+      "metadata": {
+        "is_partial": true,
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "community": 3,
+      "norm_label": "fxvalidator"
+    },
+    {
+      "label": "BPayDetailRecordMapper",
+      "file_type": "code",
+      "source_file": "Features/BPay/BPayDetailRecordMapper.cs",
+      "source_location": "L9",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.BPay",
+        "scope_chain": [
+          "s98"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "bpaydetailrecordmapper",
+      "id": "features_bpay_bpaydetailrecordmapper_commbiz_api_features_bpay_bpaydetailrecordmapper"
+    },
+    {
+      "label": "DirectEntryDetailRecordMapper",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L9",
+      "metadata": {
         "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s98"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "directentrydetailrecordmapper",
+      "id": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper"
+    },
+    {
+      "label": "PaymentInstructionError",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchResponse.cs",
+      "source_location": "L13",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
         "scope_chain": [
           "s38"
         ]
@@ -670,33 +612,15 @@
       "_origin": "ast",
       "community": 4,
       "norm_label": "paymentinstructionerror",
-      "id": "features_directentry_convertdirectentrybatchresponse_commbiz_api_features_directentry_paymentinstructionerror"
+      "id": "features_prioritypayments_convertprioritypaymentbatchresponse_commbiz_api_features_prioritypayments_paymentinstructionerror"
     },
     {
-      "label": "DirectEntryAmountTotals",
+      "label": "FieldMapping",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryAmountTotals.cs",
-      "source_location": "L8",
+      "source_file": "Features/Shared/FieldMapping.cs",
+      "source_location": "L5",
       "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s62"
-        ]
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "directentryamounttotals",
-      "id": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals"
-    },
-    {
-      "label": "DirectEntryValidator",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L6",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "namespace": "CommBiz.Api.Features.Shared",
         "scope_chain": [
           "s0"
         ]
@@ -705,8 +629,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 4,
-      "norm_label": "directentryvalidator",
-      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator"
+      "norm_label": "fieldmapping",
+      "id": "features_shared_fieldmapping_commbiz_api_features_shared_fieldmapping"
     },
     {
       "label": "LineMapping",
@@ -727,6 +651,133 @@
       "id": "features_shared_fieldmapping_commbiz_api_features_shared_linemapping"
     },
     {
+      "label": "MappingUtilities",
+      "file_type": "code",
+      "source_file": "Features/Shared/MappingUtilities.cs",
+      "source_location": "L5",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Shared",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "mappingutilities",
+      "id": "features_shared_mappingutilities_commbiz_api_features_shared_mappingutilities"
+    },
+    {
+      "label": "ConvertPriorityPaymentBatchCommand",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchCommand.cs",
+      "source_location": "L5",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s38"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "convertprioritypaymentbatchcommand",
+      "id": "features_prioritypayments_convertprioritypaymentbatchcommand_commbiz_api_features_prioritypayments_convertprioritypaymentbatchcommand"
+    },
+    {
+      "label": "ConvertPriorityPaymentBatchHandler",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchCommand.cs",
+      "source_location": "L7",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s38"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "convertprioritypaymentbatchhandler",
+      "id": "features_prioritypayments_convertprioritypaymentbatchcommand_commbiz_api_features_prioritypayments_convertprioritypaymentbatchhandler"
+    },
+    {
+      "label": "ConvertPriorityPaymentBatchResponse",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchResponse.cs",
+      "source_location": "L7",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s38"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "convertprioritypaymentbatchresponse",
+      "id": "features_prioritypayments_convertprioritypaymentbatchresponse_commbiz_api_features_prioritypayments_convertprioritypaymentbatchresponse"
+    },
+    {
+      "label": "PriorityPaymentInstructionRequest",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentInstructionRequest.cs",
+      "source_location": "L8",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "prioritypaymentinstructionrequest",
+      "id": "features_prioritypayments_prioritypaymentinstructionrequest_commbiz_api_features_prioritypayments_prioritypaymentinstructionrequest"
+    },
+    {
+      "label": "PriorityPaymentRecordMapper",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
+      "source_location": "L11",
+      "metadata": {
+        "is_partial": true,
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s106"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "prioritypaymentrecordmapper",
+      "id": "features_prioritypayments_prioritypaymentrecordmapper_commbiz_api_features_prioritypayments_prioritypaymentrecordmapper"
+    },
+    {
+      "label": "PriorityPaymentsSettings",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentsSettings.cs",
+      "source_location": "L7",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "prioritypaymentssettings",
+      "id": "features_prioritypayments_prioritypaymentssettings_commbiz_api_features_prioritypayments_prioritypaymentssettings"
+    },
+    {
       "label": "PaymentRoutingError",
       "file_type": "code",
       "source_file": "Features/PaymentRouting/PaymentRoutingResponse.cs",
@@ -740,7 +791,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": "paymentroutingerror",
       "id": "features_paymentrouting_paymentroutingresponse_commbiz_api_features_paymentrouting_paymentroutingerror"
     },
@@ -758,7 +809,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": "paymentroutingresponse",
       "id": "features_paymentrouting_paymentroutingresponse_commbiz_api_features_paymentrouting_paymentroutingresponse"
     },
@@ -776,30 +827,15 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": "paymenttyperouter",
       "id": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter"
     },
     {
-      "label": "Program",
-      "file_type": "code",
-      "source_file": "Program.cs",
-      "source_location": "L35",
-      "metadata": {
-        "is_partial": true
-      },
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 5,
-      "norm_label": "program",
-      "id": "program_program"
-    },
-    {
-      "label": ".Handle()",
+      "label": "ConvertDirectEntryBatchCommand",
       "file_type": "code",
       "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "source_location": "L9",
+      "source_location": "L5",
       "metadata": {
         "namespace": "CommBiz.Api.Features.DirectEntry",
         "scope_chain": [
@@ -807,10 +843,102 @@
         ]
       },
       "_callable": true,
+      "_callable_class": true,
       "_origin": "ast",
-      "community": 0,
-      "norm_label": ".handle()",
-      "id": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchhandler_handle"
+      "community": 8,
+      "norm_label": "convertdirectentrybatchcommand",
+      "id": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchcommand"
+    },
+    {
+      "label": "ConvertDirectEntryBatchHandler",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
+      "source_location": "L7",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s38"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": "convertdirectentrybatchhandler",
+      "id": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchhandler"
+    },
+    {
+      "label": "ConvertDirectEntryBatchResponse",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchResponse.cs",
+      "source_location": "L8",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s38"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": "convertdirectentrybatchresponse",
+      "id": "features_directentry_convertdirectentrybatchresponse_commbiz_api_features_directentry_convertdirectentrybatchresponse"
+    },
+    {
+      "label": "PaymentInstructionError",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchResponse.cs",
+      "source_location": "L14",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s38"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": "paymentinstructionerror",
+      "id": "features_directentry_convertdirectentrybatchresponse_commbiz_api_features_directentry_paymentinstructionerror"
+    },
+    {
+      "label": "DirectEntryValidator",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L6",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": "directentryvalidator",
+      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator"
+    },
+    {
+      "label": "PriorityPaymentValidator",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
+      "source_location": "L11",
+      "metadata": {
+        "is_partial": true,
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "prioritypaymentvalidator",
+      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator"
     },
     {
       "label": ".SumAmountInCents()",
@@ -828,57 +956,6 @@
       "community": 0,
       "norm_label": ".sumamountincents()",
       "id": "features_directentry_directentryamounttotals_commbiz_api_features_directentry_directentryamounttotals_sumamountincents"
-    },
-    {
-      "label": ".FormatBsb()",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
-      "source_location": "L77",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s98"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": ".formatbsb()",
-      "id": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_formatbsb"
-    },
-    {
-      "label": ".Map()",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
-      "source_location": "L17",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s98"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": ".map()",
-      "id": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_map"
-    },
-    {
-      "label": ".MapFields()",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
-      "source_location": "L32",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
-        "scope_chain": [
-          "s98"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": ".mapfields()",
-      "id": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_mapfields"
     },
     {
       "label": ".Map()",
@@ -1034,312 +1111,6 @@
       "id": "features_directentry_directentrytrailerrecordmapper_commbiz_api_features_directentry_directentrytrailerrecordmapper_resolvevalues"
     },
     {
-      "label": ".AmountToCents()",
-      "file_type": "code",
-      "source_file": "Features/Shared/MappingUtilities.cs",
-      "source_location": "L7",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.Shared",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": ".amounttocents()",
-      "id": "features_shared_mappingutilities_commbiz_api_features_shared_mappingutilities_amounttocents"
-    },
-    {
-      "label": ".FixedWidth()",
-      "file_type": "code",
-      "source_file": "Features/Shared/MappingUtilities.cs",
-      "source_location": "L11",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.Shared",
-        "scope_chain": [
-          "s0"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": ".fixedwidth()",
-      "id": "features_shared_mappingutilities_commbiz_api_features_shared_mappingutilities_fixedwidth"
-    },
-    {
-      "label": ".Handle()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchCommand.cs",
-      "source_location": "L11",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s38"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_convertprioritypaymentbatchcommand_commbiz_api_features_prioritypayments_convertprioritypaymentbatchhandler_handle",
-      "community": 1,
-      "norm_label": ".handle()"
-    },
-    {
-      "label": ".DeriveDebitAccountNumber()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
-      "source_location": "L114",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s106"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentrecordmapper_commbiz_api_features_prioritypayments_prioritypaymentrecordmapper_derivedebitaccountnumber",
-      "community": 1,
-      "norm_label": ".derivedebitaccountnumber()"
-    },
-    {
-      "label": ".DisallowedAddressCharsRegex()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
-      "source_location": "L17",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s106"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentrecordmapper_commbiz_api_features_prioritypayments_prioritypaymentrecordmapper_disallowedaddresscharsregex",
-      "community": 1,
-      "norm_label": ".disallowedaddresscharsregex()"
-    },
-    {
-      "label": ".Map()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
-      "source_location": "L23",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s106"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentrecordmapper_commbiz_api_features_prioritypayments_prioritypaymentrecordmapper_map",
-      "community": 1,
-      "norm_label": ".map()"
-    },
-    {
-      "label": ".MapFields()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
-      "source_location": "L57",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s106"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentrecordmapper_commbiz_api_features_prioritypayments_prioritypaymentrecordmapper_mapfields",
-      "community": 1,
-      "norm_label": ".mapfields()"
-    },
-    {
-      "label": ".RepeatedSpacesRegex()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
-      "source_location": "L20",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s106"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentrecordmapper_commbiz_api_features_prioritypayments_prioritypaymentrecordmapper_repeatedspacesregex",
-      "community": 1,
-      "norm_label": ".repeatedspacesregex()"
-    },
-    {
-      "label": ".SanitizeAddress()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
-      "source_location": "L125",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s106"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentrecordmapper_commbiz_api_features_prioritypayments_prioritypaymentrecordmapper_sanitizeaddress",
-      "community": 1,
-      "norm_label": ".sanitizeaddress()"
-    },
-    {
-      "label": ".AccountNoRegex()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
-      "source_location": "L36",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s70"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_accountnoregex",
-      "community": 1,
-      "norm_label": ".accountnoregex()"
-    },
-    {
-      "label": ".IsValidAmountFormat()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
-      "source_location": "L123",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s70"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_isvalidamountformat",
-      "community": 1,
-      "norm_label": ".isvalidamountformat()"
-    },
-    {
-      "label": ".IsValidBeneficiaryAccountName()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
-      "source_location": "L126",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s70"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_isvalidbeneficiaryaccountname",
-      "community": 1,
-      "norm_label": ".isvalidbeneficiaryaccountname()"
-    },
-    {
-      "label": ".IsValidBeneficiaryAddress()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
-      "source_location": "L133",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s70"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_isvalidbeneficiaryaddress",
-      "community": 1,
-      "norm_label": ".isvalidbeneficiaryaddress()"
-    },
-    {
-      "label": ".IsWithinProcessDateWindow()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
-      "source_location": "L116",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s70"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_iswithinprocessdatewindow",
-      "community": 1,
-      "norm_label": ".iswithinprocessdatewindow()"
-    },
-    {
-      "label": ".LettersDigitsSpacesRegex()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
-      "source_location": "L30",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s70"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_lettersdigitsspacesregex",
-      "community": 1,
-      "norm_label": ".lettersdigitsspacesregex()"
-    },
-    {
-      "label": ".SixDigitBsbRegex()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
-      "source_location": "L33",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s70"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_sixdigitbsbregex",
-      "community": 1,
-      "norm_label": ".sixdigitbsbregex()"
-    },
-    {
-      "label": ".Validate()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
-      "source_location": "L39",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s70"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_validate",
-      "community": 1,
-      "norm_label": ".validate()"
-    },
-    {
-      "label": ".ValidateInstruction()",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
-      "source_location": "L73",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.PriorityPayments",
-        "scope_chain": [
-          "s70"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_validateinstruction",
-      "community": 1,
-      "norm_label": ".validateinstruction()"
-    },
-    {
       "label": ".Handle()",
       "file_type": "code",
       "source_file": "Features/Imt/ConvertImtBatchCommand.cs",
@@ -1352,7 +1123,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".handle()",
       "id": "features_imt_convertimtbatchcommand_commbiz_api_features_imt_convertimtbatchhandler_handle"
     },
@@ -1369,7 +1140,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".derivecountryfromswift()",
       "id": "features_imt_imtrecordmapper_commbiz_api_features_imt_imtrecordmapper_derivecountryfromswift"
     },
@@ -1386,7 +1157,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".derivedebitaccountnumber()",
       "id": "features_imt_imtrecordmapper_commbiz_api_features_imt_imtrecordmapper_derivedebitaccountnumber"
     },
@@ -1403,7 +1174,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".disallowedfreetextcharsregex()",
       "id": "features_imt_imtrecordmapper_commbiz_api_features_imt_imtrecordmapper_disallowedfreetextcharsregex"
     },
@@ -1420,7 +1191,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".formatamount()",
       "id": "features_imt_imtrecordmapper_commbiz_api_features_imt_imtrecordmapper_formatamount"
     },
@@ -1437,7 +1208,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".map()",
       "id": "features_imt_imtrecordmapper_commbiz_api_features_imt_imtrecordmapper_map"
     },
@@ -1454,7 +1225,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".mapfields()",
       "id": "features_imt_imtrecordmapper_commbiz_api_features_imt_imtrecordmapper_mapfields"
     },
@@ -1471,7 +1242,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".repeatedspacesregex()",
       "id": "features_imt_imtrecordmapper_commbiz_api_features_imt_imtrecordmapper_repeatedspacesregex"
     },
@@ -1488,7 +1259,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".sanitizefreetext()",
       "id": "features_imt_imtrecordmapper_commbiz_api_features_imt_imtrecordmapper_sanitizefreetext"
     },
@@ -1505,7 +1276,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".isvalidamountformat()",
       "id": "features_imt_imtvalidator_commbiz_api_features_imt_imtvalidator_isvalidamountformat"
     },
@@ -1522,7 +1293,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".isvalidbeneficiaryaccountname()",
       "id": "features_imt_imtvalidator_commbiz_api_features_imt_imtvalidator_isvalidbeneficiaryaccountname"
     },
@@ -1539,7 +1310,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".isvalidbeneficiaryaccountno()",
       "id": "features_imt_imtvalidator_commbiz_api_features_imt_imtvalidator_isvalidbeneficiaryaccountno"
     },
@@ -1556,7 +1327,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".isvalidcurrencycode()",
       "id": "features_imt_imtvalidator_commbiz_api_features_imt_imtvalidator_isvalidcurrencycode"
     },
@@ -1573,7 +1344,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".isvalidswiftcode()",
       "id": "features_imt_imtvalidator_commbiz_api_features_imt_imtvalidator_isvalidswiftcode"
     },
@@ -1590,7 +1361,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".iswithinprocessdatewindow()",
       "id": "features_imt_imtvalidator_commbiz_api_features_imt_imtvalidator_iswithinprocessdatewindow"
     },
@@ -1607,7 +1378,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".tryvalidateamounts()",
       "id": "features_imt_imtvalidator_commbiz_api_features_imt_imtvalidator_tryvalidateamounts"
     },
@@ -1624,7 +1395,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".validate()",
       "id": "features_imt_imtvalidator_commbiz_api_features_imt_imtvalidator_validate"
     },
@@ -1641,43 +1412,9 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": ".validateinstruction()",
       "id": "features_imt_imtvalidator_commbiz_api_features_imt_imtvalidator_validateinstruction"
-    },
-    {
-      "label": ".Map()",
-      "file_type": "code",
-      "source_file": "Features/BPay/BPayDetailRecordMapper.cs",
-      "source_location": "L13",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.BPay",
-        "scope_chain": [
-          "s98"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "norm_label": ".map()",
-      "id": "features_bpay_bpaydetailrecordmapper_commbiz_api_features_bpay_bpaydetailrecordmapper_map"
-    },
-    {
-      "label": ".MapFields()",
-      "file_type": "code",
-      "source_file": "Features/BPay/BPayDetailRecordMapper.cs",
-      "source_location": "L27",
-      "metadata": {
-        "namespace": "CommBiz.Api.Features.BPay",
-        "scope_chain": [
-          "s98"
-        ]
-      },
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "norm_label": ".mapfields()",
-      "id": "features_bpay_bpaydetailrecordmapper_commbiz_api_features_bpay_bpaydetailrecordmapper_mapfields"
     },
     {
       "label": ".Map()",
@@ -1692,7 +1429,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": ".map()",
       "id": "features_bpay_bpayheaderrecordmapper_commbiz_api_features_bpay_bpayheaderrecordmapper_map"
     },
@@ -1709,7 +1446,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": ".mapfields()",
       "id": "features_bpay_bpayheaderrecordmapper_commbiz_api_features_bpay_bpayheaderrecordmapper_mapfields"
     },
@@ -1726,7 +1463,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": ".resolvevalues()",
       "id": "features_bpay_bpayheaderrecordmapper_commbiz_api_features_bpay_bpayheaderrecordmapper_resolvevalues"
     },
@@ -1743,7 +1480,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": ".isvalidnumericfield()",
       "id": "features_bpay_bpayvalidator_commbiz_api_features_bpay_bpayvalidator_isvalidnumericfield"
     },
@@ -1760,7 +1497,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": ".validate()",
       "id": "features_bpay_bpayvalidator_commbiz_api_features_bpay_bpayvalidator_validate"
     },
@@ -1777,7 +1514,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": ".validateinstruction()",
       "id": "features_bpay_bpayvalidator_commbiz_api_features_bpay_bpayvalidator_validateinstruction"
     },
@@ -1794,68 +1531,238 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": ".handle()",
       "id": "features_bpay_convertbpaybatchcommand_commbiz_api_features_bpay_convertbpaybatchhandler_handle"
     },
     {
-      "label": ".IsValidAccountNumber()",
+      "label": ".Handle()",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L69",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L11",
       "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "namespace": "CommBiz.Api.Features.Fx",
         "scope_chain": [
-          "s0"
+          "s38"
         ]
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 4,
-      "norm_label": ".isvalidaccountnumber()",
-      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isvalidaccountnumber"
+      "id": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler_handle",
+      "community": 3,
+      "norm_label": ".handle()"
     },
     {
-      "label": ".IsValidSourceBankBsb()",
+      "label": ".Map()",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L66",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L15",
       "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "namespace": "CommBiz.Api.Features.Fx",
         "scope_chain": [
-          "s0"
+          "s67"
         ]
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 4,
-      "norm_label": ".isvalidsourcebankbsb()",
-      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isvalidsourcebankbsb"
+      "id": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_map",
+      "community": 3,
+      "norm_label": ".map()"
+    },
+    {
+      "label": ".MapFields()",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L49",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s67"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "id": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_mapfields",
+      "community": 3,
+      "norm_label": ".mapfields()"
+    },
+    {
+      "label": ".AccountNoRegex()",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L34",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "id": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_accountnoregex",
+      "community": 3,
+      "norm_label": ".accountnoregex()"
+    },
+    {
+      "label": ".CurrencyCodeRegex()",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L31",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "id": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_currencycoderegex",
+      "community": 3,
+      "norm_label": ".currencycoderegex()"
+    },
+    {
+      "label": ".IsValidAmountFormat()",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L109",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "id": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_isvalidamountformat",
+      "community": 3,
+      "norm_label": ".isvalidamountformat()"
     },
     {
       "label": ".Validate()",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L18",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L37",
       "metadata": {
-        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "namespace": "CommBiz.Api.Features.Fx",
         "scope_chain": [
-          "s0"
+          "s70"
         ]
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 4,
-      "norm_label": ".validate()",
-      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validate"
+      "id": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validate",
+      "community": 3,
+      "norm_label": ".validate()"
     },
     {
       "label": ".ValidateInstruction()",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L43",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L85",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "id": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "community": 3,
+      "norm_label": ".validateinstruction()"
+    },
+    {
+      "label": ".Map()",
+      "file_type": "code",
+      "source_file": "Features/BPay/BPayDetailRecordMapper.cs",
+      "source_location": "L13",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.BPay",
+        "scope_chain": [
+          "s98"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": ".map()",
+      "id": "features_bpay_bpaydetailrecordmapper_commbiz_api_features_bpay_bpaydetailrecordmapper_map"
+    },
+    {
+      "label": ".MapFields()",
+      "file_type": "code",
+      "source_file": "Features/BPay/BPayDetailRecordMapper.cs",
+      "source_location": "L27",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.BPay",
+        "scope_chain": [
+          "s98"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": ".mapfields()",
+      "id": "features_bpay_bpaydetailrecordmapper_commbiz_api_features_bpay_bpaydetailrecordmapper_mapfields"
+    },
+    {
+      "label": ".FormatBsb()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L77",
       "metadata": {
         "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s98"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": ".formatbsb()",
+      "id": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_formatbsb"
+    },
+    {
+      "label": ".Map()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L17",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s98"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": ".map()",
+      "id": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_map"
+    },
+    {
+      "label": ".MapFields()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryDetailRecordMapper.cs",
+      "source_location": "L32",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s98"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": ".mapfields()",
+      "id": "features_directentry_directentrydetailrecordmapper_commbiz_api_features_directentry_directentrydetailrecordmapper_mapfields"
+    },
+    {
+      "label": ".AmountToCents()",
+      "file_type": "code",
+      "source_file": "Features/Shared/MappingUtilities.cs",
+      "source_location": "L7",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Shared",
         "scope_chain": [
           "s0"
         ]
@@ -1863,8 +1770,144 @@
       "_callable": true,
       "_origin": "ast",
       "community": 4,
-      "norm_label": ".validateinstruction()",
-      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateinstruction"
+      "norm_label": ".amounttocents()",
+      "id": "features_shared_mappingutilities_commbiz_api_features_shared_mappingutilities_amounttocents"
+    },
+    {
+      "label": ".FixedWidth()",
+      "file_type": "code",
+      "source_file": "Features/Shared/MappingUtilities.cs",
+      "source_location": "L11",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Shared",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": ".fixedwidth()",
+      "id": "features_shared_mappingutilities_commbiz_api_features_shared_mappingutilities_fixedwidth"
+    },
+    {
+      "label": ".Handle()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchCommand.cs",
+      "source_location": "L11",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s38"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": ".handle()",
+      "id": "features_prioritypayments_convertprioritypaymentbatchcommand_commbiz_api_features_prioritypayments_convertprioritypaymentbatchhandler_handle"
+    },
+    {
+      "label": ".DeriveDebitAccountNumber()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
+      "source_location": "L114",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s106"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": ".derivedebitaccountnumber()",
+      "id": "features_prioritypayments_prioritypaymentrecordmapper_commbiz_api_features_prioritypayments_prioritypaymentrecordmapper_derivedebitaccountnumber"
+    },
+    {
+      "label": ".DisallowedAddressCharsRegex()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
+      "source_location": "L17",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s106"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": ".disallowedaddresscharsregex()",
+      "id": "features_prioritypayments_prioritypaymentrecordmapper_commbiz_api_features_prioritypayments_prioritypaymentrecordmapper_disallowedaddresscharsregex"
+    },
+    {
+      "label": ".Map()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
+      "source_location": "L23",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s106"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": ".map()",
+      "id": "features_prioritypayments_prioritypaymentrecordmapper_commbiz_api_features_prioritypayments_prioritypaymentrecordmapper_map"
+    },
+    {
+      "label": ".MapFields()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
+      "source_location": "L57",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s106"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": ".mapfields()",
+      "id": "features_prioritypayments_prioritypaymentrecordmapper_commbiz_api_features_prioritypayments_prioritypaymentrecordmapper_mapfields"
+    },
+    {
+      "label": ".RepeatedSpacesRegex()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
+      "source_location": "L20",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s106"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": ".repeatedspacesregex()",
+      "id": "features_prioritypayments_prioritypaymentrecordmapper_commbiz_api_features_prioritypayments_prioritypaymentrecordmapper_repeatedspacesregex"
+    },
+    {
+      "label": ".SanitizeAddress()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
+      "source_location": "L125",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s106"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": ".sanitizeaddress()",
+      "id": "features_prioritypayments_prioritypaymentrecordmapper_commbiz_api_features_prioritypayments_prioritypaymentrecordmapper_sanitizeaddress"
     },
     {
       "label": ".DispatchBPayAsync()",
@@ -1879,7 +1922,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": ".dispatchbpayasync()",
       "id": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchbpayasync"
     },
@@ -1896,9 +1939,26 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": ".dispatchdirectentryasync()",
       "id": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchdirectentryasync"
+    },
+    {
+      "label": ".DispatchFxAsync()",
+      "file_type": "code",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L84",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PaymentRouting",
+        "scope_chain": [
+          "s45"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "id": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchfxasync",
+      "community": 6,
+      "norm_label": ".dispatchfxasync()"
     },
     {
       "label": ".DispatchImtAsync()",
@@ -1913,7 +1973,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": ".dispatchimtasync()",
       "id": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchimtasync"
     },
@@ -1930,9 +1990,9 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "id": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchprioritypaymentasync",
-      "community": 5,
-      "norm_label": ".dispatchprioritypaymentasync()"
+      "community": 6,
+      "norm_label": ".dispatchprioritypaymentasync()",
+      "id": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchprioritypaymentasync"
     },
     {
       "label": ".GetPaymentTypeCode()",
@@ -1947,7 +2007,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": ".getpaymenttypecode()",
       "id": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_getpaymenttypecode"
     },
@@ -1964,7 +2024,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": ".rejected()",
       "id": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_rejected"
     },
@@ -1981,7 +2041,7 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": ".rejectedunsupported()",
       "id": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_rejectedunsupported"
     },
@@ -1998,9 +2058,247 @@
       },
       "_callable": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": ".routeanddispatchasync()",
       "id": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_routeanddispatchasync"
+    },
+    {
+      "label": ".Handle()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
+      "source_location": "L9",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s38"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": ".handle()",
+      "id": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchhandler_handle"
+    },
+    {
+      "label": ".IsValidAccountNumber()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L69",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": ".isvalidaccountnumber()",
+      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isvalidaccountnumber"
+    },
+    {
+      "label": ".IsValidSourceBankBsb()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L66",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": ".isvalidsourcebankbsb()",
+      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_isvalidsourcebankbsb"
+    },
+    {
+      "label": ".Validate()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L18",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": ".validate()",
+      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validate"
+    },
+    {
+      "label": ".ValidateInstruction()",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L43",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.DirectEntry",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": ".validateinstruction()",
+      "id": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateinstruction"
+    },
+    {
+      "label": ".AccountNoRegex()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
+      "source_location": "L36",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": ".accountnoregex()",
+      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_accountnoregex"
+    },
+    {
+      "label": ".IsValidAmountFormat()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
+      "source_location": "L123",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": ".isvalidamountformat()",
+      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_isvalidamountformat"
+    },
+    {
+      "label": ".IsValidBeneficiaryAccountName()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
+      "source_location": "L126",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": ".isvalidbeneficiaryaccountname()",
+      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_isvalidbeneficiaryaccountname"
+    },
+    {
+      "label": ".IsValidBeneficiaryAddress()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
+      "source_location": "L133",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": ".isvalidbeneficiaryaddress()",
+      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_isvalidbeneficiaryaddress"
+    },
+    {
+      "label": ".IsWithinProcessDateWindow()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
+      "source_location": "L116",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": ".iswithinprocessdatewindow()",
+      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_iswithinprocessdatewindow"
+    },
+    {
+      "label": ".LettersDigitsSpacesRegex()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
+      "source_location": "L30",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": ".lettersdigitsspacesregex()",
+      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_lettersdigitsspacesregex"
+    },
+    {
+      "label": ".SixDigitBsbRegex()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
+      "source_location": "L33",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": ".sixdigitbsbregex()",
+      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_sixdigitbsbregex"
+    },
+    {
+      "label": ".Validate()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
+      "source_location": "L39",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": ".validate()",
+      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_validate"
+    },
+    {
+      "label": ".ValidateInstruction()",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
+      "source_location": "L73",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PriorityPayments",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": ".validateinstruction()",
+      "id": "features_prioritypayments_prioritypaymentvalidator_commbiz_api_features_prioritypayments_prioritypaymentvalidator_validateinstruction"
     },
     {
       "label": "AmountTotalField",
@@ -2023,6 +2321,21 @@
       "id": "amounttotalincents"
     },
     {
+      "label": "CommBiz.Api.Features.DirectEntry",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
+      "source_location": "L3",
+      "type": "namespace",
+      "metadata": {
+        "kind": "csharp_namespace",
+        "namespace": "CommBiz.Api.Features.DirectEntry"
+      },
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "commbiz.api.features.directentry",
+      "id": "csharp_namespace:ecd6491f19b7590a"
+    },
+    {
       "label": "DateToBeProcessed",
       "file_type": "code",
       "source_file": "",
@@ -2043,6 +2356,26 @@
       "id": "descriptionofentriesonfile"
     },
     {
+      "label": "ConvertDirectEntryBatchRequest.cs",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchRequest.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "convertdirectentrybatchrequest.cs",
+      "id": "features_directentry_convertdirectentrybatchrequest"
+    },
+    {
+      "label": "DirectEntryAmountTotals.cs",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryAmountTotals.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "directentryamounttotals.cs",
+      "id": "features_directentry_directentryamounttotals"
+    },
+    {
       "label": "IReadOnlyList",
       "file_type": "code",
       "source_file": "",
@@ -2053,24 +2386,14 @@
       "id": "features_directentry_directentryamounttotals_cs_ireadonlylist"
     },
     {
-      "label": "IReadOnlyList",
+      "label": "DirectEntryHeaderRecordMapper.cs",
       "file_type": "code",
-      "source_file": "",
-      "source_location": "",
+      "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
+      "source_location": "L1",
       "_origin": "ast",
       "community": 0,
-      "norm_label": "ireadonlylist",
-      "id": "features_directentry_directentrydetailrecordmapper_cs_ireadonlylist"
-    },
-    {
-      "label": "string",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": "string",
-      "id": "features_directentry_directentrydetailrecordmapper_cs_string"
+      "norm_label": "directentryheaderrecordmapper.cs",
+      "id": "features_directentry_directentryheaderrecordmapper"
     },
     {
       "label": "DateTime",
@@ -2103,6 +2426,16 @@
       "id": "features_directentry_directentryheaderrecordmapper_cs_string"
     },
     {
+      "label": "DirectEntrySelfBalancingRecordMapper.cs",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "directentryselfbalancingrecordmapper.cs",
+      "id": "features_directentry_directentryselfbalancingrecordmapper"
+    },
+    {
       "label": "IReadOnlyList",
       "file_type": "code",
       "source_file": "",
@@ -2131,6 +2464,26 @@
       "community": 0,
       "norm_label": "totalamountincents",
       "id": "features_directentry_directentryselfbalancingrecordmapper_cs_totalamountincents"
+    },
+    {
+      "label": "DirectEntrySettings.cs",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntrySettings.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "directentrysettings.cs",
+      "id": "features_directentry_directentrysettings"
+    },
+    {
+      "label": "DirectEntryTrailerRecordMapper.cs",
+      "file_type": "code",
+      "source_file": "Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "directentrytrailerrecordmapper.cs",
+      "id": "features_directentry_directentrytrailerrecordmapper"
     },
     {
       "label": "IReadOnlyList",
@@ -2173,6 +2526,16 @@
       "id": "nameofusersupplyingfile"
     },
     {
+      "label": "Program.cs",
+      "file_type": "code",
+      "source_file": "Program.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "program.cs",
+      "id": "program"
+    },
+    {
       "label": "RecordCountField",
       "file_type": "code",
       "source_file": "",
@@ -2203,211 +2566,6 @@
       "id": "useridentificationnumber"
     },
     {
-      "label": "CommBiz.Api.Features.PriorityPayments",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchCommand.cs",
-      "source_location": "L3",
-      "type": "namespace",
-      "metadata": {
-        "kind": "csharp_namespace",
-        "namespace": "CommBiz.Api.Features.PriorityPayments"
-      },
-      "_origin": "ast",
-      "id": "csharp_namespace:69cab67323f79dcb",
-      "community": 1,
-      "norm_label": "commbiz.api.features.prioritypayments"
-    },
-    {
-      "label": "ConvertPriorityPaymentBatchCommand.cs",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchCommand.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "features_prioritypayments_convertprioritypaymentbatchcommand",
-      "community": 1,
-      "norm_label": "convertprioritypaymentbatchcommand.cs"
-    },
-    {
-      "label": "ConvertPriorityPaymentBatchResponse.cs",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchResponse.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "features_prioritypayments_convertprioritypaymentbatchresponse",
-      "community": 1,
-      "norm_label": "convertprioritypaymentbatchresponse.cs"
-    },
-    {
-      "label": "PriorityPaymentInstructionRequest.cs",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentInstructionRequest.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentinstructionrequest",
-      "community": 1,
-      "norm_label": "prioritypaymentinstructionrequest.cs"
-    },
-    {
-      "label": "PriorityPaymentRecordMapper.cs",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentrecordmapper",
-      "community": 1,
-      "norm_label": "prioritypaymentrecordmapper.cs"
-    },
-    {
-      "label": "GeneratedRegex",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentrecordmapper_cs_generatedregex",
-      "community": 1,
-      "norm_label": "generatedregex"
-    },
-    {
-      "label": "IReadOnlyList",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentrecordmapper_cs_ireadonlylist",
-      "community": 1,
-      "norm_label": "ireadonlylist"
-    },
-    {
-      "label": "Regex",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentrecordmapper_cs_regex",
-      "community": 1,
-      "norm_label": "regex"
-    },
-    {
-      "label": "string",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentrecordmapper_cs_string",
-      "community": 1,
-      "norm_label": "string"
-    },
-    {
-      "label": "PriorityPaymentsSettings.cs",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentsSettings.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentssettings",
-      "community": 1,
-      "norm_label": "prioritypaymentssettings.cs"
-    },
-    {
-      "label": "PriorityPaymentValidator.cs",
-      "file_type": "code",
-      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator",
-      "community": 1,
-      "norm_label": "prioritypaymentvalidator.cs"
-    },
-    {
-      "label": "DateTime",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_cs_datetime",
-      "community": 1,
-      "norm_label": "datetime"
-    },
-    {
-      "label": "decimal",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_cs_decimal",
-      "community": 1,
-      "norm_label": "decimal"
-    },
-    {
-      "label": "GeneratedRegex",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_cs_generatedregex",
-      "community": 1,
-      "norm_label": "generatedregex"
-    },
-    {
-      "label": "IEnumerable",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_cs_ienumerable",
-      "community": 1,
-      "norm_label": "ienumerable"
-    },
-    {
-      "label": "int",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_cs_int",
-      "community": 1,
-      "norm_label": "int"
-    },
-    {
-      "label": "IReadOnlyList",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_cs_ireadonlylist",
-      "community": 1,
-      "norm_label": "ireadonlylist"
-    },
-    {
-      "label": "Regex",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "features_prioritypayments_prioritypaymentvalidator_cs_regex",
-      "community": 1,
-      "norm_label": "regex"
-    },
-    {
-      "label": "GeneratedRegex",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "community": 12,
-      "norm_label": "generatedregex",
-      "id": "generatedregex"
-    },
-    {
-      "label": "Regex",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "community": 16,
-      "norm_label": "regex",
-      "id": "regex"
-    },
-    {
       "label": "CommBiz.Api.Features.Imt",
       "file_type": "code",
       "source_file": "Features/Imt/ConvertImtBatchCommand.cs",
@@ -2418,7 +2576,7 @@
         "namespace": "CommBiz.Api.Features.Imt"
       },
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "commbiz.api.features.imt",
       "id": "csharp_namespace:c238c65a4c10683b"
     },
@@ -2428,7 +2586,7 @@
       "source_file": "Features/Imt/ConvertImtBatchCommand.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "convertimtbatchcommand.cs",
       "id": "features_imt_convertimtbatchcommand"
     },
@@ -2438,7 +2596,7 @@
       "source_file": "Features/Imt/ConvertImtBatchResponse.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "convertimtbatchresponse.cs",
       "id": "features_imt_convertimtbatchresponse"
     },
@@ -2448,7 +2606,7 @@
       "source_file": "Features/Imt/ImtPaymentInstructionRequest.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "imtpaymentinstructionrequest.cs",
       "id": "features_imt_imtpaymentinstructionrequest"
     },
@@ -2458,7 +2616,7 @@
       "source_file": "Features/Imt/ImtRecordMapper.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "imtrecordmapper.cs",
       "id": "features_imt_imtrecordmapper"
     },
@@ -2468,9 +2626,9 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "id": "features_imt_imtrecordmapper_cs_generatedregex",
-      "community": 2,
-      "norm_label": "generatedregex"
+      "community": 1,
+      "norm_label": "generatedregex",
+      "id": "features_imt_imtrecordmapper_cs_generatedregex"
     },
     {
       "label": "IReadOnlyList",
@@ -2478,7 +2636,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "ireadonlylist",
       "id": "features_imt_imtrecordmapper_cs_ireadonlylist"
     },
@@ -2488,9 +2646,9 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "id": "features_imt_imtrecordmapper_cs_regex",
-      "community": 2,
-      "norm_label": "regex"
+      "community": 1,
+      "norm_label": "regex",
+      "id": "features_imt_imtrecordmapper_cs_regex"
     },
     {
       "label": "string",
@@ -2498,7 +2656,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "string",
       "id": "features_imt_imtrecordmapper_cs_string"
     },
@@ -2508,7 +2666,7 @@
       "source_file": "Features/Imt/ImtSettings.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "imtsettings.cs",
       "id": "features_imt_imtsettings"
     },
@@ -2518,7 +2676,7 @@
       "source_file": "Features/Imt/ImtValidator.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "imtvalidator.cs",
       "id": "features_imt_imtvalidator"
     },
@@ -2528,7 +2686,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "datetime",
       "id": "features_imt_imtvalidator_cs_datetime"
     },
@@ -2538,7 +2696,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "decimal",
       "id": "features_imt_imtvalidator_cs_decimal"
     },
@@ -2548,7 +2706,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "ienumerable",
       "id": "features_imt_imtvalidator_cs_ienumerable"
     },
@@ -2558,7 +2716,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "int",
       "id": "features_imt_imtvalidator_cs_int"
     },
@@ -2568,9 +2726,99 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "ireadonlylist",
       "id": "features_imt_imtvalidator_cs_ireadonlylist"
+    },
+    {
+      "label": "CommBiz.Api.csproj",
+      "file_type": "code",
+      "source_file": "CommBiz.Api.csproj",
+      "source_location": null,
+      "_origin": "ast",
+      "community": 10,
+      "norm_label": "commbiz.api.csproj",
+      "id": "commbiz_api"
+    },
+    {
+      "label": "Microsoft.AspNetCore.OpenApi (10.0.11)",
+      "file_type": "code",
+      "source_file": "CommBiz.Api.csproj",
+      "source_location": null,
+      "_origin": "ast",
+      "community": 10,
+      "norm_label": "microsoft.aspnetcore.openapi (10.0.11)",
+      "id": "nuget_microsoft_aspnetcore_openapi"
+    },
+    {
+      "label": "Scalar.AspNetCore (2.16.20)",
+      "file_type": "code",
+      "source_file": "CommBiz.Api.csproj",
+      "source_location": null,
+      "_origin": "ast",
+      "community": 10,
+      "norm_label": "scalar.aspnetcore (2.16.20)",
+      "id": "nuget_scalar_aspnetcore"
+    },
+    {
+      "label": "WolverineFx (6.26.0)",
+      "file_type": "code",
+      "source_file": "CommBiz.Api.csproj",
+      "source_location": null,
+      "_origin": "ast",
+      "community": 10,
+      "norm_label": "wolverinefx (6.26.0)",
+      "id": "nuget_wolverinefx"
+    },
+    {
+      "label": "WolverineFx.RuntimeCompilation (6.26.0)",
+      "file_type": "code",
+      "source_file": "CommBiz.Api.csproj",
+      "source_location": null,
+      "_origin": "ast",
+      "community": 10,
+      "norm_label": "wolverinefx.runtimecompilation (6.26.0)",
+      "id": "nuget_wolverinefx_runtimecompilation"
+    },
+    {
+      "label": "net10.0",
+      "file_type": "concept",
+      "source_file": "CommBiz.Api.csproj",
+      "source_location": null,
+      "_origin": "ast",
+      "community": 10,
+      "norm_label": "net10.0",
+      "id": "framework_net10_0"
+    },
+    {
+      "label": "Microsoft.NET.Sdk.Web",
+      "file_type": "concept",
+      "source_file": "CommBiz.Api.csproj",
+      "source_location": null,
+      "_origin": "ast",
+      "community": 10,
+      "norm_label": "microsoft.net.sdk.web",
+      "id": "sdk_microsoft_net_sdk_web"
+    },
+    {
+      "label": "GeneratedRegex",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": "generatedregex",
+      "id": "generatedregex"
+    },
+    {
+      "label": "Regex",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 19,
+      "norm_label": "regex",
+      "id": "regex"
     },
     {
       "label": "CommBiz.Api.Features.BPay",
@@ -2583,39 +2831,9 @@
         "namespace": "CommBiz.Api.Features.BPay"
       },
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "commbiz.api.features.bpay",
       "id": "csharp_namespace:385243c78d0f21eb"
-    },
-    {
-      "label": "BPayDetailRecordMapper.cs",
-      "file_type": "code",
-      "source_file": "Features/BPay/BPayDetailRecordMapper.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 3,
-      "norm_label": "bpaydetailrecordmapper.cs",
-      "id": "features_bpay_bpaydetailrecordmapper"
-    },
-    {
-      "label": "IReadOnlyList",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "community": 3,
-      "norm_label": "ireadonlylist",
-      "id": "features_bpay_bpaydetailrecordmapper_cs_ireadonlylist"
-    },
-    {
-      "label": "string",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "community": 3,
-      "norm_label": "string",
-      "id": "features_bpay_bpaydetailrecordmapper_cs_string"
     },
     {
       "label": "BPayHeaderRecordMapper.cs",
@@ -2623,7 +2841,7 @@
       "source_file": "Features/BPay/BPayHeaderRecordMapper.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "bpayheaderrecordmapper.cs",
       "id": "features_bpay_bpayheaderrecordmapper"
     },
@@ -2633,7 +2851,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "datetime",
       "id": "features_bpay_bpayheaderrecordmapper_cs_datetime"
     },
@@ -2643,7 +2861,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "ireadonlylist",
       "id": "features_bpay_bpayheaderrecordmapper_cs_ireadonlylist"
     },
@@ -2653,7 +2871,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "string",
       "id": "features_bpay_bpayheaderrecordmapper_cs_string"
     },
@@ -2663,7 +2881,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "totalamountincents",
       "id": "features_bpay_bpayheaderrecordmapper_cs_totalamountincents"
     },
@@ -2673,7 +2891,7 @@
       "source_file": "Features/BPay/BPayPaymentInstructionRequest.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "bpaypaymentinstructionrequest.cs",
       "id": "features_bpay_bpaypaymentinstructionrequest"
     },
@@ -2683,7 +2901,7 @@
       "source_file": "Features/BPay/BPaySettings.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "bpaysettings.cs",
       "id": "features_bpay_bpaysettings"
     },
@@ -2693,7 +2911,7 @@
       "source_file": "Features/BPay/BPayValidator.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "bpayvalidator.cs",
       "id": "features_bpay_bpayvalidator"
     },
@@ -2703,7 +2921,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "decimal",
       "id": "features_bpay_bpayvalidator_cs_decimal"
     },
@@ -2713,7 +2931,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "ienumerable",
       "id": "features_bpay_bpayvalidator_cs_ienumerable"
     },
@@ -2723,7 +2941,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "int",
       "id": "features_bpay_bpayvalidator_cs_int"
     },
@@ -2733,7 +2951,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "ireadonlylist",
       "id": "features_bpay_bpayvalidator_cs_ireadonlylist"
     },
@@ -2743,7 +2961,7 @@
       "source_file": "Features/BPay/ConvertBPayBatchCommand.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "convertbpaybatchcommand.cs",
       "id": "features_bpay_convertbpaybatchcommand"
     },
@@ -2753,7 +2971,7 @@
       "source_file": "Features/BPay/ConvertBPayBatchResponse.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "convertbpaybatchresponse.cs",
       "id": "features_bpay_convertbpaybatchresponse"
     },
@@ -2763,7 +2981,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "now",
       "id": "now"
     },
@@ -2773,9 +2991,164 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 3,
+      "community": 2,
       "norm_label": "paymentdate",
       "id": "paymentdate"
+    },
+    {
+      "label": "CommBiz.Api.Features.Fx",
+      "file_type": "code",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L3",
+      "type": "namespace",
+      "metadata": {
+        "kind": "csharp_namespace",
+        "namespace": "CommBiz.Api.Features.Fx"
+      },
+      "_origin": "ast",
+      "id": "csharp_namespace:011241382ccda6f1",
+      "community": 3,
+      "norm_label": "commbiz.api.features.fx"
+    },
+    {
+      "label": "ConvertFxBatchCommand.cs",
+      "file_type": "code",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "features_fx_convertfxbatchcommand",
+      "community": 3,
+      "norm_label": "convertfxbatchcommand.cs"
+    },
+    {
+      "label": "ConvertFxBatchResponse.cs",
+      "file_type": "code",
+      "source_file": "Features/Fx/ConvertFxBatchResponse.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "features_fx_convertfxbatchresponse",
+      "community": 3,
+      "norm_label": "convertfxbatchresponse.cs"
+    },
+    {
+      "label": "FxPaymentInstructionRequest.cs",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxPaymentInstructionRequest.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "features_fx_fxpaymentinstructionrequest",
+      "community": 3,
+      "norm_label": "fxpaymentinstructionrequest.cs"
+    },
+    {
+      "label": "FxRecordMapper.cs",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "features_fx_fxrecordmapper",
+      "community": 3,
+      "norm_label": "fxrecordmapper.cs"
+    },
+    {
+      "label": "IReadOnlyList",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "features_fx_fxrecordmapper_cs_ireadonlylist",
+      "community": 3,
+      "norm_label": "ireadonlylist"
+    },
+    {
+      "label": "string",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "features_fx_fxrecordmapper_cs_string",
+      "community": 3,
+      "norm_label": "string"
+    },
+    {
+      "label": "FxSettings.cs",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxSettings.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "features_fx_fxsettings",
+      "community": 3,
+      "norm_label": "fxsettings.cs"
+    },
+    {
+      "label": "FxValidator.cs",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "features_fx_fxvalidator",
+      "community": 3,
+      "norm_label": "fxvalidator.cs"
+    },
+    {
+      "label": "decimal",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "features_fx_fxvalidator_cs_decimal",
+      "community": 3,
+      "norm_label": "decimal"
+    },
+    {
+      "label": "GeneratedRegex",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "features_fx_fxvalidator_cs_generatedregex",
+      "community": 3,
+      "norm_label": "generatedregex"
+    },
+    {
+      "label": "IEnumerable",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "features_fx_fxvalidator_cs_ienumerable",
+      "community": 3,
+      "norm_label": "ienumerable"
+    },
+    {
+      "label": "int",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "features_fx_fxvalidator_cs_int",
+      "community": 3,
+      "norm_label": "int"
+    },
+    {
+      "label": "IReadOnlyList",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "features_fx_fxvalidator_cs_ireadonlylist",
+      "community": 3,
+      "norm_label": "ireadonlylist"
+    },
+    {
+      "label": "Regex",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "features_fx_fxvalidator_cs_regex",
+      "community": 3,
+      "norm_label": "regex"
     },
     {
       "label": "CommBiz.Api.Features.Shared",
@@ -2793,59 +3166,34 @@
       "id": "csharp_namespace:033a8299756bf54a"
     },
     {
-      "label": "CommBiz.Api.Features.DirectEntry",
+      "label": "BPayDetailRecordMapper.cs",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
-      "source_location": "L3",
-      "type": "namespace",
-      "metadata": {
-        "kind": "csharp_namespace",
-        "namespace": "CommBiz.Api.Features.DirectEntry"
-      },
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "commbiz.api.features.directentry",
-      "id": "csharp_namespace:ecd6491f19b7590a"
-    },
-    {
-      "label": "ConvertDirectEntryBatchCommand.cs",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
+      "source_file": "Features/BPay/BPayDetailRecordMapper.cs",
       "source_location": "L1",
       "_origin": "ast",
       "community": 4,
-      "norm_label": "convertdirectentrybatchcommand.cs",
-      "id": "features_directentry_convertdirectentrybatchcommand"
+      "norm_label": "bpaydetailrecordmapper.cs",
+      "id": "features_bpay_bpaydetailrecordmapper"
     },
     {
-      "label": "ConvertDirectEntryBatchRequest.cs",
+      "label": "IReadOnlyList",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchRequest.cs",
-      "source_location": "L1",
+      "source_file": "",
+      "source_location": "",
       "_origin": "ast",
       "community": 4,
-      "norm_label": "convertdirectentrybatchrequest.cs",
-      "id": "features_directentry_convertdirectentrybatchrequest"
+      "norm_label": "ireadonlylist",
+      "id": "features_bpay_bpaydetailrecordmapper_cs_ireadonlylist"
     },
     {
-      "label": "ConvertDirectEntryBatchResponse.cs",
+      "label": "string",
       "file_type": "code",
-      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchResponse.cs",
-      "source_location": "L1",
+      "source_file": "",
+      "source_location": "",
       "_origin": "ast",
       "community": 4,
-      "norm_label": "convertdirectentrybatchresponse.cs",
-      "id": "features_directentry_convertdirectentrybatchresponse"
-    },
-    {
-      "label": "DirectEntryAmountTotals.cs",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryAmountTotals.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "directentryamounttotals.cs",
-      "id": "features_directentry_directentryamounttotals"
+      "norm_label": "string",
+      "id": "features_bpay_bpaydetailrecordmapper_cs_string"
     },
     {
       "label": "DirectEntryDetailRecordMapper.cs",
@@ -2858,86 +3206,6 @@
       "id": "features_directentry_directentrydetailrecordmapper"
     },
     {
-      "label": "DirectEntryHeaderRecordMapper.cs",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryHeaderRecordMapper.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "directentryheaderrecordmapper.cs",
-      "id": "features_directentry_directentryheaderrecordmapper"
-    },
-    {
-      "label": "DirectEntrySelfBalancingRecordMapper.cs",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntrySelfBalancingRecordMapper.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "directentryselfbalancingrecordmapper.cs",
-      "id": "features_directentry_directentryselfbalancingrecordmapper"
-    },
-    {
-      "label": "DirectEntrySettings.cs",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntrySettings.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "directentrysettings.cs",
-      "id": "features_directentry_directentrysettings"
-    },
-    {
-      "label": "DirectEntryTrailerRecordMapper.cs",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "directentrytrailerrecordmapper.cs",
-      "id": "features_directentry_directentrytrailerrecordmapper"
-    },
-    {
-      "label": "DirectEntryValidator.cs",
-      "file_type": "code",
-      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "directentryvalidator.cs",
-      "id": "features_directentry_directentryvalidator"
-    },
-    {
-      "label": "decimal",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "decimal",
-      "id": "features_directentry_directentryvalidator_cs_decimal"
-    },
-    {
-      "label": "IEnumerable",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "ienumerable",
-      "id": "features_directentry_directentryvalidator_cs_ienumerable"
-    },
-    {
-      "label": "int",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "int",
-      "id": "features_directentry_directentryvalidator_cs_int"
-    },
-    {
       "label": "IReadOnlyList",
       "file_type": "code",
       "source_file": "",
@@ -2945,7 +3213,27 @@
       "_origin": "ast",
       "community": 4,
       "norm_label": "ireadonlylist",
-      "id": "features_directentry_directentryvalidator_cs_ireadonlylist"
+      "id": "features_directentry_directentrydetailrecordmapper_cs_ireadonlylist"
+    },
+    {
+      "label": "string",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "string",
+      "id": "features_directentry_directentrydetailrecordmapper_cs_string"
+    },
+    {
+      "label": "ConvertPriorityPaymentBatchResponse.cs",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchResponse.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "convertprioritypaymentbatchresponse.cs",
+      "id": "features_prioritypayments_convertprioritypaymentbatchresponse"
     },
     {
       "label": "FieldMapping.cs",
@@ -2968,6 +3256,111 @@
       "id": "features_shared_mappingutilities"
     },
     {
+      "label": "CommBiz.Api.Features.PriorityPayments",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchCommand.cs",
+      "source_location": "L3",
+      "type": "namespace",
+      "metadata": {
+        "kind": "csharp_namespace",
+        "namespace": "CommBiz.Api.Features.PriorityPayments"
+      },
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "commbiz.api.features.prioritypayments",
+      "id": "csharp_namespace:69cab67323f79dcb"
+    },
+    {
+      "label": "ConvertPriorityPaymentBatchCommand.cs",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/ConvertPriorityPaymentBatchCommand.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "convertprioritypaymentbatchcommand.cs",
+      "id": "features_prioritypayments_convertprioritypaymentbatchcommand"
+    },
+    {
+      "label": "PriorityPaymentInstructionRequest.cs",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentInstructionRequest.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "prioritypaymentinstructionrequest.cs",
+      "id": "features_prioritypayments_prioritypaymentinstructionrequest"
+    },
+    {
+      "label": "PriorityPaymentRecordMapper.cs",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentRecordMapper.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "prioritypaymentrecordmapper.cs",
+      "id": "features_prioritypayments_prioritypaymentrecordmapper"
+    },
+    {
+      "label": "GeneratedRegex",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "generatedregex",
+      "id": "features_prioritypayments_prioritypaymentrecordmapper_cs_generatedregex"
+    },
+    {
+      "label": "IReadOnlyList",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "ireadonlylist",
+      "id": "features_prioritypayments_prioritypaymentrecordmapper_cs_ireadonlylist"
+    },
+    {
+      "label": "Regex",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "regex",
+      "id": "features_prioritypayments_prioritypaymentrecordmapper_cs_regex"
+    },
+    {
+      "label": "string",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "string",
+      "id": "features_prioritypayments_prioritypaymentrecordmapper_cs_string"
+    },
+    {
+      "label": "PriorityPaymentsSettings.cs",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentsSettings.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "prioritypaymentssettings.cs",
+      "id": "features_prioritypayments_prioritypaymentssettings"
+    },
+    {
+      "label": "PriorityPaymentValidator.cs",
+      "file_type": "code",
+      "source_file": "Features/PriorityPayments/PriorityPaymentValidator.cs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "prioritypaymentvalidator.cs",
+      "id": "features_prioritypayments_prioritypaymentvalidator"
+    },
+    {
       "label": "CommBiz.Api.Features.PaymentRouting",
       "file_type": "code",
       "source_file": "Features/PaymentRouting/PaymentRoutingResponse.cs",
@@ -2978,7 +3371,7 @@
         "namespace": "CommBiz.Api.Features.PaymentRouting"
       },
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": "commbiz.api.features.paymentrouting",
       "id": "csharp_namespace:e31d7f4cb5353923"
     },
@@ -2988,7 +3381,7 @@
       "source_file": "Features/PaymentRouting/PaymentRoutingResponse.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": "paymentroutingresponse.cs",
       "id": "features_paymentrouting_paymentroutingresponse"
     },
@@ -2998,7 +3391,7 @@
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": "paymenttyperouter.cs",
       "id": "features_paymentrouting_paymenttyperouter"
     },
@@ -3008,7 +3401,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": "int",
       "id": "features_paymentrouting_paymenttyperouter_cs_int"
     },
@@ -3018,7 +3411,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": "string",
       "id": "features_paymentrouting_paymenttyperouter_cs_string"
     },
@@ -3028,7 +3421,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": "imessagebus",
       "id": "imessagebus"
     },
@@ -3038,7 +3431,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": "iresult",
       "id": "iresult"
     },
@@ -3048,7 +3441,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": "jsonelement",
       "id": "jsonelement"
     },
@@ -3058,19 +3451,9 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": "jsonserializeroptions",
       "id": "jsonserializeroptions"
-    },
-    {
-      "label": "Program.cs",
-      "file_type": "code",
-      "source_file": "Program.cs",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 5,
-      "norm_label": "program.cs",
-      "id": "program"
     },
     {
       "label": "Task",
@@ -3078,7 +3461,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 5,
+      "community": 6,
       "norm_label": "task",
       "id": "task"
     },
@@ -3088,7 +3471,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "launchsettings.json",
       "id": "properties_launchsettings"
     },
@@ -3098,7 +3481,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "aspnetcore_environment",
       "id": "properties_launchsettings_environmentvariables_aspnetcore_environment"
     },
@@ -3108,7 +3491,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "applicationurl",
       "id": "properties_launchsettings_http_applicationurl"
     },
@@ -3118,7 +3501,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "commandname",
       "id": "properties_launchsettings_http_commandname"
     },
@@ -3128,7 +3511,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "dotnetrunmessages",
       "id": "properties_launchsettings_http_dotnetrunmessages"
     },
@@ -3138,7 +3521,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "environmentvariables",
       "id": "properties_launchsettings_http_environmentvariables"
     },
@@ -3148,7 +3531,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "launchbrowser",
       "id": "properties_launchsettings_http_launchbrowser"
     },
@@ -3158,7 +3541,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "launchurl",
       "id": "properties_launchsettings_http_launchurl"
     },
@@ -3168,7 +3551,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "applicationurl",
       "id": "properties_launchsettings_https_applicationurl"
     },
@@ -3178,7 +3561,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "commandname",
       "id": "properties_launchsettings_https_commandname"
     },
@@ -3188,7 +3571,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "dotnetrunmessages",
       "id": "properties_launchsettings_https_dotnetrunmessages"
     },
@@ -3198,7 +3581,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "environmentvariables",
       "id": "properties_launchsettings_https_environmentvariables"
     },
@@ -3208,7 +3591,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "launchbrowser",
       "id": "properties_launchsettings_https_launchbrowser"
     },
@@ -3218,7 +3601,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "launchurl",
       "id": "properties_launchsettings_https_launchurl"
     },
@@ -3228,7 +3611,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "profiles",
       "id": "properties_launchsettings_profiles"
     },
@@ -3238,7 +3621,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "http",
       "id": "properties_launchsettings_profiles_http"
     },
@@ -3248,7 +3631,7 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "https",
       "id": "properties_launchsettings_profiles_https"
     },
@@ -3258,161 +3641,149 @@
       "source_file": "Properties/launchSettings.json",
       "source_location": "L2",
       "_origin": "ast",
-      "community": 6,
+      "community": 7,
       "norm_label": "$schema",
       "id": "properties_launchsettings_schema"
     },
     {
-      "label": "CommBiz.Api.csproj",
+      "label": "ConvertDirectEntryBatchCommand.cs",
       "file_type": "code",
-      "source_file": "CommBiz.Api.csproj",
-      "source_location": null,
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchCommand.cs",
+      "source_location": "L1",
       "_origin": "ast",
-      "community": 7,
-      "norm_label": "commbiz.api.csproj",
-      "id": "commbiz_api"
+      "community": 8,
+      "norm_label": "convertdirectentrybatchcommand.cs",
+      "id": "features_directentry_convertdirectentrybatchcommand"
     },
     {
-      "label": "Microsoft.AspNetCore.OpenApi (10.0.11)",
+      "label": "ConvertDirectEntryBatchResponse.cs",
       "file_type": "code",
-      "source_file": "CommBiz.Api.csproj",
-      "source_location": null,
+      "source_file": "Features/DirectEntry/ConvertDirectEntryBatchResponse.cs",
+      "source_location": "L1",
       "_origin": "ast",
-      "community": 7,
-      "norm_label": "microsoft.aspnetcore.openapi (10.0.11)",
-      "id": "nuget_microsoft_aspnetcore_openapi"
+      "community": 8,
+      "norm_label": "convertdirectentrybatchresponse.cs",
+      "id": "features_directentry_convertdirectentrybatchresponse"
     },
     {
-      "label": "Scalar.AspNetCore (2.16.20)",
+      "label": "DirectEntryValidator.cs",
       "file_type": "code",
-      "source_file": "CommBiz.Api.csproj",
-      "source_location": null,
+      "source_file": "Features/DirectEntry/DirectEntryValidator.cs",
+      "source_location": "L1",
       "_origin": "ast",
-      "community": 7,
-      "norm_label": "scalar.aspnetcore (2.16.20)",
-      "id": "nuget_scalar_aspnetcore"
+      "community": 8,
+      "norm_label": "directentryvalidator.cs",
+      "id": "features_directentry_directentryvalidator"
     },
     {
-      "label": "WolverineFx (6.26.0)",
+      "label": "decimal",
       "file_type": "code",
-      "source_file": "CommBiz.Api.csproj",
-      "source_location": null,
+      "source_file": "",
+      "source_location": "",
       "_origin": "ast",
-      "community": 7,
-      "norm_label": "wolverinefx (6.26.0)",
-      "id": "nuget_wolverinefx"
+      "community": 8,
+      "norm_label": "decimal",
+      "id": "features_directentry_directentryvalidator_cs_decimal"
     },
     {
-      "label": "WolverineFx.RuntimeCompilation (6.26.0)",
+      "label": "IEnumerable",
       "file_type": "code",
-      "source_file": "CommBiz.Api.csproj",
-      "source_location": null,
+      "source_file": "",
+      "source_location": "",
       "_origin": "ast",
-      "community": 7,
-      "norm_label": "wolverinefx.runtimecompilation (6.26.0)",
-      "id": "nuget_wolverinefx_runtimecompilation"
+      "community": 8,
+      "norm_label": "ienumerable",
+      "id": "features_directentry_directentryvalidator_cs_ienumerable"
     },
     {
-      "label": "net10.0",
-      "file_type": "concept",
-      "source_file": "CommBiz.Api.csproj",
-      "source_location": null,
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "net10.0",
-      "id": "framework_net10_0"
-    },
-    {
-      "label": "Microsoft.NET.Sdk.Web",
-      "file_type": "concept",
-      "source_file": "CommBiz.Api.csproj",
-      "source_location": null,
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "microsoft.net.sdk.web",
-      "id": "sdk_microsoft_net_sdk_web"
-    },
-    {
-      "label": "Direct Entry Vertical Slice",
-      "file_type": "rationale",
-      "source_file": "src/CommBiz.Api/Features/DirectEntry/README.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "description": "Owns request model, validation, mapping for Direct Entry payments. Fixed-width format with header/trailer and self-balancing totals",
-      "community": 10,
-      "norm_label": "direct entry vertical slice",
-      "id": "direct_entry_slice"
-    },
-    {
-      "label": "F-021: Shared Field Mapping Retrofit",
-      "file_type": "rationale",
-      "source_file": "src/CommBiz.Api/Features/Shared/FieldMapping.cs",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "description": "Feature to retrofit shared field mapping model across DE/BPay/IMT response models",
-      "community": 11,
-      "norm_label": "f-021: shared field mapping retrofit",
-      "id": "f_021"
-    },
-    {
-      "label": "IMT Vertical Slice",
-      "file_type": "rationale",
-      "source_file": "src/CommBiz.Api/Features/Imt/README.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "description": "Owns IMT/MT101 payment batches. CSV format with 27-field rows, no header/trailer, no trailing CRLF",
-      "community": 13,
-      "norm_label": "imt vertical slice",
-      "id": "imt_slice"
-    },
-    {
-      "label": "Mapping Utilities",
+      "label": "int",
       "file_type": "code",
-      "source_file": "src/CommBiz.Api/Features/Shared/MappingUtilities.cs",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 14,
-      "norm_label": "mapping utilities",
-      "id": "mapping_utilities"
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": "int",
+      "id": "features_directentry_directentryvalidator_cs_int"
     },
     {
-      "label": "Payment Type Router",
-      "file_type": "rationale",
-      "source_file": "src/CommBiz.Api/Features/PaymentRouting/README.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "description": "Cross-slice component. Routes payment type codes (DE, BPAY, TT) to respective slices. Validates and dispatches",
-      "community": 15,
-      "norm_label": "payment type router",
-      "id": "payment_type_router"
-    },
-    {
-      "label": "Shared Field Mapping Model",
+      "label": "IReadOnlyList",
       "file_type": "code",
-      "source_file": "src/CommBiz.Api/Features/Shared/FieldMapping.cs",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 17,
-      "norm_label": "shared field mapping model",
-      "id": "shared_field_mapping"
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": "ireadonlylist",
+      "id": "features_directentry_directentryvalidator_cs_ireadonlylist"
+    },
+    {
+      "label": "DateTime",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "datetime",
+      "id": "features_prioritypayments_prioritypaymentvalidator_cs_datetime"
+    },
+    {
+      "label": "decimal",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "decimal",
+      "id": "features_prioritypayments_prioritypaymentvalidator_cs_decimal"
+    },
+    {
+      "label": "GeneratedRegex",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "generatedregex",
+      "id": "features_prioritypayments_prioritypaymentvalidator_cs_generatedregex"
+    },
+    {
+      "label": "IEnumerable",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "ienumerable",
+      "id": "features_prioritypayments_prioritypaymentvalidator_cs_ienumerable"
+    },
+    {
+      "label": "int",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "int",
+      "id": "features_prioritypayments_prioritypaymentvalidator_cs_int"
+    },
+    {
+      "label": "IReadOnlyList",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "ireadonlylist",
+      "id": "features_prioritypayments_prioritypaymentvalidator_cs_ireadonlylist"
+    },
+    {
+      "label": "Regex",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "regex",
+      "id": "features_prioritypayments_prioritypaymentvalidator_cs_regex"
     },
     {
       "label": "ADR-002: Vertical Slice Architecture",
@@ -3424,7 +3795,7 @@
       "author": null,
       "contributor": null,
       "description": "Architectural Decision Record - each payment type slice owns end-to-end request/response/validation/mapping",
-      "community": 8,
+      "community": 11,
       "norm_label": "adr-002: vertical slice architecture",
       "id": "adr_002"
     },
@@ -3438,12 +3809,124 @@
       "author": null,
       "contributor": null,
       "description": "Owns request model, validation, mapping, output-assembly for BPAY batch payments. CSV format, no trailer/self-balancing record",
-      "community": 9,
+      "community": 12,
       "norm_label": "bpay vertical slice",
       "id": "bpay_slice"
+    },
+    {
+      "label": "Direct Entry Vertical Slice",
+      "file_type": "rationale",
+      "source_file": "src/CommBiz.Api/Features/DirectEntry/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "description": "Owns request model, validation, mapping for Direct Entry payments. Fixed-width format with header/trailer and self-balancing totals",
+      "community": 13,
+      "norm_label": "direct entry vertical slice",
+      "id": "direct_entry_slice"
+    },
+    {
+      "label": "F-021: Shared Field Mapping Retrofit",
+      "file_type": "rationale",
+      "source_file": "src/CommBiz.Api/Features/Shared/FieldMapping.cs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "description": "Feature to retrofit shared field mapping model across DE/BPay/IMT response models",
+      "community": 14,
+      "norm_label": "f-021: shared field mapping retrofit",
+      "id": "f_021"
+    },
+    {
+      "label": "IMT Vertical Slice",
+      "file_type": "rationale",
+      "source_file": "src/CommBiz.Api/Features/Imt/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "description": "Owns IMT/MT101 payment batches. CSV format with 27-field rows, no header/trailer, no trailing CRLF",
+      "community": 16,
+      "norm_label": "imt vertical slice",
+      "id": "imt_slice"
+    },
+    {
+      "label": "Mapping Utilities",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/Shared/MappingUtilities.cs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 17,
+      "norm_label": "mapping utilities",
+      "id": "mapping_utilities"
+    },
+    {
+      "label": "Payment Type Router",
+      "file_type": "rationale",
+      "source_file": "src/CommBiz.Api/Features/PaymentRouting/README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "description": "Cross-slice component. Routes payment type codes (DE, BPAY, TT) to respective slices. Validates and dispatches",
+      "community": 18,
+      "norm_label": "payment type router",
+      "id": "payment_type_router"
+    },
+    {
+      "label": "Shared Field Mapping Model",
+      "file_type": "code",
+      "source_file": "src/CommBiz.Api/Features/Shared/FieldMapping.cs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 20,
+      "norm_label": "shared field mapping model",
+      "id": "shared_field_mapping"
     }
   ],
   "links": [
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L34",
+      "weight": 1.0,
+      "context": "attribute",
+      "metadata": {
+        "ref_token": "GeneratedRegex"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_accountnoregex",
+      "target": "features_fx_fxvalidator_cs_generatedregex",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L31",
+      "weight": 1.0,
+      "context": "attribute",
+      "metadata": {
+        "ref_token": "GeneratedRegex"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_currencycoderegex",
+      "target": "features_fx_fxvalidator_cs_generatedregex",
+      "confidence_score": 1.0
+    },
     {
       "relation": "references",
       "confidence": "EXTRACTED",
@@ -3854,6 +4337,78 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler_handle",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validate"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler_handle",
+      "target": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_mapfields"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L75",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validate",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L103",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_accountnoregex",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L87",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_currencycoderegex",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L97",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_isvalidamountformat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "Features/Imt/ConvertImtBatchCommand.cs",
       "source_location": "L16",
       "weight": 1.0,
@@ -4094,7 +4649,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_routeanddispatchasync",
@@ -4106,7 +4661,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L42",
+      "source_location": "L43",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_routeanddispatchasync",
@@ -4118,7 +4673,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L43",
+      "source_location": "L44",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_routeanddispatchasync",
@@ -4130,7 +4685,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L44",
+      "source_location": "L45",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_routeanddispatchasync",
@@ -4142,7 +4697,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_routeanddispatchasync",
@@ -4154,7 +4709,19 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L46",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_routeanddispatchasync",
+      "target": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchfxasync",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L48",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_routeanddispatchasync",
@@ -4357,7 +4924,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "context": "field",
       "metadata": {
@@ -4396,6 +4963,21 @@
       "_origin": "ast",
       "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator",
       "target": "features_directentry_directentryvalidator_cs_decimal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L29",
+      "weight": 1.0,
+      "context": "field",
+      "metadata": {
+        "ref_token": "decimal"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_cs_decimal",
       "confidence_score": 1.0
     },
     {
@@ -4456,6 +5038,21 @@
       "_origin": "ast",
       "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator",
       "target": "features_directentry_directentryvalidator_cs_int",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L26",
+      "weight": 1.0,
+      "context": "field",
+      "metadata": {
+        "ref_token": "int"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_cs_int",
       "confidence_score": 1.0
     },
     {
@@ -4596,6 +5193,21 @@
     {
       "relation": "references",
       "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L13",
+      "weight": 1.0,
+      "context": "field",
+      "metadata": {
+        "ref_token": "string"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper",
+      "target": "features_fx_fxrecordmapper_cs_string",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
       "source_file": "Features/Imt/ImtRecordMapper.cs",
       "source_location": "L14",
       "weight": 1.0,
@@ -4612,7 +5224,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L18",
+      "source_location": "L19",
       "weight": 1.0,
       "context": "field",
       "metadata": {
@@ -4806,6 +5418,21 @@
     {
       "relation": "references",
       "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L49",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "metadata": {
+        "ref_token": "FieldMapping"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_mapfields",
+      "target": "features_shared_fieldmapping_commbiz_api_features_shared_fieldmapping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
       "source_file": "Features/Imt/ImtRecordMapper.cs",
       "source_location": "L62",
       "weight": 1.0,
@@ -4836,8 +5463,23 @@
     {
       "relation": "references",
       "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L37",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "metadata": {
+        "ref_token": "FxPaymentInstructionRequest"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validate",
+      "target": "features_fx_fxpaymentinstructionrequest_commbiz_api_features_fx_fxpaymentinstructionrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L58",
+      "source_location": "L60",
       "weight": 1.0,
       "context": "generic_arg",
       "metadata": {
@@ -4852,7 +5494,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L50",
+      "source_location": "L52",
       "weight": 1.0,
       "context": "generic_arg",
       "metadata": {
@@ -4867,7 +5509,22 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L66",
+      "source_location": "L84",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "metadata": {
+        "ref_token": "IResult"
+      },
+      "_origin": "ast",
+      "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchfxasync",
+      "target": "iresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L68",
       "weight": 1.0,
       "context": "generic_arg",
       "metadata": {
@@ -4882,7 +5539,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L74",
+      "source_location": "L76",
       "weight": 1.0,
       "context": "generic_arg",
       "metadata": {
@@ -4897,7 +5554,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0,
       "context": "generic_arg",
       "metadata": {
@@ -4936,6 +5593,21 @@
       "_origin": "ast",
       "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validate",
       "target": "features_directentry_convertdirectentrybatchresponse_commbiz_api_features_directentry_paymentinstructionerror",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L37",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "metadata": {
+        "ref_token": "PaymentInstructionError"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validate",
+      "target": "features_fx_convertfxbatchresponse_commbiz_api_features_fx_paymentinstructionerror",
       "confidence_score": 1.0
     },
     {
@@ -5191,6 +5863,23 @@
       "weight": 1.0,
       "metadata": {
         "using_kind": "namespace",
+        "target_fqn": "CommBiz.Api.Features.Fx",
+        "scope_kind": "file"
+      },
+      "_origin": "ast",
+      "source": "program",
+      "target": "csharp_namespace:011241382ccda6f1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "Program.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "metadata": {
+        "using_kind": "namespace",
         "target_fqn": "CommBiz.Api.Features.Imt",
         "scope_kind": "file"
       },
@@ -5204,7 +5893,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "Program.cs",
-      "source_location": "L5",
+      "source_location": "L6",
       "weight": 1.0,
       "metadata": {
         "using_kind": "namespace",
@@ -5221,7 +5910,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "Program.cs",
-      "source_location": "L6",
+      "source_location": "L7",
       "weight": 1.0,
       "metadata": {
         "using_kind": "namespace",
@@ -5400,6 +6089,57 @@
       },
       "_origin": "ast",
       "source": "features_directentry_directentrytrailerrecordmapper",
+      "target": "csharp_namespace:033a8299756bf54a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "metadata": {
+        "using_kind": "namespace",
+        "target_fqn": "CommBiz.Api.Features.Shared",
+        "scope_kind": "file"
+      },
+      "_origin": "ast",
+      "source": "features_fx_convertfxbatchcommand",
+      "target": "csharp_namespace:033a8299756bf54a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchResponse.cs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "metadata": {
+        "using_kind": "namespace",
+        "target_fqn": "CommBiz.Api.Features.Shared",
+        "scope_kind": "file"
+      },
+      "_origin": "ast",
+      "source": "features_fx_convertfxbatchresponse",
+      "target": "csharp_namespace:033a8299756bf54a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L2",
+      "weight": 1.0,
+      "metadata": {
+        "using_kind": "namespace",
+        "target_fqn": "CommBiz.Api.Features.Shared",
+        "scope_kind": "file"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxrecordmapper",
       "target": "csharp_namespace:033a8299756bf54a",
       "confidence_score": 1.0
     },
@@ -5638,6 +6378,21 @@
       "_origin": "ast",
       "source": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchhandler_handle",
       "target": "features_directentry_convertdirectentrybatchcommand_commbiz_api_features_directentry_convertdirectentrybatchcommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "ConvertFxBatchCommand"
+      },
+      "_origin": "ast",
+      "source": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler_handle",
+      "target": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchcommand",
       "confidence_score": 1.0
     },
     {
@@ -5898,8 +6653,98 @@
     {
       "relation": "references",
       "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "FxPaymentInstructionRequest"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_map",
+      "target": "features_fx_fxpaymentinstructionrequest_commbiz_api_features_fx_fxpaymentinstructionrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L49",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "FxPaymentInstructionRequest"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_mapfields",
+      "target": "features_fx_fxpaymentinstructionrequest_commbiz_api_features_fx_fxpaymentinstructionrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L85",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "FxPaymentInstructionRequest"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "target": "features_fx_fxpaymentinstructionrequest_commbiz_api_features_fx_fxpaymentinstructionrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "FxSettings"
+      },
+      "_origin": "ast",
+      "source": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler_handle",
+      "target": "features_fx_fxsettings_commbiz_api_features_fx_fxsettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "FxSettings"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_map",
+      "target": "features_fx_fxsettings_commbiz_api_features_fx_fxsettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L49",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "FxSettings"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_mapfields",
+      "target": "features_fx_fxsettings_commbiz_api_features_fx_fxsettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L58",
+      "source_location": "L60",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -5914,7 +6759,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L50",
+      "source_location": "L52",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -5929,7 +6774,22 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L66",
+      "source_location": "L84",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "IMessageBus"
+      },
+      "_origin": "ast",
+      "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchfxasync",
+      "target": "imessagebus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L68",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -5944,7 +6804,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L74",
+      "source_location": "L76",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -5959,7 +6819,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -6184,7 +7044,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L58",
+      "source_location": "L60",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -6199,7 +7059,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L50",
+      "source_location": "L52",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -6214,7 +7074,22 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L66",
+      "source_location": "L84",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "JsonElement"
+      },
+      "_origin": "ast",
+      "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchfxasync",
+      "target": "jsonelement",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L68",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -6229,7 +7104,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L74",
+      "source_location": "L76",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -6244,7 +7119,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L96",
+      "source_location": "L106",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -6259,7 +7134,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -6453,6 +7328,21 @@
     {
       "relation": "references",
       "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "context": "return_type",
+      "metadata": {
+        "ref_token": "ConvertFxBatchResponse"
+      },
+      "_origin": "ast",
+      "source": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler_handle",
+      "target": "features_fx_convertfxbatchresponse_commbiz_api_features_fx_convertfxbatchresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
       "source_file": "Features/Imt/ConvertImtBatchCommand.cs",
       "source_location": "L12",
       "weight": 1.0,
@@ -6568,6 +7458,21 @@
       "_origin": "ast",
       "source": "features_directentry_directentryvalidator_commbiz_api_features_directentry_directentryvalidator_validateinstruction",
       "target": "features_directentry_directentryvalidator_cs_ienumerable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L85",
+      "weight": 1.0,
+      "context": "return_type",
+      "metadata": {
+        "ref_token": "IEnumerable"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "target": "features_fx_fxvalidator_cs_ienumerable",
       "confidence_score": 1.0
     },
     {
@@ -6723,6 +7628,36 @@
     {
       "relation": "references",
       "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L49",
+      "weight": 1.0,
+      "context": "return_type",
+      "metadata": {
+        "ref_token": "IReadOnlyList"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_mapfields",
+      "target": "features_fx_fxrecordmapper_cs_ireadonlylist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L37",
+      "weight": 1.0,
+      "context": "return_type",
+      "metadata": {
+        "ref_token": "IReadOnlyList"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validate",
+      "target": "features_fx_fxvalidator_cs_ireadonlylist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
       "source_file": "Features/Imt/ImtRecordMapper.cs",
       "source_location": "L62",
       "weight": 1.0,
@@ -6844,7 +7779,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L82",
+      "source_location": "L92",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -6859,7 +7794,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L85",
+      "source_location": "L95",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -6883,6 +7818,36 @@
       "_origin": "ast",
       "source": "features_directentry_directentrytrailerrecordmapper_commbiz_api_features_directentry_directentrytrailerrecordmapper_resolvevalues",
       "target": "recordcountfield",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L34",
+      "weight": 1.0,
+      "context": "return_type",
+      "metadata": {
+        "ref_token": "Regex"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_accountnoregex",
+      "target": "features_fx_fxvalidator_cs_regex",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L31",
+      "weight": 1.0,
+      "context": "return_type",
+      "metadata": {
+        "ref_token": "Regex"
+      },
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_currencycoderegex",
+      "target": "features_fx_fxvalidator_cs_regex",
       "confidence_score": 1.0
     },
     {
@@ -6994,7 +7959,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L58",
+      "source_location": "L60",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -7009,7 +7974,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L50",
+      "source_location": "L52",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -7024,7 +7989,22 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L66",
+      "source_location": "L84",
+      "weight": 1.0,
+      "context": "return_type",
+      "metadata": {
+        "ref_token": "Task"
+      },
+      "_origin": "ast",
+      "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchfxasync",
+      "target": "task",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L68",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -7039,7 +8019,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L74",
+      "source_location": "L76",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -7054,7 +8034,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -7546,6 +8526,160 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_convertfxbatchcommand",
+      "target": "csharp_namespace:011241382ccda6f1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_convertfxbatchcommand",
+      "target": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchcommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_convertfxbatchcommand",
+      "target": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchResponse.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_convertfxbatchresponse",
+      "target": "features_fx_convertfxbatchresponse_commbiz_api_features_fx_paymentinstructionerror",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchResponse.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_convertfxbatchresponse",
+      "target": "csharp_namespace:011241382ccda6f1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchResponse.cs",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_convertfxbatchresponse",
+      "target": "features_fx_convertfxbatchresponse_commbiz_api_features_fx_convertfxbatchresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxPaymentInstructionRequest.cs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxpaymentinstructionrequest",
+      "target": "csharp_namespace:011241382ccda6f1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxPaymentInstructionRequest.cs",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxpaymentinstructionrequest",
+      "target": "features_fx_fxpaymentinstructionrequest_commbiz_api_features_fx_fxpaymentinstructionrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxrecordmapper",
+      "target": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxrecordmapper",
+      "target": "csharp_namespace:011241382ccda6f1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxSettings.cs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxsettings",
+      "target": "csharp_namespace:011241382ccda6f1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxSettings.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxsettings",
+      "target": "features_fx_fxsettings_commbiz_api_features_fx_fxsettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator",
+      "target": "csharp_namespace:011241382ccda6f1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "Features/Imt/ConvertImtBatchCommand.cs",
       "source_location": "L3",
       "weight": 1.0,
@@ -7965,7 +9099,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "Program.cs",
-      "source_location": "L38",
+      "source_location": "L41",
       "weight": 1.0,
       "_origin": "ast",
       "source": "program",
@@ -8510,6 +9644,94 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler",
+      "target": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler_handle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper",
+      "target": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_map",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L49",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper",
+      "target": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_mapfields",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L109",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_isvalidamountformat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_currencycoderegex",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_accountnoregex",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L85",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
       "source_file": "Features/Imt/ConvertImtBatchCommand.cs",
       "source_location": "L12",
       "weight": 1.0,
@@ -8709,7 +9931,18 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L22",
+      "source_location": "L106",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter",
+      "target": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_getpaymenttypecode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter",
@@ -8720,7 +9953,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L50",
+      "source_location": "L52",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter",
@@ -8731,7 +9964,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L58",
+      "source_location": "L60",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter",
@@ -8742,7 +9975,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L66",
+      "source_location": "L68",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter",
@@ -8753,7 +9986,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L74",
+      "source_location": "L76",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter",
@@ -8764,7 +9997,18 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L82",
+      "source_location": "L84",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter",
+      "target": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchfxasync",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L92",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter",
@@ -8775,22 +10019,11 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L85",
+      "source_location": "L95",
       "weight": 1.0,
       "_origin": "ast",
       "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter",
       "target": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_rejectedunsupported",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L96",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter",
-      "target": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_getpaymenttypecode",
       "confidence_score": 1.0
     },
     {
@@ -9157,5 +10390,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "1fef14b68d94da0aa525d1da2caf5ceb68fe3ef6"
+  "built_at_commit": "1f2ad8bfa582d09ee745c635af6036abb8e74375"
 }

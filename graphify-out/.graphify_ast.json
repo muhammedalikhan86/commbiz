@@ -1248,6 +1248,380 @@
       "_origin": "ast"
     },
     {
+      "id": "features_fx_convertfxbatchcommand",
+      "label": "ConvertFxBatchCommand.cs",
+      "file_type": "code",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "csharp_namespace:011241382ccda6f1",
+      "label": "CommBiz.Api.Features.Fx",
+      "file_type": "code",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L3",
+      "type": "namespace",
+      "metadata": {
+        "kind": "csharp_namespace",
+        "namespace": "CommBiz.Api.Features.Fx"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchcommand",
+      "label": "ConvertFxBatchCommand",
+      "file_type": "code",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L5",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s38"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler",
+      "label": "ConvertFxBatchHandler",
+      "file_type": "code",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L7",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s38"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler_handle",
+      "label": ".Handle()",
+      "file_type": "code",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L11",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s38"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_convertfxbatchresponse",
+      "label": "ConvertFxBatchResponse.cs",
+      "file_type": "code",
+      "source_file": "Features/Fx/ConvertFxBatchResponse.cs",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_convertfxbatchresponse_commbiz_api_features_fx_convertfxbatchresponse",
+      "label": "ConvertFxBatchResponse",
+      "file_type": "code",
+      "source_file": "Features/Fx/ConvertFxBatchResponse.cs",
+      "source_location": "L8",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s38"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_convertfxbatchresponse_commbiz_api_features_fx_paymentinstructionerror",
+      "label": "PaymentInstructionError",
+      "file_type": "code",
+      "source_file": "Features/Fx/ConvertFxBatchResponse.cs",
+      "source_location": "L14",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s38"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxpaymentinstructionrequest",
+      "label": "FxPaymentInstructionRequest.cs",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxPaymentInstructionRequest.cs",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxpaymentinstructionrequest_commbiz_api_features_fx_fxpaymentinstructionrequest",
+      "label": "FxPaymentInstructionRequest",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxPaymentInstructionRequest.cs",
+      "source_location": "L7",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxrecordmapper",
+      "label": "FxRecordMapper.cs",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper",
+      "label": "FxRecordMapper",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L11",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s67"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxrecordmapper_cs_string",
+      "label": "string",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_map",
+      "label": ".Map()",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L15",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s67"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_mapfields",
+      "label": ".MapFields()",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L49",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s67"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxrecordmapper_cs_ireadonlylist",
+      "label": "IReadOnlyList",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxsettings",
+      "label": "FxSettings.cs",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxSettings.cs",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxsettings_commbiz_api_features_fx_fxsettings",
+      "label": "FxSettings",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxSettings.cs",
+      "source_location": "L6",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s0"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxvalidator",
+      "label": "FxValidator.cs",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "label": "FxValidator",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L12",
+      "metadata": {
+        "is_partial": true,
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxvalidator_cs_int",
+      "label": "int",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxvalidator_cs_decimal",
+      "label": "decimal",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_currencycoderegex",
+      "label": ".CurrencyCodeRegex()",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L31",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxvalidator_cs_regex",
+      "label": "Regex",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxvalidator_cs_generatedregex",
+      "label": "GeneratedRegex",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_accountnoregex",
+      "label": ".AccountNoRegex()",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L34",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validate",
+      "label": ".Validate()",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L37",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxvalidator_cs_ireadonlylist",
+      "label": "IReadOnlyList",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "label": ".ValidateInstruction()",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L85",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxvalidator_cs_ienumerable",
+      "label": "IEnumerable",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_isvalidamountformat",
+      "label": ".IsValidAmountFormat()",
+      "file_type": "code",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L109",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.Fx",
+        "scope_chain": [
+          "s70"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
       "id": "features_imt_convertimtbatchcommand",
       "label": "ConvertImtBatchCommand.cs",
       "file_type": "code",
@@ -1885,7 +2259,7 @@
       "label": ".RouteAndDispatchAsync()",
       "file_type": "code",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L22",
+      "source_location": "L23",
       "metadata": {
         "namespace": "CommBiz.Api.Features.PaymentRouting",
         "scope_chain": [
@@ -1932,7 +2306,7 @@
       "label": ".DispatchDirectEntryAsync()",
       "file_type": "code",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L50",
+      "source_location": "L52",
       "metadata": {
         "namespace": "CommBiz.Api.Features.PaymentRouting",
         "scope_chain": [
@@ -1947,7 +2321,7 @@
       "label": ".DispatchBPayAsync()",
       "file_type": "code",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L58",
+      "source_location": "L60",
       "metadata": {
         "namespace": "CommBiz.Api.Features.PaymentRouting",
         "scope_chain": [
@@ -1962,7 +2336,7 @@
       "label": ".DispatchImtAsync()",
       "file_type": "code",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L66",
+      "source_location": "L68",
       "metadata": {
         "namespace": "CommBiz.Api.Features.PaymentRouting",
         "scope_chain": [
@@ -1977,7 +2351,22 @@
       "label": ".DispatchPriorityPaymentAsync()",
       "file_type": "code",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L74",
+      "source_location": "L76",
+      "metadata": {
+        "namespace": "CommBiz.Api.Features.PaymentRouting",
+        "scope_chain": [
+          "s45"
+        ]
+      },
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchfxasync",
+      "label": ".DispatchFxAsync()",
+      "file_type": "code",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L84",
       "metadata": {
         "namespace": "CommBiz.Api.Features.PaymentRouting",
         "scope_chain": [
@@ -1992,7 +2381,7 @@
       "label": ".Rejected()",
       "file_type": "code",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L82",
+      "source_location": "L92",
       "metadata": {
         "namespace": "CommBiz.Api.Features.PaymentRouting",
         "scope_chain": [
@@ -2007,7 +2396,7 @@
       "label": ".RejectedUnsupported()",
       "file_type": "code",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L85",
+      "source_location": "L95",
       "metadata": {
         "namespace": "CommBiz.Api.Features.PaymentRouting",
         "scope_chain": [
@@ -2022,7 +2411,7 @@
       "label": ".GetPaymentTypeCode()",
       "file_type": "code",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L96",
+      "source_location": "L106",
       "metadata": {
         "namespace": "CommBiz.Api.Features.PaymentRouting",
         "scope_chain": [
@@ -2671,7 +3060,7 @@
       "label": "Program",
       "file_type": "code",
       "source_file": "Program.cs",
-      "source_location": "L38",
+      "source_location": "L41",
       "metadata": {
         "is_partial": true
       },
@@ -5693,6 +6082,730 @@
       "_origin": "ast"
     },
     {
+      "source": "features_fx_convertfxbatchcommand",
+      "target": "csharp_namespace:033a8299756bf54a",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "metadata": {
+        "using_kind": "namespace",
+        "target_fqn": "CommBiz.Api.Features.Shared",
+        "scope_kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_convertfxbatchcommand",
+      "target": "csharp_namespace:011241382ccda6f1",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_convertfxbatchcommand",
+      "target": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchcommand",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_convertfxbatchcommand",
+      "target": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler",
+      "target": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler_handle",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler_handle",
+      "target": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchcommand",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "ConvertFxBatchCommand"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler_handle",
+      "target": "features_fx_fxsettings_commbiz_api_features_fx_fxsettings",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "FxSettings"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler_handle",
+      "target": "features_fx_convertfxbatchresponse_commbiz_api_features_fx_convertfxbatchresponse",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "context": "return_type",
+      "metadata": {
+        "ref_token": "ConvertFxBatchResponse"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_convertfxbatchresponse",
+      "target": "csharp_namespace:033a8299756bf54a",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchResponse.cs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "metadata": {
+        "using_kind": "namespace",
+        "target_fqn": "CommBiz.Api.Features.Shared",
+        "scope_kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_convertfxbatchresponse",
+      "target": "csharp_namespace:011241382ccda6f1",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchResponse.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_convertfxbatchresponse",
+      "target": "features_fx_convertfxbatchresponse_commbiz_api_features_fx_convertfxbatchresponse",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchResponse.cs",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_convertfxbatchresponse",
+      "target": "features_fx_convertfxbatchresponse_commbiz_api_features_fx_paymentinstructionerror",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/ConvertFxBatchResponse.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxpaymentinstructionrequest",
+      "target": "csharp_namespace:011241382ccda6f1",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxPaymentInstructionRequest.cs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxpaymentinstructionrequest",
+      "target": "features_fx_fxpaymentinstructionrequest_commbiz_api_features_fx_fxpaymentinstructionrequest",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxPaymentInstructionRequest.cs",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxrecordmapper",
+      "target": "system_globalization",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "metadata": {
+        "using_kind": "namespace",
+        "target_fqn": "System.Globalization",
+        "scope_kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxrecordmapper",
+      "target": "csharp_namespace:033a8299756bf54a",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L2",
+      "weight": 1.0,
+      "metadata": {
+        "using_kind": "namespace",
+        "target_fqn": "CommBiz.Api.Features.Shared",
+        "scope_kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxrecordmapper",
+      "target": "csharp_namespace:011241382ccda6f1",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxrecordmapper",
+      "target": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper",
+      "target": "features_fx_fxrecordmapper_cs_string",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L13",
+      "weight": 1.0,
+      "context": "field",
+      "metadata": {
+        "ref_token": "string"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper",
+      "target": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_map",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_map",
+      "target": "features_fx_fxpaymentinstructionrequest_commbiz_api_features_fx_fxpaymentinstructionrequest",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "FxPaymentInstructionRequest"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_map",
+      "target": "features_fx_fxsettings_commbiz_api_features_fx_fxsettings",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "FxSettings"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper",
+      "target": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_mapfields",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L49",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_mapfields",
+      "target": "features_fx_fxpaymentinstructionrequest_commbiz_api_features_fx_fxpaymentinstructionrequest",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L49",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "FxPaymentInstructionRequest"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_mapfields",
+      "target": "features_fx_fxsettings_commbiz_api_features_fx_fxsettings",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L49",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "FxSettings"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_mapfields",
+      "target": "features_fx_fxrecordmapper_cs_ireadonlylist",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L49",
+      "weight": 1.0,
+      "context": "return_type",
+      "metadata": {
+        "ref_token": "IReadOnlyList"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_mapfields",
+      "target": "features_shared_fieldmapping_commbiz_api_features_shared_fieldmapping",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxRecordMapper.cs",
+      "source_location": "L49",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "metadata": {
+        "ref_token": "FieldMapping"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxsettings",
+      "target": "csharp_namespace:011241382ccda6f1",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxSettings.cs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxsettings",
+      "target": "features_fx_fxsettings_commbiz_api_features_fx_fxsettings",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxSettings.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator",
+      "target": "system_globalization",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "metadata": {
+        "using_kind": "namespace",
+        "target_fqn": "System.Globalization",
+        "scope_kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator",
+      "target": "system_text_regularexpressions",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L2",
+      "weight": 1.0,
+      "metadata": {
+        "using_kind": "namespace",
+        "target_fqn": "System.Text.RegularExpressions",
+        "scope_kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator",
+      "target": "csharp_namespace:011241382ccda6f1",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_cs_int",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "context": "field",
+      "metadata": {
+        "ref_token": "int"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_cs_int",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L17",
+      "weight": 1.0,
+      "context": "field",
+      "metadata": {
+        "ref_token": "int"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_cs_int",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L20",
+      "weight": 1.0,
+      "context": "field",
+      "metadata": {
+        "ref_token": "int"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_cs_int",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L23",
+      "weight": 1.0,
+      "context": "field",
+      "metadata": {
+        "ref_token": "int"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_cs_int",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L26",
+      "weight": 1.0,
+      "context": "field",
+      "metadata": {
+        "ref_token": "int"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_cs_decimal",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L29",
+      "weight": 1.0,
+      "context": "field",
+      "metadata": {
+        "ref_token": "decimal"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_currencycoderegex",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_currencycoderegex",
+      "target": "features_fx_fxvalidator_cs_regex",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L31",
+      "weight": 1.0,
+      "context": "return_type",
+      "metadata": {
+        "ref_token": "Regex"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_currencycoderegex",
+      "target": "features_fx_fxvalidator_cs_generatedregex",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L31",
+      "weight": 1.0,
+      "context": "attribute",
+      "metadata": {
+        "ref_token": "GeneratedRegex"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_accountnoregex",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_accountnoregex",
+      "target": "features_fx_fxvalidator_cs_regex",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L34",
+      "weight": 1.0,
+      "context": "return_type",
+      "metadata": {
+        "ref_token": "Regex"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_accountnoregex",
+      "target": "features_fx_fxvalidator_cs_generatedregex",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L34",
+      "weight": 1.0,
+      "context": "attribute",
+      "metadata": {
+        "ref_token": "GeneratedRegex"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validate",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validate",
+      "target": "features_fx_fxvalidator_cs_ireadonlylist",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L37",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "IReadOnlyList"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validate",
+      "target": "features_fx_fxpaymentinstructionrequest_commbiz_api_features_fx_fxpaymentinstructionrequest",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L37",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "metadata": {
+        "ref_token": "FxPaymentInstructionRequest"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validate",
+      "target": "features_fx_fxvalidator_cs_ireadonlylist",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L37",
+      "weight": 1.0,
+      "context": "return_type",
+      "metadata": {
+        "ref_token": "IReadOnlyList"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validate",
+      "target": "features_fx_convertfxbatchresponse_commbiz_api_features_fx_paymentinstructionerror",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L37",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "metadata": {
+        "ref_token": "PaymentInstructionError"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L85",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "target": "features_fx_fxpaymentinstructionrequest_commbiz_api_features_fx_fxpaymentinstructionrequest",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L85",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "FxPaymentInstructionRequest"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "target": "features_fx_fxvalidator_cs_ienumerable",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L85",
+      "weight": 1.0,
+      "context": "return_type",
+      "metadata": {
+        "ref_token": "IEnumerable"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_isvalidamountformat",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L109",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validate",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L75",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_currencycoderegex",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L87",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_isvalidamountformat",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L97",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validateinstruction",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_accountnoregex",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/Fx/FxValidator.cs",
+      "source_location": "L103",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
       "source": "features_imt_convertimtbatchcommand",
       "target": "csharp_namespace:033a8299756bf54a",
       "relation": "imports",
@@ -6872,11 +7985,25 @@
     },
     {
       "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter",
+      "target": "features_paymentrouting_paymenttyperouter_cs_string",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L19",
+      "weight": 1.0,
+      "context": "field",
+      "metadata": {
+        "ref_token": "string"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter",
       "target": "jsonserializeroptions",
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "context": "field",
       "metadata": {
@@ -6890,7 +8017,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast"
     },
@@ -6900,7 +8027,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -6914,7 +8041,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -6928,7 +8055,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -6942,7 +8069,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0,
       "context": "generic_arg",
       "metadata": {
@@ -6956,7 +8083,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L50",
+      "source_location": "L52",
       "weight": 1.0,
       "_origin": "ast"
     },
@@ -6966,7 +8093,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L50",
+      "source_location": "L52",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -6980,7 +8107,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L50",
+      "source_location": "L52",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -6994,7 +8121,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L50",
+      "source_location": "L52",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -7008,7 +8135,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L50",
+      "source_location": "L52",
       "weight": 1.0,
       "context": "generic_arg",
       "metadata": {
@@ -7022,7 +8149,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L58",
+      "source_location": "L60",
       "weight": 1.0,
       "_origin": "ast"
     },
@@ -7032,7 +8159,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L58",
+      "source_location": "L60",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -7046,7 +8173,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L58",
+      "source_location": "L60",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -7060,7 +8187,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L58",
+      "source_location": "L60",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -7074,7 +8201,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L58",
+      "source_location": "L60",
       "weight": 1.0,
       "context": "generic_arg",
       "metadata": {
@@ -7088,7 +8215,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L66",
+      "source_location": "L68",
       "weight": 1.0,
       "_origin": "ast"
     },
@@ -7098,7 +8225,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L66",
+      "source_location": "L68",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -7112,7 +8239,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L66",
+      "source_location": "L68",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -7126,7 +8253,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L66",
+      "source_location": "L68",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -7140,7 +8267,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L66",
+      "source_location": "L68",
       "weight": 1.0,
       "context": "generic_arg",
       "metadata": {
@@ -7154,7 +8281,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L74",
+      "source_location": "L76",
       "weight": 1.0,
       "_origin": "ast"
     },
@@ -7164,7 +8291,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L74",
+      "source_location": "L76",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -7178,7 +8305,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L74",
+      "source_location": "L76",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -7192,7 +8319,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L74",
+      "source_location": "L76",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -7206,7 +8333,73 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L74",
+      "source_location": "L76",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "metadata": {
+        "ref_token": "IResult"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter",
+      "target": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchfxasync",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L84",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchfxasync",
+      "target": "jsonelement",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L84",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "JsonElement"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchfxasync",
+      "target": "imessagebus",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L84",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "metadata": {
+        "ref_token": "IMessageBus"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchfxasync",
+      "target": "task",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L84",
+      "weight": 1.0,
+      "context": "return_type",
+      "metadata": {
+        "ref_token": "Task"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchfxasync",
+      "target": "iresult",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L84",
       "weight": 1.0,
       "context": "generic_arg",
       "metadata": {
@@ -7220,7 +8413,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L82",
+      "source_location": "L92",
       "weight": 1.0,
       "_origin": "ast"
     },
@@ -7230,7 +8423,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L82",
+      "source_location": "L92",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -7244,7 +8437,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L85",
+      "source_location": "L95",
       "weight": 1.0,
       "_origin": "ast"
     },
@@ -7254,7 +8447,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L85",
+      "source_location": "L95",
       "weight": 1.0,
       "context": "return_type",
       "metadata": {
@@ -7268,7 +8461,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L96",
+      "source_location": "L106",
       "weight": 1.0,
       "_origin": "ast"
     },
@@ -7278,7 +8471,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L96",
+      "source_location": "L106",
       "weight": 1.0,
       "context": "parameter_type",
       "metadata": {
@@ -7293,7 +8486,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 1.0,
       "_origin": "ast"
     },
@@ -7304,7 +8497,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L42",
+      "source_location": "L43",
       "weight": 1.0,
       "_origin": "ast"
     },
@@ -7315,7 +8508,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L43",
+      "source_location": "L44",
       "weight": 1.0,
       "_origin": "ast"
     },
@@ -7326,7 +8519,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L44",
+      "source_location": "L45",
       "weight": 1.0,
       "_origin": "ast"
     },
@@ -7337,7 +8530,18 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L45",
+      "source_location": "L46",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_routeanddispatchasync",
+      "target": "features_paymentrouting_paymenttyperouter_commbiz_api_features_paymentrouting_paymenttyperouter_dispatchfxasync",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
+      "source_location": "L47",
       "weight": 1.0,
       "_origin": "ast"
     },
@@ -7348,7 +8552,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "Features/PaymentRouting/PaymentTypeRouter.cs",
-      "source_location": "L46",
+      "source_location": "L48",
       "weight": 1.0,
       "_origin": "ast"
     },
@@ -8517,12 +9721,28 @@
     },
     {
       "source": "program",
-      "target": "csharp_namespace:c238c65a4c10683b",
+      "target": "csharp_namespace:011241382ccda6f1",
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "Program.cs",
       "source_location": "L4",
+      "weight": 1.0,
+      "metadata": {
+        "using_kind": "namespace",
+        "target_fqn": "CommBiz.Api.Features.Fx",
+        "scope_kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "source": "program",
+      "target": "csharp_namespace:c238c65a4c10683b",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "Program.cs",
+      "source_location": "L5",
       "weight": 1.0,
       "metadata": {
         "using_kind": "namespace",
@@ -8538,7 +9758,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "Program.cs",
-      "source_location": "L5",
+      "source_location": "L6",
       "weight": 1.0,
       "metadata": {
         "using_kind": "namespace",
@@ -8554,7 +9774,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "Program.cs",
-      "source_location": "L6",
+      "source_location": "L7",
       "weight": 1.0,
       "metadata": {
         "using_kind": "namespace",
@@ -8570,7 +9790,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "Program.cs",
-      "source_location": "L7",
+      "source_location": "L8",
       "weight": 1.0,
       "metadata": {
         "using_kind": "namespace",
@@ -8586,7 +9806,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "Program.cs",
-      "source_location": "L8",
+      "source_location": "L9",
       "weight": 1.0,
       "metadata": {
         "using_kind": "namespace",
@@ -8602,7 +9822,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "Program.cs",
-      "source_location": "L9",
+      "source_location": "L10",
       "weight": 1.0,
       "metadata": {
         "using_kind": "namespace",
@@ -8617,7 +9837,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "Program.cs",
-      "source_location": "L38",
+      "source_location": "L41",
       "weight": 1.0,
       "_origin": "ast"
     },
@@ -9062,6 +10282,30 @@
       "confidence_score": 1.0,
       "source_file": "Features/DirectEntry/DirectEntryTrailerRecordMapper.cs",
       "source_location": "L69",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler_handle",
+      "target": "features_fx_fxvalidator_commbiz_api_features_fx_fxvalidator_validate",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "features_fx_convertfxbatchcommand_commbiz_api_features_fx_convertfxbatchhandler_handle",
+      "target": "features_fx_fxrecordmapper_commbiz_api_features_fx_fxrecordmapper_mapfields",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Features/Fx/ConvertFxBatchCommand.cs",
+      "source_location": "L27",
       "weight": 1.0,
       "_origin": "ast"
     },

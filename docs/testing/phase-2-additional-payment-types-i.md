@@ -1,16 +1,18 @@
 # Test Runbook: Phase 2 — Additional Payment Types I
 
 > Status: DRAFT
-> Version: v3
+> Version: v4
 > Last updated: 2026-08-18
-> Covers: F-015–F-018, F-021 (see [docs/project-management.md](../project-management.md))
+> Covers: F-015–F-018, F-021, F-022, F-023 (see [docs/project-management.md](../project-management.md))
 > Scenario reference: [docs/test-cases.md](../test-cases.md) TC-051–TC-065 (independently numbered
 > range, disjoint from test-cases.md's own TC-033–TC-050 Phase 2 section — some scenarios below are
 > manual walkthroughs of the same underlying rules test-cases.md covers, e.g. TC-051/TC-052 here mirror
 > test-cases.md's TC-004/TC-005 mixed-type/unsupported-type rejections); this runbook's own TC-066–TC-070
-> (F-021 `Mappings` field) have no `test-cases.md` counterpart yet — tracked as PM-009
+> (F-021 `Mappings` field) and TC-075–TC-084 (F-022/F-023 FOREX routing + FX conversion) have no
+> `test-cases.md` counterpart yet — tracked as PM-009
 > Source data: [docs/stash/BPay Payments - CommBiz File Specification.md](../stash/BPay%20Payments%20-%20CommBiz%20File%20Specification.md) §1.1/§1.3,
-> [docs/stash/CommBiz File Specification - International Money Transfers Priority Payments Non CBA Payment Requests (MT101) v9.md](../stash/CommBiz%20File%20Specification%20-%20International%20Money%20Transfers%20Priority%20Payments%20Non%20CBA%20Payment%20Requests%20%28MT101%29%20v9.md) §1.2/§1.4
+> [docs/stash/CommBiz File Specification - International Money Transfers Priority Payments Non CBA Payment Requests (MT101) v9.md](../stash/CommBiz%20File%20Specification%20-%20International%20Money%20Transfers%20Priority%20Payments%20Non%20CBA%20Payment%20Requests%20%28MT101%29%20v9.md) §1.2/§1.4,
+> [docs/stash/CommBiz IPFX Bulk Settlement Upload - File Specification v4.0 2.md](../stash/CommBiz%20IPFX%20Bulk%20Settlement%20Upload%20-%20File%20Specification%20v4.0%202.md) "File Description and Business Rules" / "File Contents - Data Rows Format"
 
 This runbook is a step-by-step manual verification guide for the Payment Type Router's promotion to a
 real cross-slice dispatcher and the two payment types it dispatches to besides Direct Entry: **Host
@@ -37,8 +39,11 @@ open product-decision item, not a bug in this runbook or in the implementation i
    [src/CommBiz.Api/Properties/launchSettings.json](../../src/CommBiz.Api/Properties/launchSettings.json), `http` profile).
 3. All examples below use PowerShell's `Invoke-RestMethod`. Ready-to-run equivalents for every scenario
    below also live in [tests/smoke/BPay.http](../../tests/smoke/BPay.http),
-   [tests/smoke/Imt.http](../../tests/smoke/Imt.http), and
-   [tests/smoke/Errors.http](../../tests/smoke/Errors.http).
+   [tests/smoke/Imt.http](../../tests/smoke/Imt.http),
+   [tests/smoke/PriorityPayments.http](../../tests/smoke/PriorityPayments.http), and
+   [tests/smoke/Errors.http](../../tests/smoke/Errors.http). **No `tests/smoke/Fx.http` file exists
+   yet** — the F-022/F-023 FX scenarios below (TC-075–TC-084) are written directly in this runbook
+   instead; creating an `Fx.http` mirroring the others is tracked as a follow-up, not fabricated here.
 4. `appsettings.json`'s `BPay` section (`FundingAccount`, `FileNumber`) uses placeholder values only —
    no real funding account has been confirmed yet (per [Features/BPay/README.md](../../src/CommBiz.Api/Features/BPay/README.md)).
    `appsettings.json`'s `Imt` section (`DebitAccountBsb`, `DebitAccountNumber`, `DebitAccountName`) uses
@@ -640,6 +645,11 @@ fields (Beneficiary Address, Beneficiary Payment Details — see TC-062), which 
 | PP `DestinationBankAccountName` | no hyphen/apostrophe, ≤32 characters |
 | PP `BeneficiaryAddress` | optional; if present, ≤40 characters, no hyphen/apostrophe |
 | PP batch size | 1–350 instructions |
+| FX `BuyCurrency`/`SellCurrency` | exactly 3 upper-case alphabetic characters |
+| FX `Amount` | > 0, at most 11 integer digits + 2 decimal digits (max `99,999,999,999.99`) |
+| FX `AccountNo` | 1–12 alphanumeric characters |
+| FX batch size | 1–200 instructions |
+| FX distinct currency pairs per batch | at most 15 |
 
 ---
 
@@ -940,3 +950,386 @@ $result.mappings                             # expect: $null
 ```
 Consistent with F-021's TC-070 above — `Mappings` is only ever populated alongside a successful
 conversion, never on a rejected batch.
+
+---
+
+## F-022 — Payment Type Router: FOREX dispatch — TC-075–TC-077
+
+> Added 2026-08-18. **No `tests/smoke/Fx.http` file exists yet** (see [Prerequisites](#prerequisites)
+> point 3 above) — every request body in this section and in F-023 below is written directly in this
+> runbook, not lifted from a smoke file, unlike the F-015–F-021 sections above.
+
+`PaymentTypeRouter` (F-015) gained a fifth routing code, `"FOREX"` (`FxType` in
+[PaymentTypeRouter.cs](../../src/CommBiz.Api/Features/PaymentRouting/PaymentTypeRouter.cs)), dispatching
+to the FX Conversion Slice (F-023, `Features/Fx`). The existing router-level rules apply unchanged: a
+batch is peeked for `paymentTypeCode` before any slice's own validator runs, and a batch mixing `FOREX`
+with any other payment type code is rejected in full at the router level — the same mixed-batch rule
+already verified for `BPAY`/`DE`/`TT`/`RTGS` in F-015/TC-051 and F-018/TC-073 above.
+
+**Automated equivalent:**
+[tests/CommBiz.Api.Tests/Fx/FxConvertEndpointTests.cs](../../tests/CommBiz.Api.Tests/Fx/FxConvertEndpointTests.cs)
+
+### TC-075 — Valid FOREX batch dispatches through `/convert` to the FX handler
+
+```powershell
+$body = @'
+[
+  {
+    "paymentTypeCode": "FOREX",
+    "paymentSourceTypeCode": "CMA",
+    "paymentDate": "2026-08-18T10:00:00",
+    "amount": 500.00,
+    "notes": "New Settlement",
+    "buyCurrency": "USD",
+    "sellCurrency": "AUD",
+    "rateTypeCode": "SPOT",
+    "valueDateTypeCode": "STANDARD",
+    "feeTypeCode": "OUR",
+    "feeOtherTypeCode": "",
+    "accountNo": "Payment2"
+  }
+]
+'@
+
+$result = Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
+  -ContentType 'application/json' -Body $body
+```
+
+**Expected:** `200 OK`, `success: true`, `errors: null`, `convertedText` starts with `"FX,"` (never
+`"FOREX,"` — the routing code is never written to the file), `mappings` populated with 1 entry keyed
+`row1`.
+
+### TC-076 — Invalid FOREX batch returns failure with per-instruction reasons
+
+Same body as TC-075 with `buyCurrency` shortened to `"US"` (2 letters, fails the FX slice's own
+currency-code rule — see F-023/TC-082 below):
+
+```powershell
+$body = @'
+[
+  {
+    "paymentTypeCode": "FOREX",
+    "paymentSourceTypeCode": "CMA",
+    "paymentDate": "2026-08-18T10:00:00",
+    "amount": 500.00,
+    "notes": "New Settlement",
+    "buyCurrency": "US",
+    "sellCurrency": "AUD",
+    "rateTypeCode": "SPOT",
+    "valueDateTypeCode": "STANDARD",
+    "feeTypeCode": "OUR",
+    "feeOtherTypeCode": "",
+    "accountNo": "Payment2"
+  }
+]
+'@
+
+Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
+  -ContentType 'application/json' -Body $body
+```
+
+**Expected:** `200 OK`,
+```json
+{
+  "success": false,
+  "convertedText": null,
+  "errors": [
+    { "index": 0, "reason": "BuyCurrency 'US' must be exactly 3 uppercase alphabetic characters." }
+  ]
+}
+```
+`mappings: null` — the router successfully dispatched to the FX handler, but the FX slice's own
+validator rejected the instruction; this is a slice-level rejection, not a router-level one (contrast
+with TC-077 below).
+
+### TC-077 — Batch mixing FOREX with another payment type is rejected in full
+
+TC-075's valid instruction plus a minimal `DE` instruction in the same batch:
+
+```powershell
+$body = @'
+[
+  {
+    "paymentTypeCode": "FOREX",
+    "paymentSourceTypeCode": "CMA",
+    "paymentDate": "2026-08-18T10:00:00",
+    "amount": 500.00,
+    "notes": "New Settlement",
+    "buyCurrency": "USD",
+    "sellCurrency": "AUD",
+    "rateTypeCode": "SPOT",
+    "valueDateTypeCode": "STANDARD",
+    "feeTypeCode": "OUR",
+    "feeOtherTypeCode": "",
+    "accountNo": "Payment2"
+  },
+  {
+    "paymentTypeCode": "DE",
+    "paymentSourceTypeCode": "CMA"
+  }
+]
+'@
+
+Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
+  -ContentType 'application/json' -Body $body
+```
+
+**Expected:** `200 OK`,
+```json
+{
+  "success": false,
+  "convertedText": null,
+  "errors": [
+    { "index": -1, "reason": "Payment batch must not mix payment types (found 'FOREX', 'DE')." }
+  ]
+}
+```
+This is a **router-level** rejection (`index: -1`) — the batch never reaches either slice's own
+validator, exactly like F-015/TC-051 and F-018/TC-073 above; `FOREX` simply extends the same
+already-existing mixed-batch rule to a fifth type code.
+
+---
+
+## F-023 — FX (Foreign Exchange) conversion — TC-078–TC-084
+
+The FX file is CSV, comma-delimited, 27 fields, one row per instruction, CRLF-separated with **no
+header, no trailer, and no trailing CRLF after the last row** — the same shape as IMT and Priority
+Payments. Field 1 (Transaction Type) always writes the literal constant `"FX"` — never the API routing
+code `"FOREX"`. Only the IPFX spec's non-CBA "Instruction" pattern (Sample 2: I SELL Instruction =
+`MAN`, I BUY Instruction = `DOC`) is supported; the IDR/CNH/KRW conditional fields (positions 23–27) are
+deferred per [docs/architecture.md](../architecture.md) Open Question A6, and are always blank.
+
+Per [FxRecordMapper.cs](../../src/CommBiz.Api/Features/Fx/FxRecordMapper.cs), of the 27 fields:
+
+| Field # | Name | Source |
+|---|---|---|
+| 1 | Transaction Type | constant `"FX"` |
+| 2 | Transaction Description | request `AccountNo` |
+| 3 | I BUY Currency | request `BuyCurrency` |
+| 4 | I BUY Amount | blank — amount is always placed on the **Sell** side |
+| 5 | I SELL Currency | request `SellCurrency` |
+| 6 | I SELL Amount | request `Amount` |
+| 7 | I SELL Instruction | config `Fx:SellInstruction` (confirmed value `"MAN"`) |
+| 12 | I BUY Instruction | config `Fx:BuyInstruction` (confirmed value `"DOC"`) |
+| 21 | I BUY Payment details | config `Fx:BuyPaymentDetails` (confirmed value `"Buy"`) |
+| 22 | I SELL Payment details | config `Fx:SellPaymentDetails` (confirmed value `"Sell"`) |
+| 8, 9, 10, 11, 13–20, 23–27 | (18 remaining positions) | always blank |
+
+**Automated equivalents:**
+[tests/CommBiz.Api.Tests/Fx/FxValidatorTests.cs](../../tests/CommBiz.Api.Tests/Fx/FxValidatorTests.cs),
+[tests/CommBiz.Api.Tests/Fx/FxRecordMapperTests.cs](../../tests/CommBiz.Api.Tests/Fx/FxRecordMapperTests.cs),
+[tests/CommBiz.Api.Tests/Fx/ConvertFxBatchHandlerTests.cs](../../tests/CommBiz.Api.Tests/Fx/ConvertFxBatchHandlerTests.cs),
+[tests/CommBiz.Api.Tests/Fx/FxConvertEndpointTests.cs](../../tests/CommBiz.Api.Tests/Fx/FxConvertEndpointTests.cs)
+
+### TC-078 — Happy path: single instruction, full field mapping
+
+Reuse TC-075's body (`buyCurrency: "USD"`, `sellCurrency: "AUD"`, `amount: 500.00`,
+`accountNo: "Payment2"`):
+
+```powershell
+$fields = $result.convertedText.Split(',')
+$fields.Count            # expect: 27
+$fields[0]                # "FX"        (field 1)
+$fields[1]                # "Payment2"  (field 2: Transaction Description, from AccountNo)
+$fields[2]                # "USD"       (field 3: I BUY Currency)
+$fields[3]                # ""          (field 4: I BUY Amount — always blank)
+$fields[4]                # "AUD"       (field 5: I SELL Currency)
+$fields[5]                # "500.00"    (field 6: I SELL Amount, from Amount)
+$fields[6]                # "MAN"       (field 7: I SELL Instruction)
+$fields[11]               # "DOC"       (field 12: I BUY Instruction)
+$fields[20]                # "Buy"       (field 21: I BUY Payment details)
+$fields[21]                # "Sell"      (field 22: I SELL Payment details)
+```
+
+**Expected:** `200 OK`, `success: true`, `errors: null`; every field above matches; all 18 remaining
+positions (8, 9, 10, 11, 13–20, 23–27) are empty strings.
+
+### TC-079 — Happy path: 2 instructions, distinct currency pairs — `Mappings` row order/count
+
+Same as TC-078 plus a second instruction with a different currency pair (`GBP`/`AUD`):
+
+```powershell
+$body = @'
+[
+  {
+    "paymentTypeCode": "FOREX",
+    "paymentSourceTypeCode": "CMA",
+    "paymentDate": "2026-08-18T10:00:00",
+    "amount": 500.00,
+    "notes": "New Settlement",
+    "buyCurrency": "USD",
+    "sellCurrency": "AUD",
+    "rateTypeCode": "SPOT",
+    "valueDateTypeCode": "STANDARD",
+    "feeTypeCode": "OUR",
+    "feeOtherTypeCode": "",
+    "accountNo": "Payment2"
+  },
+  {
+    "paymentTypeCode": "FOREX",
+    "paymentSourceTypeCode": "CMA",
+    "paymentDate": "2026-08-18T10:00:00",
+    "amount": 1250.75,
+    "notes": "New Settlement",
+    "buyCurrency": "GBP",
+    "sellCurrency": "AUD",
+    "rateTypeCode": "SPOT",
+    "valueDateTypeCode": "STANDARD",
+    "feeTypeCode": "OUR",
+    "feeOtherTypeCode": "",
+    "accountNo": "Payment3"
+  }
+]
+'@
+
+$result = Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
+  -ContentType 'application/json' -Body $body
+
+$result.convertedText -split "`r`n" | Measure-Object | Select-Object -ExpandProperty Count   # expect: 2
+$result.mappings.line                        # expect: row1, row2 (no header, no trailer)
+$row2 = $result.mappings | Where-Object { $_.line -eq 'row2' }
+$row2.fields.Count                           # expect: 27 — one FieldMapping entry per CSV field
+```
+
+**Expected:** `200 OK`, `success: true`; two 27-field CSV rows joined by exactly one CRLF, no trailing
+CRLF; `mappings` has 2 entries keyed `row1`/`row2`, each with 27 field entries — matching the
+`convertedText`/`Mappings` shape already verified for IMT/PP in F-021/TC-068 above.
+
+### TC-080 — Edge case: batch-count boundaries (0 / 1 / 200 / 201)
+
+All four variants below use a single, fixed currency pair (`USD`/`AUD`) throughout, so the batch-count
+rule is isolated from the currency-pair-count rule (F-023/TC-081 below).
+
+| Instruction count | Body shape | Expected |
+|---|---|---|
+| 0 | `[]` (empty array) | **Router-level** rejection (F-015 rule) — `200 OK`, `"success": false`, `errors: [{ "index": -1, "reason": "Payment batch must contain at least 1 payment instruction; unable to determine payment type." }]`. The FX slice's own `MinimumInstructionCount` check in `FxValidator` is never reached, since `PaymentTypeRouter` rejects empty arrays before any `paymentTypeCode` can be read. |
+| 1 | TC-078's single instruction | `200 OK`, `success: true` (already covered above). |
+| 200 | 200 instructions, same currency pair, unique `accountNo` per instruction (e.g. `"FX000001"`..`"FX000200"`) | `200 OK`, `success: true` — the maximum boundary is inclusive. |
+| 201 | 201 instructions, otherwise identical to the 200 case | `200 OK`, `"success": false`, `errors: [{ "index": -1, "reason": "FX file must contain at most 200 payment instruction(s) (found 201)." }]` |
+
+Generate the 200/201-instruction bodies with a small script rather than hand-writing them — e.g.:
+
+```powershell
+function New-FxBatch([int]$count) {
+    1..$count | ForEach-Object {
+        [PSCustomObject]@{
+            paymentTypeCode  = "FOREX"
+            paymentSourceTypeCode = "CMA"
+            paymentDate      = "2026-08-18T10:00:00"
+            amount           = 500.00
+            notes            = "New Settlement"
+            buyCurrency      = "USD"
+            sellCurrency     = "AUD"
+            rateTypeCode     = "SPOT"
+            valueDateTypeCode = "STANDARD"
+            feeTypeCode      = "OUR"
+            feeOtherTypeCode = ""
+            accountNo        = "FX{0:D6}" -f $_
+        }
+    }
+}
+
+$batch200 = New-FxBatch -count 200 | ConvertTo-Json
+Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
+  -ContentType 'application/json' -Body $batch200
+
+$batch201 = New-FxBatch -count 201 | ConvertTo-Json
+Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
+  -ContentType 'application/json' -Body $batch201
+```
+
+### TC-081 — Edge case: currency-pair-count boundary (15 / 16 distinct pairs)
+
+Both variants below use a small, fixed instruction count (one instruction per distinct pair, well under
+the 200-instruction batch-count limit), so this boundary is isolated from TC-080 above. Fifteen distinct
+`BuyCurrency` values against a constant `SellCurrency` of `AUD` gives 15 distinct pairs; adding a 16th
+buy currency tips it over:
+
+```powershell
+function New-FxCurrencyPairBatch([string[]]$buyCurrencies) {
+    $buyCurrencies | ForEach-Object {
+        [PSCustomObject]@{
+            paymentTypeCode  = "FOREX"
+            paymentSourceTypeCode = "CMA"
+            paymentDate      = "2026-08-18T10:00:00"
+            amount           = 500.00
+            notes            = "New Settlement"
+            buyCurrency      = $_
+            sellCurrency     = "AUD"
+            rateTypeCode     = "SPOT"
+            valueDateTypeCode = "STANDARD"
+            feeTypeCode      = "OUR"
+            feeOtherTypeCode = ""
+            accountNo        = "FX-$_"
+        }
+    }
+}
+
+$fifteenPairs = @("USD","GBP","EUR","JPY","NZD","CAD","CHF","SGD","HKD","CNY","INR","ZAR","SEK","NOK","DKK")
+$batch15 = New-FxCurrencyPairBatch -buyCurrencies $fifteenPairs | ConvertTo-Json
+Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
+  -ContentType 'application/json' -Body $batch15
+# Expect: 200 OK, success: true
+
+$sixteenPairs = $fifteenPairs + "THB"
+$batch16 = New-FxCurrencyPairBatch -buyCurrencies $sixteenPairs | ConvertTo-Json
+Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
+  -ContentType 'application/json' -Body $batch16
+```
+
+**Expected (16-pair batch):** `200 OK`,
+```json
+{
+  "success": false,
+  "convertedText": null,
+  "errors": [
+    { "index": -1, "reason": "FX file must settle at most 15 distinct currency pairs (found 16)." }
+  ]
+}
+```
+
+### TC-082/TC-083/TC-084 — Field validation failures
+
+Start from TC-078's single-instruction body and apply only the described mutation to one field, then
+POST. All return `200 OK` with `"success": false`, `"convertedText": null`, `"mappings": null`.
+
+| TC | Mutation | Expected `errors[0].reason` | `index` |
+|---|---|---|---|
+| TC-082 | `buyCurrency = "US"` (2 letters) | `BuyCurrency 'US' must be exactly 3 uppercase alphabetic characters.` | `0` |
+| TC-083 | `amount = 100.123` (3 decimal digits) | `Amount '100.123' must be greater than zero, with at most 11 integer digits and 2 decimal digits.` | `0` |
+| TC-084 | `accountNo = "ABCDEFGHIJKLM"` (13 alphanumeric characters, exceeds the 12-character max) | `AccountNo 'ABCDEFGHIJKLM' must be 1-12 alphanumeric characters.` | `0` |
+
+```powershell
+$body = @'
+[
+  {
+    "paymentTypeCode": "FOREX",
+    "paymentSourceTypeCode": "CMA",
+    "paymentDate": "2026-08-18T10:00:00",
+    "amount": 500.00,
+    "notes": "New Settlement",
+    "buyCurrency": "US",
+    "sellCurrency": "AUD",
+    "rateTypeCode": "SPOT",
+    "valueDateTypeCode": "STANDARD",
+    "feeTypeCode": "OUR",
+    "feeOtherTypeCode": "",
+    "accountNo": "Payment2"
+  }
+]
+'@
+
+Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
+  -ContentType 'application/json' -Body $body
+```
+
+**Expected (TC-082):**
+```json
+{
+  "success": false,
+  "convertedText": null,
+  "errors": [
+    { "index": 0, "reason": "BuyCurrency 'US' must be exactly 3 uppercase alphabetic characters." }
+  ]
+}
+```

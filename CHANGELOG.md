@@ -5,6 +5,76 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] — 2026-08-18
+
+### Added
+
+#### FX Conversion Pipeline
+- **F-023:** New FX batch conversion pipeline for foreign exchange (FOREX) payment routing
+  - Converts FX instruction batches to IPFX CSV format (CBA-compliant international payment file specification)
+  - Routed on payment type `"FOREX"` via `PaymentTypeRouter`
+  - Validator enforces FX-specific batch constraints (max 200 instructions, max 15 unique currency pairs)
+  - Instruction-level validation for required fields, format, and currency code compliance
+  - `FxRecordMapper` converts batch metadata and instructions to IPFX-compliant field mapping
+  - Handler orchestrates validation, mapping, and conversion into final formatted output
+  - Unified `Mappings` model (F-021) included for field-level traceability across FX conversion
+
+- **F-022:** Payment Type Router extended to dispatch `"FOREX"` payment type code
+  - Added `"FOREX"` case to `PaymentTypeRouter` routing switch
+  - Dispatches `"FOREX"` to `ConvertFxBatchCommand`
+  - No changes to existing routing logic (DE, BPAY, IMT, RTGS dispatch unchanged)
+
+### Modules/Files Modified
+- `src/CommBiz.Api/Features/Fx/` [new]
+  - `FxPaymentInstructionRequest.cs` — Request model for individual FX instructions
+  - `FxSettings.cs` — Configuration and settings for FX processing (field widths, constraints)
+  - `FxValidator.cs` — Batch-level validation (instruction count ≤ 200, currency pairs ≤ 15)
+  - `FxRecordMapper.cs` — Maps FX instructions to IPFX CSV format with field mapping metadata
+  - `ConvertFxBatchCommand.cs` — MediatR command for orchestration
+  - `ConvertFxBatchHandler.cs` — Handler implementing the FX conversion pipeline
+  - `ConvertFxBatchResponse.cs` — Response model with `ConvertedText` and `Mappings`
+
+- `src/CommBiz.Api/Features/PaymentRouting/PaymentTypeRouter.cs` [modified]
+  - Added `"FOREX"` case to payment type routing switch
+  - Dispatches `"FOREX"` to `ConvertFxBatchCommand`
+  - No changes to existing routing logic (DE, BPAY, IMT, RTGS dispatch unchanged)
+
+- `src/CommBiz.Api/Program.cs` [modified]
+  - Registered `FxSettings` in dependency injection container
+  - MediatR handler auto-discovery includes FX batch handler
+  - No changes to existing service registrations
+
+- `src/CommBiz.Api/appsettings.json` [modified]
+  - Added `"Fx"` configuration section with IPFX field definitions and validation constraints
+  - Currency pair and instruction limit configuration for batch boundaries
+
+### Breaking Changes
+None — FX conversion is purely additive. Existing payment types (Direct Entry, BPAY, IMT, Priority Payments) are unaffected. New payment type routed on `"FOREX"` string; no changes to existing request/response contracts or routing logic.
+
+### Test Coverage
+**374 passing tests** (verified via `dotnet test`, 0 failed, 0 skipped; 0 vulnerabilities via `dotnet list package --vulnerable --include-transitive`):
+
+1. **Happy Path — Valid FX Batch Conversion to IPFX CSV**
+   - POST valid FX batch with multiple instructions (≤ 200 instructions, ≤ 15 unique currency pairs) to `POST /convert` with payment type `"FOREX"`
+   - Verify response includes `ConvertedText` (formatted IPFX CSV output) and populated `Mappings` array
+   - Confirm `Mappings` is ordered parallel to `ConvertedText` with per-instruction field breakdown
+   - Validate output meets IPFX/CBA-spec CSV format constraints (field widths, delimiters, currency code format)
+
+2. **Edge Case — Batch Boundary Enforcement**
+   - POST FX batch at exactly 200 instructions, 15 unique currency pairs (maximum allowed)
+   - Verify response includes `ConvertedText` and `Mappings` with all 200 instructions converted
+   - POST FX batch exceeding 200 instructions or 15 currency pairs
+   - Verify validation rejects batch with clear error indicating boundary violation
+   - Confirm response structure matches existing error handling (validation error case)
+
+3. **Regression-Sensitive — Existing Payment Type Routing Unaffected**
+   - POST valid Direct Entry batch to `POST /convert` with payment type `"DE"`
+   - Verify response unchanged from Revision 5 (conversion output identical, Mappings present)
+   - POST valid BPAY batch with payment type `"BPAY"`, verify output unchanged
+   - POST valid IMT batch with payment type `"FOREX_DOMESTIC"` (if applicable) or test IMT, verify unaffected
+   - POST valid Priority Payments batch with payment type `"RTGS"`, verify output unchanged
+   - Confirm no regression: existing handlers for all four payment types still route correctly and produce byte-for-byte identical output
+
 ## [1.4.0] — 2026-08-18
 
 ### Added

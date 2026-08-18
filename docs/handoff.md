@@ -87,13 +87,43 @@ Integration Agent PASS (318 tests, 0 vulnerabilities) and Reviewer-Integration P
 attempt) for F-018 — no fixes needed. With F-018 Done, all five Phase 2 features (F-015, F-016,
 F-017, F-018, F-021) are now Done and the phase is closed.
 
+**FX (Foreign Exchange) — F-022 and F-023 — added after the above, completing Phase 2's fifth and
+final payment type.**
+
+- F-023 — Full FX conversion slice: converts Shaw and Partners' `FOREX`-typed payment instructions
+  into a CommBiz IPFX Bulk Settlement Upload CSV file (one data row per instruction, no
+  header/trailer/self-balancing record). Field mapping: constant `FX` Transaction Type; `accountNo`
+  → Transaction Description; Buy/Sell Currency and Amount mapped directly (Amount always on the Sell
+  side, I BUY Amount left blank); I SELL/I BUY Instruction (`MAN`/`DOC`) and I BUY/I SELL Payment
+  details (`Buy`/`Sell`) sourced from static `FxSettings` configuration, not the request; `Notes`
+  carried but unused. Batch rules: 1-200 instructions, max 15 distinct currency pairs. Built directly
+  against the shared Field Mapping Model (F-021) from day one, no retrofit needed — same pattern as
+  Priority Payments. IDR/CNH/KRW-specific fields are explicitly deferred (Architecture Open Question
+  A6). Files: `src/CommBiz.Api/Features/Fx/*.cs` (`FxPaymentInstructionRequest`, `FxSettings`,
+  `FxValidator`, `FxRecordMapper`, `ConvertFxBatchCommand`/`ConvertFxBatchHandler`,
+  `ConvertFxBatchResponse`); new `appsettings.json` `"Fx"` section, registered in `Program.cs`.
+- F-022 — Extended the Payment Type Router
+  (`src/CommBiz.Api/Features/PaymentRouting/PaymentTypeRouter.cs`) to recognise the `FOREX` code and
+  dispatch to the FX slice, mirroring the existing DE/BPAY/TT/RTGS dispatch pattern. No changes to
+  existing dispatch behaviour for the other four payment types.
+
+Integration Agent PASS (374 tests, 0 vulnerabilities) and Reviewer-Integration PASS (first attempt)
+for both F-022 and F-023 — no fixes needed. With F-023 Done, all seven Phase 2 features (F-015,
+F-016, F-017, F-018, F-021, F-022, F-023) are now Done and **Phase 2 is fully complete: all five
+payment types (Direct Entry, BPay, IMT, Priority Payments, FX) now convert end to end.**
+
+New documentation gaps surfaced by this round, not yet resolved: [docs/test-cases.md](test-cases.md)
+has zero FX scenarios and no `tests/smoke/Fx.http` file exists (tracked as new PMBook item PM-012);
+the existing test-runbook/handoff/CHANGELOG/REVISION staleness item now also covers F-022/F-023
+(amended PM-011).
+
 ## Current State
 
-- Service builds, tests, and runs cleanly (318 tests passing, 0 failed, 0 vulnerabilities).
+- Service builds, tests, and runs cleanly (374 tests passing, 0 failed, 0 vulnerabilities).
 - Kestrel-hosted; Wolverine-wired.
 - **Phase 1 (Direct Entry Conversion Core) and Phase 2 (Additional Payment Types) are both fully
-  Done.** Four payment types now convert end to end through the shared router: route → validate →
-  map → assemble, returning the result inline as JSON per
+  Done.** All five payment types now convert end to end through the shared router: route →
+  validate → map → assemble, returning the result inline as JSON per
   [ADR-008](adr/ADR-008-inline-json-response.md).
   - Direct Entry — `POST /convert` accepts a batch of as few as 1 valid payment instruction and
     always returns a file whose trailer totals reconcile to zero net, thanks to the F-014
@@ -104,21 +134,33 @@ F-017, F-018, F-021) are now Done and the phase is closed.
   - Priority Payments (RTGS) — converts to the same 27-field MT101-family CSV layout as IMT, with
     almost all SWIFT/currency/intermediary fields "Not applicable" for this domestic BSB-based
     payment; 14-month process-date window; stricter beneficiary character rules.
-- All four payment types' responses include a `Mappings` field (F-021), giving a per-line,
+  - FX (Foreign Exchange) — routed on the `FOREX` code, converts to the CommBiz IPFX Bulk
+    Settlement Upload CSV layout (one data row per instruction, no header/trailer/self-balancing
+    record); IDR/CNH/KRW-specific fields are explicitly out of scope for now (Architecture Open
+    Question A6).
+- All five payment types' responses include a `Mappings` field (F-021), giving a per-line,
   per-field breakdown of request-origin vs. CBA-spec-output values, for testing-team verification
-  without needing to parse the raw converted text. Priority Payments was built against this model
-  from day one, with no retrofit needed.
+  without needing to parse the raw converted text. Priority Payments and FX were both built against
+  this model from day one, with no retrofit needed.
 - `GET /health` returns a basic liveness check.
 - Phase 3 (Cross-Cutting Concerns & Hardening) and Phase 4 (Release Readiness) are both Planned,
   not yet started.
-- Known gaps, tracked in the PMBook as PM-010/PM-011, not yet resolved: [docs/test-cases.md](test-cases.md)
-  has zero scenarios for Priority Payments; [docs/testing/phase-2-additional-payment-types-i.md](testing/phase-2-additional-payment-types-i.md),
+- Known gaps, tracked in the PMBook as PM-011 (amended) and the newly-added PM-012, not yet
+  resolved: [docs/test-cases.md](test-cases.md) has zero scenarios for FX; no `tests/smoke/Fx.http`
+  file exists (both PM-012); [docs/testing/phase-2-additional-payment-types-i.md](testing/phase-2-additional-payment-types-i.md),
   [ADR-009](adr/ADR-009-shared-field-mapping-response-model.md), this handoff doc, `CHANGELOG.md`,
-  and `REVISION.md` were all one feature stale (describing F-018 as Planned/blocked and carrying a
-  stale 244-test count) prior to this Finalization round. These docs should be brought current —
-  and PM-010/PM-011 resolved — before Phase 4's E2E test work (F-013) begins.
+  and `REVISION.md` are one feature-pair stale for F-022/F-023 (amended PM-011, previously scoped to
+  F-018 only). These docs should be brought current — and PM-011/PM-012 resolved — before Phase 4's
+  E2E test work (F-013) begins.
 
 ## What's Next
+
+**Documentation gaps to close first**
+- PM-012 (new) — add FX scenarios to [docs/test-cases.md](test-cases.md) and create
+  `tests/smoke/Fx.http`
+- PM-011 (amended) — bring [docs/testing/phase-2-additional-payment-types-i.md](testing/phase-2-additional-payment-types-i.md),
+  [ADR-009](adr/ADR-009-shared-field-mapping-response-model.md), this handoff doc, `CHANGELOG.md`,
+  and `REVISION.md` current for F-022/F-023 (previously amended for F-018 only)
 
 **Phase 3 — Cross-Cutting Concerns & Hardening (current phase)**
 - F-009 — Shaw.Diagnostics logging + redaction
@@ -127,8 +169,8 @@ F-017, F-018, F-021) are now Done and the phase is closed.
 
 **Phase 4 — Release Readiness**
 - F-012 — Kestrel-only hosting config
-- F-013 — E2E test coverage — should follow closure of PM-010/PM-011's documentation gaps so the
-  E2E suite has accurate Priority Payments test-case coverage to build from
+- F-013 — E2E test coverage — should follow closure of PM-011/PM-012's documentation gaps so the
+  E2E suite has accurate FX and Priority Payments test-case coverage to build from
 
 ## Important Context
 
@@ -149,6 +191,8 @@ F-017, F-018, F-021) are now Done and the phase is closed.
    - `src/CommBiz.Api/Features/BPay/` (validator, header/detail CSV mappers, Command+Handler)
    - `src/CommBiz.Api/Features/Imt/` (validator, CSV mapper, Command+Handler)
    - `src/CommBiz.Api/Features/PriorityPayments/` (validator, CSV mapper, Command+Handler)
+   - `src/CommBiz.Api/Features/Fx/` (`FxPaymentInstructionRequest`, `FxSettings`, `FxValidator`,
+     `FxRecordMapper`, `ConvertFxBatchCommand`/`ConvertFxBatchHandler`, `ConvertFxBatchResponse`)
    All mapping is done via pure static functions, no AutoMapper ([ADR-004](adr/ADR-004-manual-mapping-no-automapper.md)).
 4. **Build/test/format commands** — the solution builds via `dotnet build CommBiz.sln`, tests via
    `dotnet test`, format via `dotnet format`.
@@ -161,17 +205,22 @@ F-017, F-018, F-021) are now Done and the phase is closed.
    IMT. It is a domestic, BSB-based payment: almost all SWIFT/currency/intermediary fields are "Not
    applicable", the process-date window is 14 months (vs. IMT's 7 days), and beneficiary
    name/address fields disallow hyphens/apostrophes.
-7. **The shared Field Mapping Model (F-021) is now used consistently by all four implemented
-   payment types (DE, BPay, IMT, Priority Payments)** — it is an established second ADR-002
+7. **The shared Field Mapping Model (F-021) is now used consistently by all five implemented
+   payment types (DE, BPay, IMT, Priority Payments, FX)** — it is an established second ADR-002
    exception, alongside the Payment Type Router — see
    [ADR-009](adr/ADR-009-shared-field-mapping-response-model.md). It lives at
    `src/CommBiz.Api/Features/Shared/FieldMapping.cs` (`FieldMapping`/`LineMapping`), with the
    `AmountToCents`/`FixedWidth` helpers factored out to
-   `src/CommBiz.Api/Features/Shared/MappingUtilities.cs`. Priority Payments (F-018) was the first
-   feature built directly against this model from day one, with no retrofit step required.
-8. **PM-010/PM-011 track remaining documentation gaps from the F-018 round** —
-   [docs/test-cases.md](test-cases.md) has zero Priority Payments scenarios (PM-010), and several
-   docs ([docs/testing/phase-2-additional-payment-types-i.md](testing/phase-2-additional-payment-types-i.md),
-   [ADR-009](adr/ADR-009-shared-field-mapping-response-model.md), `CHANGELOG.md`, `REVISION.md`)
-   were one feature stale (PM-011) prior to this Finalization round. Close both before starting
-   Phase 4's E2E test work (F-013), so the E2E suite has accurate source material to build from.
+   `src/CommBiz.Api/Features/Shared/MappingUtilities.cs`. Priority Payments (F-018) and FX (F-023)
+   were both built directly against this model from day one, with no retrofit step required.
+8. **PM-011/PM-012 track remaining documentation gaps, now including the FX round** —
+   [docs/test-cases.md](test-cases.md) has zero FX scenarios and no `tests/smoke/Fx.http` file
+   exists (PM-012, new); [docs/testing/phase-2-additional-payment-types-i.md](testing/phase-2-additional-payment-types-i.md),
+   [ADR-009](adr/ADR-009-shared-field-mapping-response-model.md), this handoff doc, `CHANGELOG.md`,
+   and `REVISION.md` are stale for F-022/F-023 (PM-011, amended — previously scoped to F-018 only).
+   Close both before starting Phase 4's E2E test work (F-013), so the E2E suite has accurate source
+   material to build from.
+9. **FX's IDR/CNH/KRW-specific fields are explicitly out of scope for now (Architecture Open
+   Question A6)** — `FxValidator`/`FxRecordMapper` handle the general Buy/Sell currency-pair case
+   only; no currency-specific field handling exists yet for those three currencies. Revisit once A6
+   is resolved.
