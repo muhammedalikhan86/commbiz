@@ -15,6 +15,7 @@ public static class PaymentTypeRouter
     private const string BPayType = "BPAY";
     private const string ImtType = "TT"; // F-017: Shaw and Partners' internal "Telegraphic Transfer" code - CBA's file calls this format "IMT"
     private const string PriorityPaymentType = "RTGS"; // F-018: Shaw and Partners' routing code - never written to output, which always uses the literal "PP"
+    private const string FxType = "FOREX"; // F-022: dispatches to the FX Conversion Slice (F-023)
     private const string PaymentTypeCodeProperty = "paymentTypeCode";
 
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
@@ -43,6 +44,7 @@ public static class PaymentTypeRouter
             BPayType => await DispatchBPayAsync(body, bus),
             ImtType => await DispatchImtAsync(body, bus),
             PriorityPaymentType => await DispatchPriorityPaymentAsync(body, bus),
+            FxType => await DispatchFxAsync(body, bus),
             _ => Results.Ok(RejectedUnsupported(typeCodes))
         };
     }
@@ -76,6 +78,14 @@ public static class PaymentTypeRouter
         var instructions = body.Deserialize<List<PriorityPayments.PriorityPaymentInstructionRequest>>(JsonOptions) ?? [];
         var response = await bus.InvokeAsync<PriorityPayments.ConvertPriorityPaymentBatchResponse>(
             new PriorityPayments.ConvertPriorityPaymentBatchCommand(instructions));
+        return Results.Ok(response);
+    }
+
+    private static async Task<IResult> DispatchFxAsync(JsonElement body, IMessageBus bus)
+    {
+        var instructions = body.Deserialize<List<Fx.FxPaymentInstructionRequest>>(JsonOptions) ?? [];
+        var response = await bus.InvokeAsync<Fx.ConvertFxBatchResponse>(
+            new Fx.ConvertFxBatchCommand(instructions));
         return Results.Ok(response);
     }
 
