@@ -1,8 +1,8 @@
 # PRD: Shaw and Partners → CommBank Payment File Conversion Service
 
 > Status: APPROVED
-> Version: v8
-> Last updated: 2026-08-17
+> Version: v10
+> Last updated: 2026-08-18
 
 ## Problem Statement
 Shaw and Partners raises individual client payment instructions from its own platform — each
@@ -18,8 +18,12 @@ straight-through processing.
 - Automatically convert a Shaw and Partners payment file into the equivalent CommBank
   submission, with no manual re-keying or manual reformatting step.
 - Deliver domestic (Direct Entry) payment conversion first, with further payment types (e.g.
-  international, BPAY) added in later releases, each converted into its own corresponding
-  CommBank format.
+  international, BPAY, foreign currency exchange (FX)) added in later releases, each converted
+  into its own corresponding CommBank format.
+- Support converting a foreign currency exchange (FX) payment instruction — where Shaw and
+  Partners specifies a currency pair being bought and sold — into the equivalent CommBank FX
+  settlement submission, so cross-currency payments don't require manual entry into CommBank's
+  markets/FX system.
 - Support converting a group of payment instructions submitted together in one go, not just
   one at a time — including a run of just a single instruction, since the service itself adds
   the self-balancing entry CommBank's file format requires (see below), rather than relying on
@@ -51,6 +55,9 @@ straight-through processing.
   re-key it before submission.
 - As a payments operations user, I want to be notified when a payment run cannot be converted
   (e.g. missing required data), so that I can fix the source data before it reaches the bank.
+- As a payments operations user, I want to submit a foreign currency exchange (FX) payment
+  instruction and have it converted into the format CommBank's FX settlement system accepts, so
+  that cross-currency payments go through the same straight-through process as domestic ones.
 - As a payments operations user, if any single instruction in a submitted group is invalid, I
   want the whole submission rejected with a clear reason per invalid instruction, so that I can
   correct the source data and resubmit with confidence nothing partial went through.
@@ -102,3 +109,5 @@ straight-through processing.
 | v5 | 2026-08-13 | Resolved Q4: bank return/status handling is permanently out of scope, not deferred — product is conversion-only. Non-Goals updated accordingly. All open questions resolved | Triage edit |
 | v6 | 2026-08-13 | PRD approved | Gate approval |
 | v8 | 2026-08-17 | Added Goal: every conversion also exposes a field-by-field breakdown of the converted output, for the testing team's convenience validating conversions against source data | Triage edit — downstream Architecture change (field-level mapping response contract) |
+| v9 | 2026-08-18 | Added foreign currency exchange (FX) as a new in-scope payment type: Goal (convert FX instructions into CommBank's FX settlement submission) and corresponding User Story. Confirmed CommBank file specification and source request shape provided; both carried into Architecture, not recorded here per Document Boundaries | Triage edit |
+| v10 | 2026-08-18 | PRD approved | Gate approval |
