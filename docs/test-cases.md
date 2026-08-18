@@ -1,8 +1,8 @@
 # Test Cases: Shaw and Partners → CommBank Payment File Conversion Service
 
 > Status: DRAFT
-> Version: v3
-> Last updated: 2026-08-17
+> Version: v4
+> Last updated: 2026-08-18
 > Source: docs/project-management.md (Feature Backlog), docs/architecture.md (FR-001–FR-008),
 > docs/stash/Direct Entry - File Specification CommBiz.md, docs/stash/BPay Payments - CommBiz File
 > Specification.md, docs/stash/CommBiz File Specification - International Money Transfers Priority
@@ -86,6 +86,8 @@ running Minimal API host. Field values reference the Direct Entry spec's Sample 
 
 > Covers F-015 (Payment Type Router extended to BPAY/IMT), F-016 (BPAY Batch Payments), F-017 (IMT).
 > F-018 (Priority Payments) is still Planned (blocked on PM-006) and has no scenarios here yet.
+> F-022/F-023 (FX conversion) now has scenarios below (PM-012 closure) — this is a separate addition
+> and does not resolve F-018's still-open gap (tracked separately under PM-010).
 
 ### F-015 — Payment Type Router: additional dispatch/rejection paths (beyond TC-004/TC-005)
 
@@ -120,6 +122,21 @@ running Minimal API host. Field values reference the Direct Entry spec's Sample 
 | TC-049 | `DestinationBankSwiftCode` invalid length rejected | POST an instruction with `DestinationBankSwiftCode` not 8 or 11 alphanumeric characters | 4xx response; batch rejected in full; error reason cites `DestinationBankSwiftCode` must be 8 or 11 alphanumeric characters |
 | TC-050 | Max-350-transaction boundary (regression-sensitive) | POST a batch of exactly 350 valid instructions, then a batch of 351 | 350 instructions: 200 OK, `success: true`, all 350 convert. 351 instructions: 4xx response, batch rejected, error reason cites "at most 350 payment instruction(s) (found 351)" per the IMT spec's 350-transaction file limit |
 
+### F-022/F-023 — FX conversion
+
+| ID | Scenario | Steps | Expected Result |
+|----|----------|-------|------------------|
+| TC-051 | Happy path — single valid FX instruction | POST a batch of 1 valid FX instruction (`buyCurrency`/`sellCurrency` exactly 3 uppercase letters, e.g. `USD`/`AUD`; positive `amount` with at most 11 integer digits and 2 decimal digits; `accountNo` 1-12 alphanumeric characters) | 200 OK; `success: true`; `convertedText` is a single 27-field CSV row starting with the constant `"FX,"` (never the API routing code `"FOREX,"`), no header/trailer record |
+| TC-052 | FOREX dispatch is case-insensitive (mirroring TC-034/TC-035/TC-036) | POST a valid single-instruction FX batch with `paymentTypeCode: "forex"` (lower-case) | 200 OK; `success: true`; routes to the FX slice identically to `"FOREX"` |
+| TC-053 | Happy path — multiple valid FX instructions, distinct currency pairs (regression-sensitive) | POST a batch of 2+ valid FX instructions, each with a different `buyCurrency`/`sellCurrency` pair | 200 OK; `success: true`; `convertedText` contains one 27-field CSV row per instruction, CRLF-separated, no trailing CRLF, no header/trailer record; `Mappings` populated with one entry per row (`row1`, `row2`, ...), each with 27 field entries |
+| TC-054 | `BuyCurrency`/`SellCurrency` invalid format rejected | POST an instruction with `buyCurrency` or `sellCurrency` not exactly 3 uppercase alphabetic characters (e.g. lower-case `"usd"` or wrong-length `"US"`) | 4xx response; batch rejected in full; error reason cites `BuyCurrency`/`SellCurrency` must be exactly 3 uppercase alphabetic characters |
+| TC-055 | `Amount` invalid format rejected | POST an instruction with `amount` ≤0, more than 11 integer digits, or more than 2 decimal digits (e.g. `100.123`) | 4xx response; batch rejected in full; error reason cites `Amount` must be greater than zero, with at most 11 integer digits and 2 decimal digits |
+| TC-056 | `AccountNo` invalid rejected | POST an instruction with `accountNo` blank or exceeding 12 alphanumeric characters | 4xx response; batch rejected in full; error reason cites `AccountNo` must be 1-12 alphanumeric characters |
+| TC-057 | Max-200-instruction boundary (regression-sensitive) | POST a batch of exactly 200 valid instructions sharing one currency pair, then a batch of 201 | 200 instructions: 200 OK, `success: true`, all 200 convert. 201 instructions: 4xx response, batch rejected, error reason cites "at most 200 payment instruction(s) (found 201)" per the FX file's 200-row limit |
+| TC-058 | Max-15-distinct-currency-pair boundary (regression-sensitive) | POST a batch of 15 valid instructions, each with a distinct `buyCurrency` against a constant `sellCurrency`, then a batch of 16 distinct pairs | 15 pairs: 200 OK, `success: true`. 16 pairs: 4xx response, batch rejected, error reason cites "must settle at most 15 distinct currency pairs (found 16)" per the FX spec's 15-currency-pair limit |
+| TC-059 | Mixed *recognised* payment types in one batch rejects the whole batch (mirroring TC-004) | POST a batch mixing FX (`FOREX`) instructions with a different, recognised payment type (e.g. `DE`) | 4xx response; entire batch rejected (no partial conversion) with exactly one error at index `-1`; reason is the batch-level "must not mix payment types" message, e.g. `Payment batch must not mix payment types (found 'FOREX', 'DE').`, per FR-006 |
+| TC-060 | Response contract — `Mappings` present, `Notes` never output (distinctive FX behaviour) | Convert a valid FX batch; inspect the response | `Mappings` populated with 27 field-position entries per row (`Transaction Type` through `Social Security Number (SSN)`); unlike every other payment type in this doc, the request's `Notes` field is never read by the FX slice and never appears anywhere in `convertedText` or `Mappings` — it is carried in the payload for other purposes only, per `FxPaymentInstructionRequest`'s own field comment |
+
 ## Phase 3 — Cross-Cutting Concerns (F-009, F-010, F-011)
 
 | ID | Scenario | Steps | Expected Result |
@@ -143,3 +160,4 @@ running Minimal API host. Field values reference the Direct Entry spec's Sample 
 | v1 | 2026-08-13 | Initial draft, derived from PMBook Feature Backlog and Direct Entry spec | Orchestrator Step 0.0 |
 | v2 | 2026-08-13 | Added F-014 scenarios (self-balancing contra detail record, minimum batch size reduced to 1); updated TC-019 to expect the self-balancing detail record in the output | User requirement change |
 | v3 | 2026-08-17 | Retroactive documentation catch-up for F-015/F-016/F-017 (already Done, Reviewer-PASS'd): added an editorial note flagging the still-open PM-003 status-code discrepancy (4xx wording below vs. actual `200 OK` + `success: false`); corrected TC-004/TC-005 to reflect the router's two distinct rejections (batch-level mixed-type at index -1 vs. per-instruction unsupported-type); renumbered stale "Phase 2 — Cross-Cutting"/"Phase 3 — Release Readiness" headers to the current PMBook v11 numbering (Phase 3/Phase 4); added new "Phase 2 — Additional Payment Types (F-015–F-018)" section, TC-033–TC-050, covering F-015 routing edge cases, F-016 BPAY, and F-017 IMT | Retroactive Finalizer documentation catch-up |
+| v4 | 2026-08-18 | Added F-022/F-023 (FX conversion) scenarios, TC-051–TC-060, under Phase 2 — Additional Payment Types: happy path, FOREX dispatch case-insensitivity, multi-instruction batch, invalid `BuyCurrency`/`SellCurrency`/`Amount`/`AccountNo` rejections, 200-instruction and 15-currency-pair boundary tests, mixed-payment-type rejection, and the `Mappings`-present/`Notes`-never-output response-contract behaviour; appended a Phase 2 header note pointing to the new FX section (F-018/Priority-Payments wording, tracked separately under PM-010, left untouched); added `tests/smoke/Fx.http` | PM-012 closure — User requirement |
