@@ -1,9 +1,9 @@
 # Architecture: Shaw and Partners → CommBank Payment File Conversion Service
 
 > Status: APPROVED
-> Version: v10
-> Last updated: 2026-08-17
-> PRD: docs/prd.md (built against v8)
+> Version: v12
+> Last updated: 2026-08-18
+> PRD: docs/prd.md (built against v9)
 
 ## 1. System Context
 Shaw and Partners' internal systems call this service with a group of payment instructions to
@@ -57,10 +57,11 @@ contains the data that genuinely varies per instruction (see §3, Direct Entry C
   command, untouched — each slice still owns its own request/response/validator/mapper end to
   end; this component only owns the dispatch decision.
 - **Inputs:** Parsed batch of payment instructions (raw JSON array).
-- **Outputs:** Dispatch to the corresponding slice's Wolverine command (Direct Entry, BPay, or
-  IMT), or a rejection — batch-level reason for empty/mixed batches, per-instruction reason for
-  an unsupported type.
-- **Dependencies:** Direct Entry Conversion Slice; BPay Conversion Slice; IMT Conversion Slice.
+- **Outputs:** Dispatch to the corresponding slice's Wolverine command (Direct Entry, BPay,
+  IMT, Priority Payments, or FX), or a rejection — batch-level reason for empty/mixed batches,
+  per-instruction reason for an unsupported type.
+- **Dependencies:** Direct Entry Conversion Slice; BPay Conversion Slice; IMT Conversion Slice;
+  Priority Payments Conversion Slice; FX Conversion Slice.
 - **Technology:** Wolverine command routing; `System.Text.Json` for the `paymentTypeCode` peek
   and per-slice deserialization.
 
@@ -150,6 +151,48 @@ contains the data that genuinely varies per instruction (see §3, Direct Entry C
 - **Technology:** Plain C# mapping code (`PriorityPaymentRecordMapper`), no AutoMapper/commercial
   mapping library, per Technology Decisions.
 
+### FX Conversion Slice
+- **Responsibility:** Validates and converts a batch of FX-typed instructions (routed on Shaw
+  and Partners' `FOREX` code) into a CommBank CommBiz IPFX Bulk Settlement Upload file: one CSV
+  data row per instruction, comma-delimited, CRLF-terminated, with no header or footer row (per
+  the IPFX spec's own business rules) and no self-balancing record. Each row always writes the
+  literal constant `FX` as Transaction Type. The only settlement pattern currently supported is
+  the IPFX spec's "non-CBA payment types" case (its Sample 2: I SELL Instruction = `MAN`, I BUY
+  Instruction = `DOC`, no beneficiary/intermediary bank required) — the I BUY/I SELL Instruction
+  fields and the I BUY/I SELL Payment details fields are populated from static FX Configuration,
+  not the request, since Shaw and Partners' FX requests are never routed to an actual settlement
+  account or a different settlement type. Beneficiary/intermediary bank fields stay blank,
+  consistent with the spec's rule that they're only required when the Instruction field holds an
+  account number rather than a 3-letter settlement-type code. Transaction Description is sourced
+  from the request's `accountNo` field (max 12AN). The request's single `Amount` value is always
+  placed on the Sell side (I SELL Amount), leaving I BUY Amount blank, mirroring the IPFX spec's
+  Sample 2 shape. Fields specific to IDR/CNH/KRW currency pairs (Purpose of Payment, CNAPS Code,
+  Beneficiary Company Name/Contact/SSN) are not yet supported (see Open Questions & Risks, A6).
+  `PaymentSourceTypeCode`, `PaymentDate`, `Notes`, `RateTypeCode`, `ValueDateTypeCode`,
+  `FeeTypeCode`, and `FeeOtherTypeCode` are carried in the request but unused — none of the IPFX
+  file's 27 field positions correspond to them.
+- **Inputs:** Validated batch of FX-typed payment instructions; FX Configuration.
+- **Outputs:** Assembled FX CSV file content (one data row per instruction, CRLF-terminated, no
+  header/trailer), plus its parallel `LineMapping` breakdown (one `row1`/`row2`... entry per
+  instruction — see Field Mapping Model).
+- **Dependencies:** FxValidator — this slice's own validation logic, not shared with the other
+  slices; FX Configuration (`FxSettings`: I SELL/I BUY Instruction codes, I BUY/I SELL Payment
+  details static text).
+- **Technology:** Plain C# mapping code (`FxRecordMapper`), no AutoMapper/commercial mapping
+  library, per Technology Decisions.
+
+### FX Configuration
+- **Responsibility:** Holds the organisation-level constants an FX file requires that never vary
+  per instruction — I SELL Instruction (`MAN`), I BUY Instruction (`DOC`), I BUY Payment details
+  (`Buy`), I SELL Payment details (`Sell`). Kept out of the request payload and out of source
+  code as hardcoded defaults, adjustable via configuration without a code change, same pattern as
+  Direct Entry/BPay/IMT/Priority Payments Configuration.
+- **Inputs:** None (static configuration, not request-driven).
+- **Outputs:** Confirmed static values consumed by the FX Conversion Slice's row mapping.
+- **Dependencies:** None.
+- **Technology:** ASP.NET Core `IOptions<T>` configuration binding, sourced from
+  `appsettings.json`.
+
 ### Field Mapping Model
 - **Responsibility:** A shared, cross-slice type representing a field-by-field breakdown of a
   converted line — the second explicit exception to ADR-002's no-shared-layer rule (alongside
@@ -210,11 +253,11 @@ contains the data that genuinely varies per instruction (see §3, Direct Entry C
 
 ## 4. Data Flow
 
-Routing now fans out to four slices — Direct Entry (`DE`), BPay (`BPAY`), IMT (`TT`), and Priority
-Payments (`RTGS`) — all dispatched through the same Payment Type Router. Direct Entry remains the
-primary worked example below, since it is the most structurally involved (header + details +
-self-balancing record + trailer); see the note after step 6 for how BPay, IMT, and Priority
-Payments differ.
+Routing now fans out to five slices — Direct Entry (`DE`), BPay (`BPAY`), IMT (`TT`), Priority
+Payments (`RTGS`), and FX (`FOREX`) — all dispatched through the same Payment Type Router. Direct
+Entry remains the primary worked example below, since it is the most structurally involved
+(header + details + self-balancing record + trailer); see the note after step 6 for how BPay,
+IMT, Priority Payments, and FX differ.
 
 1. Shaw and Partners' system sends a batch of payment instructions, in its own native payload
    shape, to the API Host's `POST /convert` endpoint.
@@ -243,14 +286,17 @@ Payments differ.
    parallel `Mappings` list — one entry per line of the converted output — for the testing team
    to verify the output field-by-field without parsing the raw fixed-width/CSV text.
 
-**BPay, IMT, and Priority Payments follow the same overall shape** (validate → map → assemble →
-return inline) but with slice-specific field rules and output formats: BPay assembles a CSV
-Header + one Payment Details record per instruction, with no trailer or self-balancing record;
-IMT and Priority Payments each assemble one 27-field CSV row per instruction, CRLF-separated,
-with no header or trailer record and no trailing CRLF after the last row, sharing the same
-MT101 file family but enforcing their own distinct field rules per the MT101 spec. See the BPay
-Conversion Slice, IMT Conversion Slice, and Priority Payments Conversion Slice entries in §3 for
-their full field/output rules.
+**BPay, IMT, Priority Payments, and FX follow the same overall shape** (validate → map →
+assemble → return inline) but with slice-specific field rules and output formats: BPay assembles
+a CSV Header + one Payment Details record per instruction, with no trailer or self-balancing
+record; IMT and Priority Payments each assemble one 27-field CSV row per instruction,
+CRLF-separated, with no header or trailer record and no trailing CRLF after the last row,
+sharing the same MT101 file family but enforcing their own distinct field rules per the MT101
+spec; FX assembles one CommBiz IPFX data row per instruction, CRLF-separated, with no header or
+footer row, its settlement-instruction and payment-details fields sourced from static FX
+Configuration rather than the request. See the BPay Conversion Slice, IMT Conversion Slice,
+Priority Payments Conversion Slice, and FX Conversion Slice entries in §3 for their full
+field/output rules.
 
 ## 5. Functional Requirements
 
@@ -265,6 +311,7 @@ their full field/output rules.
 | FR-007 | Generate a self-balancing (contra) detail record — posting the batch's total amount against the configured settlement account, in the direction opposite the batch's Transaction Code — immediately before the trailer record, on every conversion | Direct Entry spec's self-balancing/contra-entry requirement; PRD v7 | Must |
 | FR-008 | Accept a batch of as few as 1 valid instruction — the minimum-2-detail-record structural rule is satisfied by FR-007's self-balancing detail record, not by the batch's own size | PRD v7 (single-instruction runs are a fully supported batch size) | Must |
 | FR-009 | Every successful conversion response includes an ordered, parallel `Mappings` list — one entry per line of the converted output (header/detail/self-balancing/trailer as applicable), each with a request-field/value and CBA-response-field/value breakdown per field — regardless of payment type | PRD v8 (testing-team convenience goal) | Must |
+| FR-010 | Convert every valid FX-typed instruction into a CommBiz IPFX Bulk Settlement CSV row, per the confirmed field mapping (constant Transaction Type; `accountNo` as Transaction Description; Buy/Sell Currency and Amount; static Instruction and Payment details fields from FX Configuration) | PRD v9 (FX conversion goal) | Must |
 
 ## 6. Non-Functional Requirements
 
@@ -298,6 +345,7 @@ their full field/output rules.
 | A3 | Can a single submitted batch mix payment types (with unsupported types causing rejection), or must every instruction in a batch declare the same, currently-supported type? | Medium — affects Payment Type Router behaviour (FR-006) | User | Yes — reject the batch if it contains any instruction of an unsupported/not-yet-usable type. Noted as a decision the user may revisit in a later tranche. |
 | A4 | What is the expected/maximum batch size and target conversion latency? | Medium — ties to PRD's open turnaround-time metric and NFR-001 | User | Deferred — explicitly revisited later. |
 | A5 | What are the logging/traceability requirements for audit purposes (per PRD's compliance/audit user story), given no data is persisted? | Medium — affects NFR-002 and how "traceable back to source" is satisfied without a database | User | Yes — logging library decided (Shaw.Diagnostics, ADR-006); detailed logging design left for implementation. |
+| A6 | The FX Conversion Slice currently only supports the IPFX spec's non-CBA "Instruction" pattern (`MAN`/`DOC`) for USD/AUD-style currency pairs. If a future FX instruction uses IDR, CNH, or KRW as the Buy currency, the spec requires additional conditional fields (Purpose of Payment, CNAPS Code, Beneficiary Company Name/Contact/SSN) that aren't yet mapped. Should these be built now, or deferred until an actual IDR/CNH/KRW requirement arises? | Low — no current requirement for these currencies | User | No — deferred, not blocking initial FX delivery. |
 
 ## Version History
 | Version | Date | Change | Triggered By |
@@ -312,3 +360,5 @@ their full field/output rules.
 | v8 | 2026-08-17 | Added FR-009 and a new shared Field Mapping Model component (`FieldMapping`/`LineMapping` records) exposing a per-line, per-field breakdown of every conversion response (request field/value + CBA response field/value), parallel to `ConvertedText`; a second sanctioned ADR-002 exception (added ADR-009); updated API Host outputs and Data Flow step 6 accordingly. Applies to DE, BPay, and IMT (retrofit — all already Done) and to the not-yet-built F-018 (Priority Payments), tracked as new PMBook item F-021 | Triage edit — user requirement change; upward ripple to PRD v8 |
 | v9 | 2026-08-17 | Clarified the Field Mapping Model description to state explicitly that a line's field list covers every spec-defined field position for that record type (including reserved/blank/unused positions), not only populated ones — the wording previously left this ambiguous, which is what let the original F-021 implementation silently skip unpopulated positions until PMBook v17's correction fixed the code | Integration Agent Documentation Drift finding on the F-021 correction |
 | v10 | 2026-08-17 | Added the missing Priority Payments Conversion Slice component entry to §3 (F-018, Done, had no architecture.md entry) and updated §4 Data Flow's fan-out note to include Priority Payments (`RTGS`) alongside DE/BPAY/IMT | Integration Agent Documentation Drift finding on F-018 |
+| v11 | 2026-08-18 | Added FX as a fifth payment type: new FX Conversion Slice and FX Configuration components (§3) per the confirmed CommBiz IPFX Bulk Settlement Upload field mapping (constant Transaction Type; `accountNo` → Transaction Description; Buy/Sell Currency/Amount; static Instruction and Payment details fields; IDR/CNH/KRW-specific fields deferred, see A6); updated Payment Type Router's dispatch list (also fixed a pre-existing gap where Priority Payments was missing from it); updated §4 Data Flow fan-out note; added FR-010; added Open Question A6 | Ripple from PRD v9 |
+| v12 | 2026-08-18 | Architecture approved | Gate approval |
