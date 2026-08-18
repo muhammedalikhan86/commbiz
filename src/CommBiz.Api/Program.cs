@@ -1,6 +1,7 @@
 using System.Text.Json;
 using CommBiz.Api.Features.BPay;
 using CommBiz.Api.Features.DirectEntry;
+using CommBiz.Api.Features.Fx;
 using CommBiz.Api.Features.Imt;
 using CommBiz.Api.Features.PaymentRouting;
 using CommBiz.Api.Features.PriorityPayments;
@@ -19,6 +20,8 @@ builder.Services.Configure<ImtSettings>(builder.Configuration.GetSection("Imt"))
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<ImtSettings>>().Value);
 builder.Services.Configure<PriorityPaymentsSettings>(builder.Configuration.GetSection("PriorityPayments"));
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<PriorityPaymentsSettings>>().Value);
+builder.Services.Configure<FxSettings>(builder.Configuration.GetSection("Fx"));
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<FxSettings>>().Value);
 
 var app = builder.Build();
 
