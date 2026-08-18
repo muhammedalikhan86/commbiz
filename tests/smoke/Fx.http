@@ -1,0 +1,123 @@
+@baseUrl = http://localhost:5182
+
+### Valid batch: 1 real sample instruction (FX conversion, routed via API code "FOREX" — the
+### file's own Transaction Type field is always the constant "FX", never the routing code).
+### Expect: 200 OK, Success: true, ConvertedText populated (single 27-field CSV row starting with
+### "FX,", no header/trailer record), Mappings populated with 1 entry keyed "row1", Errors: null.
+POST {{baseUrl}}/convert
+Content-Type: application/json
+
+[
+  {
+    "paymentTypeCode": "FOREX",
+    "paymentSourceTypeCode": "CMA",
+    "paymentDate": "2026-08-18T10:00:00",
+    "amount": 500.00,
+    "notes": "New Settlement",
+    "buyCurrency": "USD",
+    "sellCurrency": "AUD",
+    "rateTypeCode": "SPOT",
+    "valueDateTypeCode": "STANDARD",
+    "feeTypeCode": "OUR",
+    "feeOtherTypeCode": "",
+    "accountNo": "Payment2"
+  }
+]
+
+### Valid batch: 2 instructions, second one with a distinct currency pair (GBP/AUD vs USD/AUD).
+### Expect: 200 OK, Success: true, ConvertedText populated (two 27-field CSV rows joined by CRLF,
+### no trailing CRLF), Mappings populated with 2 entries keyed "row1"/"row2", Errors: null.
+POST {{baseUrl}}/convert
+Content-Type: application/json
+
+[
+  {
+    "paymentTypeCode": "FOREX",
+    "paymentSourceTypeCode": "CMA",
+    "paymentDate": "2026-08-18T10:00:00",
+    "amount": 500.00,
+    "notes": "New Settlement",
+    "buyCurrency": "USD",
+    "sellCurrency": "AUD",
+    "rateTypeCode": "SPOT",
+    "valueDateTypeCode": "STANDARD",
+    "feeTypeCode": "OUR",
+    "feeOtherTypeCode": "",
+    "accountNo": "Payment2"
+  },
+  {
+    "paymentTypeCode": "FOREX",
+    "paymentSourceTypeCode": "CMA",
+    "paymentDate": "2026-08-18T10:00:00",
+    "amount": 1250.75,
+    "notes": "New Settlement",
+    "buyCurrency": "GBP",
+    "sellCurrency": "AUD",
+    "rateTypeCode": "SPOT",
+    "valueDateTypeCode": "STANDARD",
+    "feeTypeCode": "OUR",
+    "feeOtherTypeCode": "",
+    "accountNo": "Payment3"
+  }
+]
+
+### Invalid instruction: lowercase buyCurrency ("usd" instead of "USD") on instruction 0 —
+### everything else valid so the BuyCurrency failure is isolated.
+### Expect: 200 OK, Success: false, Mappings: null, Errors containing
+### "BuyCurrency 'usd' must be exactly 3 uppercase alphabetic characters." tied to index 0.
+POST {{baseUrl}}/convert
+Content-Type: application/json
+
+[
+  {
+    "paymentTypeCode": "FOREX",
+    "paymentSourceTypeCode": "CMA",
+    "paymentDate": "2026-08-18T10:00:00",
+    "amount": 500.00,
+    "notes": "New Settlement",
+    "buyCurrency": "usd",
+    "sellCurrency": "AUD",
+    "rateTypeCode": "SPOT",
+    "valueDateTypeCode": "STANDARD",
+    "feeTypeCode": "OUR",
+    "feeOtherTypeCode": "",
+    "accountNo": "Payment2"
+  }
+]
+
+### Mixed paymentTypeCode (found 'FOREX', 'DE') — whole batch rejected in full, per existing
+### PaymentTypeRouter mixed-type rejection behaviour (see Errors.http). Only the paymentTypeCode
+### mix is invalid; the FOREX instruction on its own matches the valid batch above.
+### Expect: 200 OK, Success: false, Errors: ["Payment batch must not mix payment types (found 'FOREX', 'DE')."].
+POST {{baseUrl}}/convert
+Content-Type: application/json
+
+[
+  {
+    "paymentTypeCode": "FOREX",
+    "paymentSourceTypeCode": "CMA",
+    "paymentDate": "2026-08-18T10:00:00",
+    "amount": 500.00,
+    "notes": "New Settlement",
+    "buyCurrency": "USD",
+    "sellCurrency": "AUD",
+    "rateTypeCode": "SPOT",
+    "valueDateTypeCode": "STANDARD",
+    "feeTypeCode": "OUR",
+    "feeOtherTypeCode": "",
+    "accountNo": "Payment2"
+  },
+  {
+    "paymentTypeCode": "DE",
+    "accountNo": "S1605677",
+    "paymentSourceTypeCode": "CMA",
+    "sourceBankAccountName": "SOPHIA CLARK",
+    "sourceBankAccountNo": "111375004",
+    "sourceBankBSB": "015141",
+    "paymentDate": "2026-08-20T10:00:00",
+    "sourceCurrency": "AUD",
+    "sourceAmount": 0.0,
+    "amount": 7500.0,
+    "createBy": "James Harris"
+  }
+]
