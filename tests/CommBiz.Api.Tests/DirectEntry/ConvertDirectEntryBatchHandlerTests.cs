@@ -157,8 +157,8 @@ public class ConvertDirectEntryBatchHandlerTests
 
         var detail1 = result.Mappings!.Single(line => line.Line == "detail1");
         var detail2 = result.Mappings!.Single(line => line.Line == "detail2");
-        Assert.Equal("111375004", detail1.Fields.Single(f => f.CbaResponseField == "Trace Account Number").RequestValue);
-        Assert.Equal("222486115", detail2.Fields.Single(f => f.CbaResponseField == "Trace Account Number").RequestValue);
+        Assert.Equal("111375004", detail1.Fields.Single(f => f.CbaResponseField == "Account Number to be Credited/Debited").RequestValue);
+        Assert.Equal("222486115", detail2.Fields.Single(f => f.CbaResponseField == "Account Number to be Credited/Debited").RequestValue);
     }
 
     [Fact]

@@ -18,28 +18,32 @@ public static class DirectEntryDetailRecordMapper
 
     public static string Map(PaymentInstructionRequest instruction, DirectEntrySettings settings) =>
         RecordType +
-        settings.TraceAccountBsb +
-        settings.TraceAccountAccNo.PadLeft(9) +
+        FormatBsb(instruction.DestinationBankBsb) +
+        instruction.DestinationBankAccountNo.PadLeft(9) +
         Indicator +
         CreditTransactionCode +
         AmountToCents(instruction.Amount).ToString().PadLeft(10, '0') +
-        FixedWidth(settings.NameOfRemitter, 32) +
+        FixedWidth(instruction.DestinationBankAccountName, 32) +
         FixedWidth(settings.LodgementReferenceDetails, 18) +
-        FormatBsb(instruction.DestinationBankBsb) +
-        instruction.DestinationBankAccountNo.PadLeft(9) +
-        FixedWidth(instruction.DestinationBankAccountName, 16) +
+        settings.TraceAccountBsb +
+        settings.TraceAccountAccNo.PadLeft(9) +
+        FixedWidth(settings.NameOfRemitter, 16) +
         settings.AmountOfWithholdingTax;
 
     // F-021: same field values already written into Map's output - never recomputed separately.
     public static IReadOnlyList<FieldMapping> MapFields(PaymentInstructionRequest instruction, DirectEntrySettings settings) =>
     [
         new(nameof(RecordType), RecordType, "Record Type", RecordType),
-        new(nameof(DirectEntrySettings.TraceAccountBsb), settings.TraceAccountBsb, "BSB Number", settings.TraceAccountBsb),
         new(
-            nameof(DirectEntrySettings.TraceAccountAccNo),
-            settings.TraceAccountAccNo,
+            nameof(instruction.DestinationBankBsb),
+            instruction.DestinationBankBsb,
+            "BSB Number",
+            FormatBsb(instruction.DestinationBankBsb)),
+        new(
+            nameof(instruction.DestinationBankAccountNo),
+            instruction.DestinationBankAccountNo,
             "Account Number to be Credited/Debited",
-            settings.TraceAccountAccNo.PadLeft(9)),
+            instruction.DestinationBankAccountNo.PadLeft(9)),
         new(nameof(Indicator), Indicator, "Indicator", Indicator),
         new(nameof(CreditTransactionCode), CreditTransactionCode, "Transaction Code", CreditTransactionCode),
         new(
@@ -48,30 +52,26 @@ public static class DirectEntryDetailRecordMapper
             "Amount",
             AmountToCents(instruction.Amount).ToString().PadLeft(10, '0')),
         new(
-            nameof(DirectEntrySettings.NameOfRemitter),
-            settings.NameOfRemitter,
+            nameof(instruction.DestinationBankAccountName),
+            instruction.DestinationBankAccountName,
             "Title of Account to be Credited/Debited",
-            FixedWidth(settings.NameOfRemitter, 32)),
+            FixedWidth(instruction.DestinationBankAccountName, 32)),
         new(
             nameof(DirectEntrySettings.LodgementReferenceDetails),
             settings.LodgementReferenceDetails,
             "Lodgement Reference",
             FixedWidth(settings.LodgementReferenceDetails, 18)),
+        new(nameof(DirectEntrySettings.TraceAccountBsb), settings.TraceAccountBsb, "Trace BSB Number", settings.TraceAccountBsb),
         new(
-            nameof(instruction.DestinationBankBsb),
-            instruction.DestinationBankBsb,
-            "Trace BSB Number",
-            FormatBsb(instruction.DestinationBankBsb)),
-        new(
-            nameof(instruction.DestinationBankAccountNo),
-            instruction.DestinationBankAccountNo,
+            nameof(DirectEntrySettings.TraceAccountAccNo),
+            settings.TraceAccountAccNo,
             "Trace Account Number",
-            instruction.DestinationBankAccountNo.PadLeft(9)),
+            settings.TraceAccountAccNo.PadLeft(9)),
         new(
-            nameof(instruction.DestinationBankAccountName),
-            instruction.DestinationBankAccountName,
+            nameof(DirectEntrySettings.NameOfRemitter),
+            settings.NameOfRemitter,
             "Name of Remitter",
-            FixedWidth(instruction.DestinationBankAccountName, 16)),
+            FixedWidth(settings.NameOfRemitter, 16)),
         new(
             nameof(DirectEntrySettings.AmountOfWithholdingTax),
             settings.AmountOfWithholdingTax,
