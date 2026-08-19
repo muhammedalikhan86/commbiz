@@ -27,6 +27,9 @@ public class ConvertDirectEntryBatchHandlerTests
             SourceBankAccountName: "SOPHIA CLARK",
             SourceBankAccountNo: "111375004",
             SourceBankBsb: "015141",
+            DestinationBankBsb: "484799",
+            DestinationBankAccountNo: "300500",
+            DestinationBankAccountName: "JOHN CITIZEN",
             PaymentDate: new DateTime(2026, 8, 20, 10, 0, 0),
             SourceCurrency: "AUD",
             SourceAmount: 0.0m,
@@ -151,16 +154,16 @@ public class ConvertDirectEntryBatchHandlerTests
     [Fact]
     public void Two_instruction_batch_mappings_detail_fields_match_the_converted_text_for_that_instruction()
     {
-        var first = Instruction("DE") with { SourceBankAccountNo = "111375004" };
-        var second = Instruction("DE") with { SourceBankAccountNo = "222486115" };
+        var first = Instruction("DE") with { DestinationBankAccountNo = "111375004" };
+        var second = Instruction("DE") with { DestinationBankAccountNo = "222486115" };
         var command = CommandWith([first, second]);
 
         var result = ConvertDirectEntryBatchHandler.Handle(command, Settings);
 
         var detail1 = result.Mappings!.Single(line => line.Line == "detail1");
         var detail2 = result.Mappings!.Single(line => line.Line == "detail2");
-        Assert.Equal("111375004", detail1.Fields.Single(f => f.CbaResponseField == "Account Number to be Credited/Debited").RequestValue);
-        Assert.Equal("222486115", detail2.Fields.Single(f => f.CbaResponseField == "Account Number to be Credited/Debited").RequestValue);
+        Assert.Equal("111375004", detail1.Fields.Single(f => f.CbaResponseField == "Trace Account Number").RequestValue);
+        Assert.Equal("222486115", detail2.Fields.Single(f => f.CbaResponseField == "Trace Account Number").RequestValue);
     }
 
     [Fact]

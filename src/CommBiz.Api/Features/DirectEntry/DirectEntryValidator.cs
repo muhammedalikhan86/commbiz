@@ -47,7 +47,7 @@ public static class DirectEntryValidator
             yield return "AccountNo must not be blank.";
         }
 
-        if (!IsValidSourceBankBsb(instruction.SourceBankBsb))
+        if (!IsValidBsb(instruction.SourceBankBsb))
         {
             yield return $"SourceBankBsb '{instruction.SourceBankBsb}' must be exactly 6 numeric digits.";
         }
@@ -57,13 +57,28 @@ public static class DirectEntryValidator
             yield return $"SourceBankAccountNo '{instruction.SourceBankAccountNo}' is invalid.";
         }
 
+        if (!IsValidBsb(instruction.DestinationBankBsb))
+        {
+            yield return $"DestinationBankBsb '{instruction.DestinationBankBsb}' must be exactly 6 numeric digits.";
+        }
+
+        if (!IsValidAccountNumber(instruction.DestinationBankAccountNo))
+        {
+            yield return $"DestinationBankAccountNo '{instruction.DestinationBankAccountNo}' is invalid.";
+        }
+
+        if (string.IsNullOrWhiteSpace(instruction.DestinationBankAccountName))
+        {
+            yield return "DestinationBankAccountName must not be blank.";
+        }
+
         if (instruction.Amount <= 0 || instruction.Amount > MaxAmount)
         {
             yield return $"Amount '{instruction.Amount}' must be positive and convert to at most 10 digits of cents.";
         }
     }
 
-    private static bool IsValidSourceBankBsb(string bsb) =>
+    private static bool IsValidBsb(string bsb) =>
         bsb.Length == 6 && bsb.All(char.IsDigit);
 
     private static bool IsValidAccountNumber(string accountNumber)

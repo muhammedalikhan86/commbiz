@@ -27,6 +27,9 @@ public class DirectEntrySelfBalancingRecordMapperTests
             SourceBankAccountName: "SOPHIA CLARK",
             SourceBankAccountNo: "111375004",
             SourceBankBsb: "015141",
+            DestinationBankBsb: "484799",
+            DestinationBankAccountNo: "300500",
+            DestinationBankAccountName: "JOHN CITIZEN",
             PaymentDate: new DateTime(2026, 8, 20, 10, 0, 0),
             SourceCurrency: "AUD",
             SourceAmount: 0.0m,
@@ -52,11 +55,11 @@ public class DirectEntrySelfBalancingRecordMapperTests
         Assert.Equal("N", record[17..18]); // Indicator, position 18, length 1
         Assert.Equal("50", record[18..20]); // Transaction Code, position 19-20, length 2 - inverse of debit "13"
         Assert.Equal("0000010050", record[20..30]); // Amount = batch total in cents, position 21-30, length 10
-        Assert.Equal("SHAW AND PARTNERS LIMITED", record[30..62].TrimEnd()); // Title, position 31-62, length 32
+        Assert.Equal("SHAW AND PARTNER", record[30..62].TrimEnd()); // Title (NameOfRemitter setting), position 31-62, length 32
         Assert.Equal("PAYMENTS", record[62..80].TrimEnd()); // Lodgement Reference, position 63-80, length 18
-        Assert.Equal("062-000", record[80..87]); // Trace BSB Number, position 81-87, length 7
-        Assert.Equal("21120227", record[87..96].Trim()); // Trace Account Number, position 88-96, length 9
-        Assert.Equal("SHAW AND PARTNER", record[96..112].TrimEnd()); // Name of Remitter, position 97-112, length 16
+        Assert.Equal("484-799", record[80..87]); // Trace BSB Number (first instruction's Destination), position 81-87, length 7
+        Assert.Equal("300500", record[87..96].Trim()); // Trace Account Number (first instruction's Destination), position 88-96, length 9
+        Assert.Equal("JOHN CITIZEN", record[96..112].TrimEnd()); // Name of Remitter (first instruction's Destination), position 97-112, length 16
         Assert.Equal("00000000", record[112..120]); // Withholding Tax Amount, position 113-120, length 8
     }
 
@@ -69,6 +72,29 @@ public class DirectEntrySelfBalancingRecordMapperTests
 
         Assert.Equal("062-000", record[1..8]);
         Assert.Equal("21120227", record[8..17].Trim());
+    }
+
+    [Fact]
+    public void Trace_fields_come_from_the_batchs_first_instructions_destination_not_the_settlement_account()
+    {
+        var first = Instruction(100.00m) with
+        {
+            DestinationBankBsb = "111222",
+            DestinationBankAccountNo = "999999",
+            DestinationBankAccountName = "JANE DOE",
+        };
+        var second = Instruction(50.00m) with
+        {
+            DestinationBankBsb = "333444",
+            DestinationBankAccountNo = "888888",
+            DestinationBankAccountName = "OTHER PAYEE",
+        };
+
+        var record = DirectEntrySelfBalancingRecordMapper.Map([first, second], DebitSettings);
+
+        Assert.Equal("111-222", record[80..87]);
+        Assert.Equal("999999", record[87..96].Trim());
+        Assert.Equal("JANE DOE", record[96..112].TrimEnd());
     }
 
     [Fact]

@@ -27,6 +27,9 @@ public class DirectEntryDetailRecordMapperTests
             SourceBankAccountName: "SOPHIA CLARK",
             SourceBankAccountNo: "111375004",
             SourceBankBsb: "015141",
+            DestinationBankBsb: "484799",
+            DestinationBankAccountNo: "300500",
+            DestinationBankAccountName: "JOHN CITIZEN",
             PaymentDate: new DateTime(2026, 8, 20, 10, 0, 0),
             SourceCurrency: "AUD",
             SourceAmount: 0.0m,
@@ -47,41 +50,43 @@ public class DirectEntryDetailRecordMapperTests
         var record = DirectEntryDetailRecordMapper.Map(ValidInstruction(), Settings);
 
         Assert.Equal("1", record[0..1]); // Record Type, position 1, length 1
-        Assert.Equal("015-141", record[1..8]); // BSB Number, position 2-8, length 7
-        Assert.Equal("111375004", record[8..17].Trim()); // Account Number, position 9-17, length 9
+        Assert.Equal("062-000", record[1..8]); // BSB Number (Trace setting), position 2-8, length 7
+        Assert.Equal("21120227", record[8..17].Trim()); // Account Number (Trace setting), position 9-17, length 9
         Assert.Equal("N", record[17..18]); // Indicator, position 18, length 1
         Assert.Equal("13", record[18..20]); // Transaction Code, position 19-20, length 2
         Assert.Equal("0000750000", record[20..30]); // Amount, position 21-30, length 10
-        Assert.Equal("SHAW AND PARTNERS LIMITED", record[30..62].TrimEnd()); // Title, position 31-62, length 32
+        Assert.Equal("SHAW AND PARTNER", record[30..62].TrimEnd()); // Title (NameOfRemitter setting), position 31-62, length 32
         Assert.Equal("PAYMENTS", record[62..80].TrimEnd()); // Lodgement Reference, position 63-80, length 18
-        Assert.Equal("062-000", record[80..87]); // Trace BSB Number, position 81-87, length 7
-        Assert.Equal("21120227", record[87..96].Trim()); // Trace Account Number, position 88-96, length 9
-        Assert.Equal("SHAW AND PARTNER", record[96..112].TrimEnd()); // Name of Remitter, position 97-112, length 16
+        Assert.Equal("484-799", record[80..87]); // Trace BSB Number (payload Destination), position 81-87, length 7
+        Assert.Equal("300500", record[87..96].Trim()); // Trace Account Number (payload Destination), position 88-96, length 9
+        Assert.Equal("JOHN CITIZEN", record[96..112].TrimEnd()); // Name of Remitter (payload Destination), position 97-112, length 16
         Assert.Equal("00000000", record[112..120]); // Withholding Tax Amount, position 113-120, length 8
     }
 
     [Fact]
-    public void Bsb_is_reformatted_from_raw_6_digits_to_nnn_dash_nnn()
+    public void Bsb_number_and_account_number_always_come_from_trace_settings_regardless_of_instruction()
     {
-        var record = DirectEntryDetailRecordMapper.Map(ValidInstruction() with { SourceBankBsb = "063111" }, Settings);
+        var record = DirectEntryDetailRecordMapper.Map(
+            ValidInstruction() with { SourceBankBsb = "999999", SourceBankAccountNo = "999999999" }, Settings);
 
-        Assert.Equal("063-111", record[1..8]);
+        Assert.Equal("062-000", record[1..8]);
+        Assert.Equal("21120227", record[8..17].Trim());
     }
 
     [Fact]
-    public void Account_number_shorter_than_9_chars_is_right_justified_space_filled()
+    public void Account_number_setting_shorter_than_9_chars_is_right_justified_space_filled()
     {
         var record = DirectEntryDetailRecordMapper.Map(
-            ValidInstruction() with { SourceBankAccountNo = "1000" }, Settings);
+            ValidInstruction(), Settings with { TraceAccountAccNo = "1000" });
 
         Assert.Equal("     1000", record[8..17]);
     }
 
     [Fact]
-    public void Account_number_at_max_length_needs_no_padding()
+    public void Account_number_setting_at_max_length_needs_no_padding()
     {
         var record = DirectEntryDetailRecordMapper.Map(
-            ValidInstruction() with { SourceBankAccountNo = "123456789" }, Settings);
+            ValidInstruction(), Settings with { TraceAccountAccNo = "123456789" });
 
         Assert.Equal("123456789", record[8..17]);
     }
@@ -120,18 +125,35 @@ public class DirectEntryDetailRecordMapperTests
     }
 
     [Fact]
+    public void Trace_bsb_is_reformatted_from_the_payloads_raw_6_digits_to_nnn_dash_nnn()
+    {
+        var record = DirectEntryDetailRecordMapper.Map(ValidInstruction() with { DestinationBankBsb = "063111" }, Settings);
+
+        Assert.Equal("063-111", record[80..87]);
+    }
+
+    [Fact]
     public void Trace_account_number_shorter_than_9_chars_is_right_justified_space_filled()
     {
         var record = DirectEntryDetailRecordMapper.Map(
-            ValidInstruction(), Settings with { TraceAccountAccNo = "100000" });
+            ValidInstruction() with { DestinationBankAccountNo = "1000" }, Settings);
 
-        Assert.Equal("   100000", record[87..96]);
+        Assert.Equal("     1000", record[87..96]);
+    }
+
+    [Fact]
+    public void Trace_account_number_at_max_length_needs_no_padding()
+    {
+        var record = DirectEntryDetailRecordMapper.Map(
+            ValidInstruction() with { DestinationBankAccountNo = "123456789" }, Settings);
+
+        Assert.Equal("123456789", record[87..96]);
     }
 
     [Fact]
     public void Title_shorter_than_max_is_left_justified_space_filled()
     {
-        var record = DirectEntryDetailRecordMapper.Map(ValidInstruction(), Settings with { Title = "AB" });
+        var record = DirectEntryDetailRecordMapper.Map(ValidInstruction(), Settings with { NameOfRemitter = "AB" });
 
         Assert.Equal("AB" + new string(' ', 30), record[30..62]);
     }
@@ -140,7 +162,7 @@ public class DirectEntryDetailRecordMapperTests
     public void Title_longer_than_max_is_truncated_to_keep_the_record_fixed_width()
     {
         var record = DirectEntryDetailRecordMapper.Map(
-            ValidInstruction(), Settings with { Title = new string('A', 40) });
+            ValidInstruction(), Settings with { NameOfRemitter = new string('A', 40) });
 
         Assert.Equal(new string('A', 32), record[30..62]);
         Assert.Equal(120, record.Length);
@@ -158,9 +180,20 @@ public class DirectEntryDetailRecordMapperTests
     [Fact]
     public void Remitter_name_shorter_than_max_is_left_justified_space_filled()
     {
-        var record = DirectEntryDetailRecordMapper.Map(ValidInstruction(), Settings with { NameOfRemitter = "AB" });
+        var record = DirectEntryDetailRecordMapper.Map(
+            ValidInstruction() with { DestinationBankAccountName = "AB" }, Settings);
 
         Assert.Equal("AB" + new string(' ', 14), record[96..112]);
+    }
+
+    [Fact]
+    public void Remitter_name_longer_than_max_is_truncated_to_keep_the_record_fixed_width()
+    {
+        var record = DirectEntryDetailRecordMapper.Map(
+            ValidInstruction() with { DestinationBankAccountName = new string('A', 20) }, Settings);
+
+        Assert.Equal(new string('A', 16), record[96..112]);
+        Assert.Equal(120, record.Length);
     }
 
     [Fact]
@@ -193,18 +226,32 @@ public class DirectEntryDetailRecordMapperTests
         var record = DirectEntryDetailRecordMapper.Map(ValidInstruction(), Settings);
         var fields = DirectEntryDetailRecordMapper.MapFields(ValidInstruction(), Settings);
 
-        Assert.Equal("015-141", fields.Single(f => f.CbaResponseField == "BSB Number").CbaResponseValue);
+        Assert.Equal("062-000", fields.Single(f => f.CbaResponseField == "BSB Number").CbaResponseValue);
+        Assert.Equal("484-799", fields.Single(f => f.CbaResponseField == "Trace BSB Number").CbaResponseValue);
         Assert.Equal("0000750000", fields.Single(f => f.CbaResponseField == "Amount").CbaResponseValue);
         Assert.Equal(record[112..120], fields.Single(f => f.CbaResponseField == "Amount of withholding tax").CbaResponseValue);
     }
 
     [Fact]
-    public void MapFields_request_sourced_fields_carry_the_raw_unformatted_request_value()
+    public void MapFields_settings_sourced_bsb_number_field_is_attributed_to_the_trace_settings_field()
     {
         var fields = DirectEntryDetailRecordMapper.MapFields(ValidInstruction(), Settings);
 
-        Assert.Equal("015141", fields.Single(f => f.CbaResponseField == "BSB Number").RequestValue);
-        Assert.Equal(nameof(PaymentInstructionRequest.SourceBankBsb), fields.Single(f => f.CbaResponseField == "BSB Number").RequestField);
+        Assert.Equal("062-000", fields.Single(f => f.CbaResponseField == "BSB Number").RequestValue);
+        Assert.Equal(
+            nameof(DirectEntrySettings.TraceAccountBsb),
+            fields.Single(f => f.CbaResponseField == "BSB Number").RequestField);
+    }
+
+    [Fact]
+    public void MapFields_payload_sourced_trace_bsb_field_carries_the_raw_unformatted_request_value()
+    {
+        var fields = DirectEntryDetailRecordMapper.MapFields(ValidInstruction(), Settings);
+
+        Assert.Equal("484799", fields.Single(f => f.CbaResponseField == "Trace BSB Number").RequestValue);
+        Assert.Equal(
+            nameof(PaymentInstructionRequest.DestinationBankBsb),
+            fields.Single(f => f.CbaResponseField == "Trace BSB Number").RequestField);
     }
 }
 

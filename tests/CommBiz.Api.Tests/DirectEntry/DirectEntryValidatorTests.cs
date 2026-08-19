@@ -27,6 +27,9 @@ public class DirectEntryValidatorTests
             SourceBankAccountName: "SOPHIA CLARK",
             SourceBankAccountNo: "111375004",
             SourceBankBsb: "015141",
+            DestinationBankBsb: "484799",
+            DestinationBankAccountNo: "300500",
+            DestinationBankAccountName: "JOHN CITIZEN",
             PaymentDate: new DateTime(2026, 8, 20, 10, 0, 0),
             SourceCurrency: "AUD",
             SourceAmount: 0.0m,
@@ -119,6 +122,64 @@ public class DirectEntryValidatorTests
             AssertSingleInvalidField(batch, 0, "Amount");
         }
     }
+
+    // --- DestinationBankBsb ---
+
+    [Theory]
+    [InlineData("484799", true)]
+    [InlineData("484-799", false)] // hyphen not allowed on the raw field
+    [InlineData("48479", false)] // 5 digits, too short
+    [InlineData("4847991", false)] // 7 digits, too long
+    [InlineData("48479A", false)] // non-numeric
+    [InlineData("", false)]
+    public void DestinationBankBsb_must_be_exactly_6_numeric_digits(string destinationBankBsb, bool expectedValid)
+    {
+        var batch = BatchWith(ValidInstruction() with { DestinationBankBsb = destinationBankBsb });
+
+        if (expectedValid)
+        {
+            AssertValid(batch);
+        }
+        else
+        {
+            AssertSingleInvalidField(batch, 0, "DestinationBankBsb");
+        }
+    }
+
+    // --- DestinationBankAccountNo ---
+
+    [Theory]
+    [InlineData("300500", true)]
+    [InlineData("123456789", true)] // exactly 9 chars, boundary
+    [InlineData("1234567890", false)] // 10 chars, over max
+    [InlineData("12345$678", false)] // disallowed character
+    [InlineData("000000000", false)] // all zeros
+    [InlineData("", false)] // all blank
+    [InlineData("   ", false)] // all blank (spaces)
+    public void DestinationBankAccountNo_rules_are_enforced(string destinationBankAccountNo, bool expectedValid)
+    {
+        var batch = BatchWith(ValidInstruction() with { DestinationBankAccountNo = destinationBankAccountNo });
+
+        if (expectedValid)
+        {
+            AssertValid(batch);
+        }
+        else
+        {
+            AssertSingleInvalidField(batch, 0, "DestinationBankAccountNo");
+        }
+    }
+
+    // --- DestinationBankAccountName ---
+
+    [Fact]
+    public void DestinationBankAccountName_blank_is_invalid() =>
+        AssertSingleInvalidField(
+            BatchWith(ValidInstruction() with { DestinationBankAccountName = "" }), 0, "DestinationBankAccountName");
+
+    [Fact]
+    public void DestinationBankAccountName_populated_is_valid() =>
+        AssertValid(BatchWith(ValidInstruction() with { DestinationBankAccountName = "JOHN CITIZEN" }));
 
     // --- AccountNo ---
 
