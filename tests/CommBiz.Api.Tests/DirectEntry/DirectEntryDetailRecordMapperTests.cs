@@ -11,8 +11,7 @@ public class DirectEntryDetailRecordMapperTests
         TraceAccountBsb = "062-000",
         TraceAccountAccNo = "21120227",
         NameOfRemitter = "SHAW AND PARTNER",
-        AmountOfWithholdingTax = "00000000",
-        TransactionCode = "13",
+        AmountOfWithholdingTax = "00000000"
     };
 
     private static PaymentInstructionRequest ValidInstruction() =>
@@ -48,8 +47,8 @@ public class DirectEntryDetailRecordMapperTests
         Assert.Equal("1", record[0..1]); // Record Type, position 1, length 1
         Assert.Equal("062-000", record[1..8]); // BSB Number (Trace setting), position 2-8, length 7
         Assert.Equal("21120227", record[8..17].Trim()); // Account Number (Trace setting), position 9-17, length 9
-        Assert.Equal("N", record[17..18]); // Indicator, position 18, length 1
-        Assert.Equal("13", record[18..20]); // Transaction Code, position 19-20, length 2
+        Assert.Equal(" ", record[17..18]); // Indicator, position 18, length 1
+        Assert.Equal("50", record[18..20]); // Transaction Code, position 19-20, length 2
         Assert.Equal("0000750000", record[20..30]); // Amount, position 21-30, length 10
         Assert.Equal("SHAW AND PARTNER", record[30..62].TrimEnd()); // Title (NameOfRemitter setting), position 31-62, length 32
         Assert.Equal("PAYMENTS", record[62..80].TrimEnd()); // Lodgement Reference, position 63-80, length 18
@@ -101,23 +100,6 @@ public class DirectEntryDetailRecordMapperTests
         var record = DirectEntryDetailRecordMapper.Map(ValidInstruction() with { Amount = 10.005m }, Settings);
 
         Assert.Equal("0000001001", record[20..30]); // 10.005 rounds away from zero to 10.01 -> 1001 cents
-    }
-
-    [Fact]
-    public void Transaction_code_always_comes_from_settings_regardless_of_instruction()
-    {
-        var record = DirectEntryDetailRecordMapper.Map(
-            ValidInstruction(), Settings with { TransactionCode = "50" });
-
-        Assert.Equal("50", record[18..20]);
-    }
-
-    [Fact]
-    public void Indicator_is_always_the_literal_N()
-    {
-        var record = DirectEntryDetailRecordMapper.Map(ValidInstruction(), Settings);
-
-        Assert.Equal("N", record[17..18]);
     }
 
     [Fact]

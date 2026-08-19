@@ -3,7 +3,7 @@
 ### Valid batch: 2 real sample instructions. Every field satisfies the validation rules.
 ### Expect: 200 OK, Success: true, ConvertedText populated (header + 2 details + self-balancing
 ### contra record + trailer, per F-014), Errors: null.
-POST {{baseUrl}}/convert
+POST {{baseUrl}}/convert-to-file
 Content-Type: application/json
 
 [

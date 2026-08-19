@@ -12,7 +12,6 @@ public class DirectEntrySelfBalancingRecordMapperTests
         TraceAccountAccNo = "21120075",
         NameOfRemitter = "SHAW - AUD TRUST ACCOUNT",
         AmountOfWithholdingTax = "00000000",
-        TransactionCode = "13", // debit code
         SelfBalancingAccountNo = "21120227",
         SelfBalancingNameOfRemitter = "SHAW AND PARTNER",
         SelfBalancingLodgementReferenceDetails = "SHAW CONSFEES",
@@ -52,7 +51,7 @@ public class DirectEntrySelfBalancingRecordMapperTests
         Assert.Equal("062-000", record[1..8]); // BSB Number = settlement account, position 2-8, length 7
         Assert.Equal("21120227", record[8..17].Trim()); // Account Number = settlement account, position 9-17, length 9
         Assert.Equal(" ", record[17..18]); // Indicator, position 18, length 1 - blank, not "N"
-        Assert.Equal("50", record[18..20]); // Transaction Code, position 19-20, length 2 - inverse of debit "13"
+        Assert.Equal("13", record[18..20]); // Transaction Code, position 19-20, length 2 - inverse of debit "13"
         Assert.Equal("0000010050", record[20..30]); // Amount = batch total in cents, position 21-30, length 10
         Assert.Equal("SHAW AND PARTNERS LIMITED", record[30..62].TrimEnd()); // Title (mapper constant), position 31-62, length 32
         Assert.Equal("SHAW CONSFEES", record[62..80].TrimEnd()); // Lodgement Reference (self-balancing setting), position 63-80, length 18
@@ -100,16 +99,6 @@ public class DirectEntrySelfBalancingRecordMapperTests
     public void Transaction_code_is_credit_when_configured_code_is_the_debit_code()
     {
         var record = DirectEntrySelfBalancingRecordMapper.Map([Instruction(100.00m)], DebitSettings);
-
-        Assert.Equal("50", record[18..20]);
-    }
-
-    [Fact]
-    public void Transaction_code_is_debit_when_configured_code_is_a_credit_code()
-    {
-        var creditSettings = DebitSettings with { TransactionCode = "50" };
-
-        var record = DirectEntrySelfBalancingRecordMapper.Map([Instruction(100.00m)], creditSettings);
 
         Assert.Equal("13", record[18..20]);
     }

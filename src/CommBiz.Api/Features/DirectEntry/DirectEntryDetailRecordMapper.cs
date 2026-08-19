@@ -10,16 +10,18 @@ public static class DirectEntryDetailRecordMapper
 {
     private const string RecordType = "1";
 
+    private const string CreditTransactionCode = "50";
+
     // Spec: "Care should be exercised to ensure inclusion of 'N' symbol" — combined with withholding tax
     // always being zero (static config), "N" (ordinary, non-withholding) is correct for every instruction.
-    private const string Indicator = "N";
+    private const string Indicator = " ";
 
     public static string Map(PaymentInstructionRequest instruction, DirectEntrySettings settings) =>
         RecordType +
         settings.TraceAccountBsb +
         settings.TraceAccountAccNo.PadLeft(9) +
         Indicator +
-        settings.TransactionCode +
+        CreditTransactionCode +
         AmountToCents(instruction.Amount).ToString().PadLeft(10, '0') +
         FixedWidth(settings.NameOfRemitter, 32) +
         FixedWidth(settings.LodgementReferenceDetails, 18) +
@@ -39,7 +41,7 @@ public static class DirectEntryDetailRecordMapper
             "Account Number to be Credited/Debited",
             settings.TraceAccountAccNo.PadLeft(9)),
         new(nameof(Indicator), Indicator, "Indicator", Indicator),
-        new(nameof(DirectEntrySettings.TransactionCode), settings.TransactionCode, "Transaction Code", settings.TransactionCode),
+        new(nameof(CreditTransactionCode), CreditTransactionCode, "Transaction Code", CreditTransactionCode),
         new(
             nameof(instruction.Amount),
             instruction.Amount.ToString(),

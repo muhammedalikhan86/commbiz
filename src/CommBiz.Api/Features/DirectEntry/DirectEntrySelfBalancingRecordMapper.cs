@@ -15,12 +15,10 @@ public static class DirectEntrySelfBalancingRecordMapper
     private const string RecordType = "1";
     private const string Indicator = " ";
     private const string DebitTransactionCode = "13";
-    private const string CreditTransactionCode = "50";
     private const string Title = "SHAW AND PARTNERS LIMITED";
 
     public static string Map(IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings)
     {
-        var transactionCode = ResolveTransactionCode(settings);
         var totalAmountInCents = DirectEntryAmountTotals.SumAmountInCents(instructions);
 
         return
@@ -28,7 +26,7 @@ public static class DirectEntrySelfBalancingRecordMapper
             settings.TraceAccountBsb +
             settings.SelfBalancingAccountNo.PadLeft(9) +
             Indicator +
-            transactionCode +
+            DebitTransactionCode +
             totalAmountInCents.ToString().PadLeft(10, '0') +
             FixedWidth(Title, 32) +
             FixedWidth(settings.SelfBalancingLodgementReferenceDetails, 18) +
@@ -42,7 +40,6 @@ public static class DirectEntrySelfBalancingRecordMapper
     public static IReadOnlyList<FieldMapping> MapFields(
         IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings)
     {
-        var transactionCode = ResolveTransactionCode(settings);
         var totalAmountInCents = DirectEntryAmountTotals.SumAmountInCents(instructions);
 
         return
@@ -56,10 +53,10 @@ public static class DirectEntrySelfBalancingRecordMapper
                 settings.SelfBalancingAccountNo.PadLeft(9)),
             new(nameof(Indicator), Indicator, "Indicator", Indicator),
             new(
-                nameof(DirectEntrySettings.TransactionCode),
-                settings.TransactionCode,
+                nameof(DebitTransactionCode),
+                DebitTransactionCode,
                 "Transaction Code",
-                transactionCode),
+                DebitTransactionCode),
             new("Amount", totalAmountInCents.ToString(), "Amount", totalAmountInCents.ToString().PadLeft(10, '0')),
             new(nameof(Title), Title, "Title of Account to be Credited/Debited", FixedWidth(Title, 32)),
             new(
@@ -85,10 +82,4 @@ public static class DirectEntrySelfBalancingRecordMapper
                 settings.AmountOfWithholdingTax),
         ];
     }
-
-    // Must be the inverse of the batch's configured direction - CBA cross-checks the Trailer's Credit/
-    // Debit totals against the actual sum of credit-coded vs debit-coded Detail records in the file, so
-    // a contra coded the same direction as the real payments leaves one side of that total at zero.
-    private static string ResolveTransactionCode(DirectEntrySettings settings) =>
-        settings.TransactionCode == DebitTransactionCode ? CreditTransactionCode : DebitTransactionCode;
 }

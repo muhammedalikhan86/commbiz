@@ -11,8 +11,7 @@ public class DirectEntryTrailerRecordMapperTests
         TraceAccountBsb = "062-000",
         TraceAccountAccNo = "21120227",
         NameOfRemitter = "SHAW AND PARTNER",
-        AmountOfWithholdingTax = "00000000",
-        TransactionCode = "13", // debit code — applies to every instruction for this payment type
+        AmountOfWithholdingTax = "00000000"        
     };
 
     private static PaymentInstructionRequest Instruction(decimal amount) =>
@@ -63,21 +62,6 @@ public class DirectEntryTrailerRecordMapperTests
         // opposite side of whichever direction is configured, so credit == debit == total, always.
         var record = DirectEntryTrailerRecordMapper.Map(
             [Instruction(100.00m), Instruction(50.00m)], DebitSettings);
-
-        Assert.Equal("0000000000", record[20..30]); // Net
-        Assert.Equal("0000015000", record[30..40]); // Credit
-        Assert.Equal("0000015000", record[40..50]); // Debit
-    }
-
-    [Fact]
-    public void Credit_settings_credit_and_debit_totals_both_equal_the_batch_total_and_net_is_zero()
-    {
-        // A future payment type whose static TransactionCode isn't the debit code "13" still yields
-        // the same invariant - the self-balancing record's transaction code flips to match.
-        var creditSettings = DebitSettings with { TransactionCode = "50" };
-
-        var record = DirectEntryTrailerRecordMapper.Map(
-            [Instruction(100.00m), Instruction(50.00m)], creditSettings);
 
         Assert.Equal("0000000000", record[20..30]); // Net
         Assert.Equal("0000015000", record[30..40]); // Credit
