@@ -16,6 +16,7 @@ public static class DirectEntrySelfBalancingRecordMapper
     private const string Indicator = " ";
     private const string DebitTransactionCode = "13";
     private const string CreditTransactionCode = "50";
+    private const string Title = "SHAW AND PARTNERS LIMITED";
 
     public static string Map(IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings)
     {
@@ -29,7 +30,7 @@ public static class DirectEntrySelfBalancingRecordMapper
             Indicator +
             transactionCode +
             totalAmountInCents.ToString().PadLeft(10, '0') +
-            FixedWidth(settings.Title, 32) +
+            FixedWidth(Title, 32) +
             FixedWidth(settings.SelfBalancingLodgementReferenceDetails, 18) +
             settings.TraceAccountBsb +
             settings.SelfBalancingAccountNo.PadLeft(9) +
@@ -60,7 +61,7 @@ public static class DirectEntrySelfBalancingRecordMapper
                 "Transaction Code",
                 transactionCode),
             new("Amount", totalAmountInCents.ToString(), "Amount", totalAmountInCents.ToString().PadLeft(10, '0')),
-            new(nameof(DirectEntrySettings.Title), settings.Title, "Title of Account to be Credited/Debited", FixedWidth(settings.Title, 32)),
+            new(nameof(Title), Title, "Title of Account to be Credited/Debited", FixedWidth(Title, 32)),
             new(
                 nameof(DirectEntrySettings.SelfBalancingLodgementReferenceDetails),
                 settings.SelfBalancingLodgementReferenceDetails,

@@ -6,10 +6,6 @@ public class DirectEntryHeaderRecordMapperTests
 {
     private static readonly DirectEntrySettings Settings = new()
     {
-        InstitutionCode = "CBA",
-        UserIdentificationNumber = "301500",
-        NameOfUserSupplyingFile = "SHAW AND PARTNERS LIMITED",
-        Title = "SHAW AND PARTNERS LIMITED",
         DescriptionOfEntriesOnFile = "ONLINEPAYMENTS",
         LodgementReferenceDetails = "PAYMENTS",
         TraceAccountBsb = "062-000",
@@ -64,43 +60,6 @@ public class DirectEntryHeaderRecordMapperTests
         Assert.Equal("ONLINEPAYMEN", record[62..74]); // Description of Entries, position 63-74, length 12
         Assert.Equal("051226", record[74..80]); // Date to be Processed, position 75-80, length 6
         Assert.Equal(new string(' ', 40), record[80..120]); // Blank, position 81-120, length 40
-    }
-
-    [Fact]
-    public void Name_of_user_supplying_file_shorter_than_max_is_left_justified_space_filled()
-    {
-        var record = DirectEntryHeaderRecordMapper.Map(
-            ValidInstructions(), Settings with { NameOfUserSupplyingFile = "AB" });
-
-        Assert.Equal("AB" + new string(' ', 24), record[30..56]);
-    }
-
-    [Fact]
-    public void Name_of_user_supplying_file_at_max_length_needs_no_padding()
-    {
-        var name = new string('A', 26);
-        var record = DirectEntryHeaderRecordMapper.Map(
-            ValidInstructions(), Settings with { NameOfUserSupplyingFile = name });
-
-        Assert.Equal(name, record[30..56]);
-    }
-
-    [Fact]
-    public void User_identification_number_shorter_than_6_digits_is_right_justified_zero_filled()
-    {
-        var record = DirectEntryHeaderRecordMapper.Map(
-            ValidInstructions(), Settings with { UserIdentificationNumber = "42" });
-
-        Assert.Equal("000042", record[56..62]);
-    }
-
-    [Fact]
-    public void Missing_user_identification_number_zero_fills_to_all_zeros()
-    {
-        var record = DirectEntryHeaderRecordMapper.Map(
-            ValidInstructions(), Settings with { UserIdentificationNumber = "" });
-
-        Assert.Equal("000000", record[56..62]);
     }
 
     [Fact]
@@ -184,12 +143,12 @@ public class DirectEntryHeaderRecordMapperTests
     }
 
     [Fact]
-    public void MapFields_config_sourced_fields_are_attributed_to_the_settings_field_name_not_the_request()
+    public void MapFields_hardcoded_fields_are_attributed_by_their_own_field_name()
     {
         var fields = DirectEntryHeaderRecordMapper.MapFields(ValidInstructions(), Settings);
 
-        Assert.Equal(nameof(DirectEntrySettings.InstitutionCode), fields.Single(f => f.CbaResponseField == "Name Of User Financial Institution").RequestField);
-        Assert.Equal(nameof(DirectEntrySettings.UserIdentificationNumber), fields.Single(f => f.CbaResponseField == "Number of User Supplying File").RequestField);
+        Assert.Equal("InstitutionCode", fields.Single(f => f.CbaResponseField == "Name Of User Financial Institution").RequestField);
+        Assert.Equal("UserIdentificationNumber", fields.Single(f => f.CbaResponseField == "Number of User Supplying File").RequestField);
     }
 }
 

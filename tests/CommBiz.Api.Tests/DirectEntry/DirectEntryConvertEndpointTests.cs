@@ -14,10 +14,6 @@ public class DirectEntryConvertEndpointTests(WebApplicationFactory<Program> fact
     // doesn't depend on appsettings.json's contents.
     private static readonly Dictionary<string, string?> DirectEntryConfig = new()
     {
-        ["DirectEntry:InstitutionCode"] = "CBA",
-        ["DirectEntry:UserIdentificationNumber"] = "301500",
-        ["DirectEntry:NameOfUserSupplyingFile"] = "SHAW AND PARTNERS LIMITED",
-        ["DirectEntry:Title"] = "SHAW AND PARTNERS LIMITED",
         ["DirectEntry:DescriptionOfEntriesOnFile"] = "ONLINEPAYMENTS",
         ["DirectEntry:LodgementReferenceDetails"] = "PAYMENTS",
         ["DirectEntry:TraceAccountBsb"] = "062-000",

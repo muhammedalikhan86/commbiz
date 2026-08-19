@@ -6,10 +6,6 @@ public class ConvertDirectEntryBatchHandlerTests
 {
     private static readonly DirectEntrySettings Settings = new()
     {
-        InstitutionCode = "CBA",
-        UserIdentificationNumber = "301500",
-        NameOfUserSupplyingFile = "SHAW AND PARTNERS LIMITED",
-        Title = "SHAW AND PARTNERS LIMITED",
         DescriptionOfEntriesOnFile = "ONLINEPAYMENTS",
         LodgementReferenceDetails = "PAYMENTS",
         TraceAccountBsb = "062-000",

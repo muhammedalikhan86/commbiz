@@ -4,14 +4,6 @@ namespace CommBiz.Api.Features.DirectEntry;
 // "DirectEntry" section). Bound via builder.Services.Configure<DirectEntrySettings>(...) in Program.cs.
 public record DirectEntrySettings
 {
-    public string InstitutionCode { get; init; } = "";
-
-    public string UserIdentificationNumber { get; init; } = "";
-
-    public string NameOfUserSupplyingFile { get; init; } = "";
-
-    public string Title { get; init; } = "";
-
     public string DescriptionOfEntriesOnFile { get; init; } = "";
 
     public string LodgementReferenceDetails { get; init; } = "";

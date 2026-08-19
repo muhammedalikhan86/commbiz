@@ -6,17 +6,16 @@ public class DirectEntrySelfBalancingRecordMapperTests
 {
     private static readonly DirectEntrySettings DebitSettings = new()
     {
-        InstitutionCode = "CBA",
-        UserIdentificationNumber = "301500",
-        NameOfUserSupplyingFile = "SHAW AND PARTNERS LIMITED",
-        Title = "SHAW AND PARTNERS LIMITED",
         DescriptionOfEntriesOnFile = "ONLINEPAYMENTS",
         LodgementReferenceDetails = "PAYMENTS",
         TraceAccountBsb = "062-000",
-        TraceAccountAccNo = "21120227",
-        NameOfRemitter = "SHAW AND PARTNER",
+        TraceAccountAccNo = "21120075",
+        NameOfRemitter = "SHAW - AUD TRUST ACCOUNT",
         AmountOfWithholdingTax = "00000000",
         TransactionCode = "13", // debit code
+        SelfBalancingAccountNo = "21120227",
+        SelfBalancingNameOfRemitter = "SHAW AND PARTNER",
+        SelfBalancingLodgementReferenceDetails = "SHAW CONSFEES",
     };
 
     private static PaymentInstructionRequest Instruction(decimal amount) =>
@@ -52,14 +51,14 @@ public class DirectEntrySelfBalancingRecordMapperTests
         Assert.Equal("1", record[0..1]); // Record Type, position 1, length 1
         Assert.Equal("062-000", record[1..8]); // BSB Number = settlement account, position 2-8, length 7
         Assert.Equal("21120227", record[8..17].Trim()); // Account Number = settlement account, position 9-17, length 9
-        Assert.Equal("N", record[17..18]); // Indicator, position 18, length 1
+        Assert.Equal(" ", record[17..18]); // Indicator, position 18, length 1 - blank, not "N"
         Assert.Equal("50", record[18..20]); // Transaction Code, position 19-20, length 2 - inverse of debit "13"
         Assert.Equal("0000010050", record[20..30]); // Amount = batch total in cents, position 21-30, length 10
-        Assert.Equal("SHAW AND PARTNER", record[30..62].TrimEnd()); // Title (NameOfRemitter setting), position 31-62, length 32
-        Assert.Equal("PAYMENTS", record[62..80].TrimEnd()); // Lodgement Reference, position 63-80, length 18
-        Assert.Equal("484-799", record[80..87]); // Trace BSB Number (first instruction's Destination), position 81-87, length 7
-        Assert.Equal("300500", record[87..96].Trim()); // Trace Account Number (first instruction's Destination), position 88-96, length 9
-        Assert.Equal("JOHN CITIZEN", record[96..112].TrimEnd()); // Name of Remitter (first instruction's Destination), position 97-112, length 16
+        Assert.Equal("SHAW AND PARTNERS LIMITED", record[30..62].TrimEnd()); // Title (mapper constant), position 31-62, length 32
+        Assert.Equal("SHAW CONSFEES", record[62..80].TrimEnd()); // Lodgement Reference (self-balancing setting), position 63-80, length 18
+        Assert.Equal("062-000", record[80..87]); // Trace BSB Number = settlement account, position 81-87, length 7
+        Assert.Equal("21120227", record[87..96].Trim()); // Trace Account Number = settlement account, position 88-96, length 9
+        Assert.Equal("SHAW AND PARTNER", record[96..112].TrimEnd()); // Name of Remitter (self-balancing setting), position 97-112, length 16
         Assert.Equal("00000000", record[112..120]); // Withholding Tax Amount, position 113-120, length 8
     }
 
@@ -75,7 +74,7 @@ public class DirectEntrySelfBalancingRecordMapperTests
     }
 
     [Fact]
-    public void Trace_fields_come_from_the_batchs_first_instructions_destination_not_the_settlement_account()
+    public void Trace_fields_always_match_the_settlement_account_regardless_of_any_instructions_destination()
     {
         var first = Instruction(100.00m) with
         {
@@ -92,9 +91,9 @@ public class DirectEntrySelfBalancingRecordMapperTests
 
         var record = DirectEntrySelfBalancingRecordMapper.Map([first, second], DebitSettings);
 
-        Assert.Equal("111-222", record[80..87]);
-        Assert.Equal("999999", record[87..96].Trim());
-        Assert.Equal("JANE DOE", record[96..112].TrimEnd());
+        Assert.Equal("062-000", record[80..87]);
+        Assert.Equal("21120227", record[87..96].Trim());
+        Assert.Equal("SHAW AND PARTNER", record[96..112].TrimEnd());
     }
 
     [Fact]
@@ -135,20 +134,6 @@ public class DirectEntrySelfBalancingRecordMapperTests
             [Instruction(0.005m), Instruction(0.005m)], DebitSettings);
 
         Assert.Equal("0000000002", record[20..30]);
-    }
-
-    [Fact]
-    public void Title_lodgement_reference_trace_account_remitter_and_withholding_tax_match_the_detail_mapper()
-    {
-        var instructions = new[] { Instruction(100.00m) };
-        var detailRecord = DirectEntryDetailRecordMapper.Map(instructions[0], DebitSettings);
-        var selfBalancingRecord = DirectEntrySelfBalancingRecordMapper.Map(instructions, DebitSettings);
-
-        Assert.Equal(detailRecord[30..62], selfBalancingRecord[30..62]); // Title
-        Assert.Equal(detailRecord[62..80], selfBalancingRecord[62..80]); // Lodgement Reference
-        Assert.Equal(detailRecord[80..96], selfBalancingRecord[80..96]); // Trace BSB/Account
-        Assert.Equal(detailRecord[96..112], selfBalancingRecord[96..112]); // Name of Remitter
-        Assert.Equal(detailRecord[112..120], selfBalancingRecord[112..120]); // Withholding Tax
     }
 
     [Fact]
@@ -196,7 +181,7 @@ public class DirectEntrySelfBalancingRecordMapperTests
             nameof(DirectEntrySettings.TraceAccountBsb),
             fields.Single(f => f.CbaResponseField == "BSB Number").RequestField);
         Assert.Equal(
-            nameof(DirectEntrySettings.TraceAccountAccNo),
+            nameof(DirectEntrySettings.SelfBalancingAccountNo),
             fields.Single(f => f.CbaResponseField == "Account Number to be Credited/Debited").RequestField);
     }
 }

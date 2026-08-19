@@ -9,6 +9,9 @@ public static class DirectEntryHeaderRecordMapper
 {
     private const string RecordType = "0";
     private const string ReelSequenceNumber = "01";
+    private const string InstitutionCode = "CBA";
+    private const string UserIdentificationNumber = "301500";
+    private const string NameOfUserSupplyingFile = "SHAW AND PARTNERS LIMITED";
 
     // A Direct Entry file has exactly one header date but each instruction carries its own PaymentDate;
     // the earliest instruction's date in the batch is used as the interim header date (see Assumptions).
@@ -20,10 +23,10 @@ public static class DirectEntryHeaderRecordMapper
             RecordType +
             new string(' ', 17) +
             ReelSequenceNumber +
-            values.InstitutionCode +
+            InstitutionCode +
             new string(' ', 7) +
-            FixedWidth(values.NameOfUserSupplyingFile, 26) +
-            values.UserIdentificationNumber.PadLeft(6, '0') +
+            FixedWidth(NameOfUserSupplyingFile, 26) +
+            UserIdentificationNumber.PadLeft(6, '0') +
             FixedWidth(values.DescriptionOfEntriesOnFile, 12) +
             values.DateToBeProcessed.ToString("ddMMyy") +
             new string(' ', 40);
@@ -43,21 +46,21 @@ public static class DirectEntryHeaderRecordMapper
             new("", "", "Blank", new string(' ', 17)),
             new(nameof(ReelSequenceNumber), ReelSequenceNumber, "Reel Sequence Number", ReelSequenceNumber),
             new(
-                nameof(DirectEntrySettings.InstitutionCode),
-                values.InstitutionCode,
+                nameof(InstitutionCode),
+                InstitutionCode,
                 "Name Of User Financial Institution",
-                values.InstitutionCode),
+                InstitutionCode),
             new("", "", "Blank", new string(' ', 7)),
             new(
-                nameof(DirectEntrySettings.NameOfUserSupplyingFile),
-                values.NameOfUserSupplyingFile,
+                nameof(NameOfUserSupplyingFile),
+                NameOfUserSupplyingFile,
                 "Name of User Supplying File",
-                FixedWidth(values.NameOfUserSupplyingFile, 26)),
+                FixedWidth(NameOfUserSupplyingFile, 26)),
             new(
-                nameof(DirectEntrySettings.UserIdentificationNumber),
-                values.UserIdentificationNumber,
+                nameof(UserIdentificationNumber),
+                UserIdentificationNumber,
                 "Number of User Supplying File",
-                values.UserIdentificationNumber.PadLeft(6, '0')),
+                UserIdentificationNumber.PadLeft(6, '0')),
             new(
                 nameof(DirectEntrySettings.DescriptionOfEntriesOnFile),
                 values.DescriptionOfEntriesOnFile,
@@ -72,17 +75,9 @@ public static class DirectEntryHeaderRecordMapper
         ];
     }
 
-    private static (
-        string InstitutionCode,
-        string NameOfUserSupplyingFile,
-        string UserIdentificationNumber,
-        string DescriptionOfEntriesOnFile,
-        DateTime DateToBeProcessed) ResolveValues(
+    private static (string DescriptionOfEntriesOnFile, DateTime DateToBeProcessed) ResolveValues(
         IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings) =>
         (
-            settings.InstitutionCode,
-            settings.NameOfUserSupplyingFile,
-            settings.UserIdentificationNumber,
             settings.DescriptionOfEntriesOnFile,
             instructions.Min(instruction => instruction.PaymentDate.Date));
 }
