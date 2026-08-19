@@ -35,6 +35,10 @@ app.MapGet("/health", () => Results.Ok(new { status = "Healthy" }));
 app.MapPost("/convert", async (JsonElement body, IMessageBus bus) =>
     await PaymentTypeRouter.RouteAndDispatchAsync(body, bus));
 
+// TEMPORARY: same routing/conversion as /convert, but returns ConvertedText as a downloadable .txt file.
+app.MapPost("/convert-to-file", async (JsonElement body, IMessageBus bus) =>
+    await ConvertToFileRouter.RouteAndDispatchAsync(body, bus));
+
 app.Run();
 
 // Exposed so WebApplicationFactory<Program> can bootstrap the host in tests.

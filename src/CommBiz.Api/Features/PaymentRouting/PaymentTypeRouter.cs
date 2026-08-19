@@ -103,7 +103,7 @@ public static class PaymentTypeRouter
         return new PaymentRoutingResponse(false, null, errors);
     }
 
-    private static string? GetPaymentTypeCode(JsonElement instruction)
+    internal static string? GetPaymentTypeCode(JsonElement instruction)
     {
         if (instruction.ValueKind != JsonValueKind.Object)
         {
