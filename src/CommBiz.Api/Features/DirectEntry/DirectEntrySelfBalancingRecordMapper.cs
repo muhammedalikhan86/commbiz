@@ -13,17 +13,9 @@ namespace CommBiz.Api.Features.DirectEntry;
 public static class DirectEntrySelfBalancingRecordMapper
 {
     private const string RecordType = "1";
-    private const string BsbNumber = "062-000";
-    private const string AccountNumber = "21120227";
     private const string Indicator = " ";
     private const string DebitTransactionCode = "13";
     private const string CreditTransactionCode = "50";
-    private const string Title = "SHAW AND PARTNERS LIMITED";
-    private const string LodgementReferenceDetails = "SHAW CONSFEES";
-    private const string TraceAccountBsb = "062-000";
-    private const string TraceAccountAccNo = "21120227";
-    private const string NameOfRemitter = "SHAW AND PARTNER";
-    private const string AmountOfWithholdingTax = "00000000";
 
     public static string Map(IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings)
     {
@@ -32,20 +24,20 @@ public static class DirectEntrySelfBalancingRecordMapper
 
         return
             RecordType +
-            BsbNumber +
-            AccountNumber.PadLeft(9) +
+            settings.TraceAccountBsb +
+            settings.SelfBalancingAccountNo.PadLeft(9) +
             Indicator +
             transactionCode +
             totalAmountInCents.ToString().PadLeft(10, '0') +
-            FixedWidth(Title, 32) +
-            FixedWidth(LodgementReferenceDetails, 18) +
-            TraceAccountBsb +
-            TraceAccountAccNo.PadLeft(9) +
-            FixedWidth(NameOfRemitter, 16) +
-            AmountOfWithholdingTax;
+            FixedWidth(settings.Title, 32) +
+            FixedWidth(settings.SelfBalancingLodgementReferenceDetails, 18) +
+            settings.TraceAccountBsb +
+            settings.SelfBalancingAccountNo.PadLeft(9) +
+            FixedWidth(settings.SelfBalancingNameOfRemitter, 16) +
+            settings.AmountOfWithholdingTax;
     }
 
-    // F-021: same literal/resolved values as Map, so the field-mapping breakdown can never drift from ConvertedText.
+    // F-021: same resolved values as Map, so the field-mapping breakdown can never drift from ConvertedText.
     public static IReadOnlyList<FieldMapping> MapFields(
         IReadOnlyList<PaymentInstructionRequest> instructions, DirectEntrySettings settings)
     {
@@ -55,8 +47,12 @@ public static class DirectEntrySelfBalancingRecordMapper
         return
         [
             new(nameof(RecordType), RecordType, "Record Type", RecordType),
-            new(nameof(BsbNumber), BsbNumber, "BSB Number", BsbNumber),
-            new(nameof(AccountNumber), AccountNumber, "Account Number to be Credited/Debited", AccountNumber.PadLeft(9)),
+            new(nameof(DirectEntrySettings.TraceAccountBsb), settings.TraceAccountBsb, "BSB Number", settings.TraceAccountBsb),
+            new(
+                nameof(DirectEntrySettings.SelfBalancingAccountNo),
+                settings.SelfBalancingAccountNo,
+                "Account Number to be Credited/Debited",
+                settings.SelfBalancingAccountNo.PadLeft(9)),
             new(nameof(Indicator), Indicator, "Indicator", Indicator),
             new(
                 nameof(DirectEntrySettings.TransactionCode),
@@ -64,24 +60,28 @@ public static class DirectEntrySelfBalancingRecordMapper
                 "Transaction Code",
                 transactionCode),
             new("Amount", totalAmountInCents.ToString(), "Amount", totalAmountInCents.ToString().PadLeft(10, '0')),
-            new(nameof(Title), Title, "Title of Account to be Credited/Debited", FixedWidth(Title, 32)),
+            new(nameof(DirectEntrySettings.Title), settings.Title, "Title of Account to be Credited/Debited", FixedWidth(settings.Title, 32)),
             new(
-                nameof(LodgementReferenceDetails),
-                LodgementReferenceDetails,
+                nameof(DirectEntrySettings.SelfBalancingLodgementReferenceDetails),
+                settings.SelfBalancingLodgementReferenceDetails,
                 "Lodgement Reference",
-                FixedWidth(LodgementReferenceDetails, 18)),
-            new(nameof(TraceAccountBsb), TraceAccountBsb, "Trace BSB Number", TraceAccountBsb),
+                FixedWidth(settings.SelfBalancingLodgementReferenceDetails, 18)),
+            new(nameof(DirectEntrySettings.TraceAccountBsb), settings.TraceAccountBsb, "Trace BSB Number", settings.TraceAccountBsb),
             new(
-                nameof(TraceAccountAccNo),
-                TraceAccountAccNo,
+                nameof(DirectEntrySettings.SelfBalancingAccountNo),
+                settings.SelfBalancingAccountNo,
                 "Trace Account Number",
-                TraceAccountAccNo.PadLeft(9)),
-            new(nameof(NameOfRemitter), NameOfRemitter, "Name of Remitter", FixedWidth(NameOfRemitter, 16)),
+                settings.SelfBalancingAccountNo.PadLeft(9)),
             new(
-                nameof(AmountOfWithholdingTax),
-                AmountOfWithholdingTax,
+                nameof(DirectEntrySettings.SelfBalancingNameOfRemitter),
+                settings.SelfBalancingNameOfRemitter,
+                "Name of Remitter",
+                FixedWidth(settings.SelfBalancingNameOfRemitter, 16)),
+            new(
+                nameof(DirectEntrySettings.AmountOfWithholdingTax),
+                settings.AmountOfWithholdingTax,
                 "Amount of withholding tax",
-                AmountOfWithholdingTax),
+                settings.AmountOfWithholdingTax),
         ];
     }
 
