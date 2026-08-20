@@ -179,18 +179,26 @@ Entry credits (see §3, Direct Entry Configuration).
   and Partners' `FOREX` code) into a CommBank CommBiz IPFX Bulk Settlement Upload file: one CSV
   data row per instruction, comma-delimited, CRLF-terminated, with no header or footer row (per
   the IPFX spec's own business rules) and no self-balancing record. Each row always writes the
-  literal constant `FX` as Transaction Type. The only settlement pattern currently supported is
-  the IPFX spec's "non-CBA payment types" case (its Sample 2: I SELL Instruction = `MAN`, I BUY
-  Instruction = `DOC`, no beneficiary/intermediary bank required) — the I BUY/I SELL Instruction
-  fields and the I BUY/I SELL Payment details fields are populated from static FX Configuration,
-  not the request, since Shaw and Partners' FX requests are never routed to an actual settlement
-  account or a different settlement type. Beneficiary/intermediary bank fields stay blank,
-  consistent with the spec's rule that they're only required when the Instruction field holds an
-  account number rather than a 3-letter settlement-type code. Transaction Description is sourced
-  from the request's `accountNo` field (max 12AN). The request's single `Amount` value is always
-  placed on the Sell side (I SELL Amount), leaving I BUY Amount blank, mirroring the IPFX spec's
-  Sample 2 shape. Fields specific to IDR/CNH/KRW currency pairs (Purpose of Payment, CNAPS Code,
-  Beneficiary Company Name/Contact/SSN) are not yet supported (see Open Questions & Risks, A6).
+  literal constant `FX` as Transaction Type. The I SELL/I BUY Instruction fields (7/12) and the
+  I BUY/I SELL Payment details fields (21/22) always come from static FX Configuration, not the
+  request, since Shaw and Partners' FX requests are never routed to an actual settlement account
+  or a different settlement type (the IPFX spec's Samples 1/3/4/5 "Address Book Beneficiary"
+  pattern) — every row uses the spec's Sample 2 shape (I SELL Instruction = `MAN`, I BUY
+  Instruction = `DOC`). The beneficiary/intermediary bank fields (8/9/10/11/13/14/20), however,
+  are still mapped through from the request whenever present, using the same shared payload
+  fields (`IntermediaryBankSwiftCode`, `DestinationBankSwiftCode`, `DestinationBankAccountName`,
+  `BeneficiaryAddress`) the IMT Conversion Slice already maps for its own beneficiary/
+  intermediary bank fields — country codes (9/11/20) are derived from the SWIFT BIC's characters
+  5-6, same technique as IMT. This is pass-through only (truncated to each field's max length,
+  no character-set or reject-on-invalid validation yet). Beneficiary Address lines 2/3 (15/16)
+  stay blank regardless — a hard spec rule, not a data gap. Beneficiary City/State/Postcode
+  (17-19) stay blank too — no discrete field for them exists anywhere in the shared payload,
+  same gap the IMT Conversion Slice documents. Transaction Description is sourced from the
+  request's `accountNo` field (max 12AN). The request's single `Amount` value is always placed
+  on the Sell side (I SELL Amount), leaving I BUY Amount blank, mirroring the IPFX spec's Sample 2
+  shape. Fields specific to IDR/CNH/KRW currency pairs (Purpose of Payment, CNAPS Code,
+  Beneficiary Company Name/Contact/SSN) are not yet supported (see Open Questions & Risks, A6) —
+  unlike 8-20, no source data for these exists in the payload at all.
   `PaymentSourceTypeCode`, `PaymentDate`, `Notes`, `RateTypeCode`, `ValueDateTypeCode`,
   `FeeTypeCode`, and `FeeOtherTypeCode` are carried in the request but unused — none of the IPFX
   file's 27 field positions correspond to them.
