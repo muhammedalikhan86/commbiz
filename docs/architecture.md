@@ -1,8 +1,8 @@
 # Architecture: Shaw and Partners → CommBank Payment File Conversion Service
 
 > Status: APPROVED
-> Version: v12
-> Last updated: 2026-08-18
+> Version: v13
+> Last updated: 2026-08-20
 > PRD: docs/prd.md (built against v9)
 
 ## 1. System Context
@@ -25,9 +25,12 @@ validation, mapping, and output-assembly logic end to end, rather than sharing h
 in-process command/handler pipeline for each slice (CQRS), replacing the need for a separate
 mediator library. No database is used — the service holds no state beyond a single request's
 lifetime. Organisation-level constants each payment type's output format requires (e.g. Direct
-Entry's institution code, remitter details, trace account, transaction code) are sourced from
-static application configuration, not carried in the request — the upstream payload only ever
-contains the data that genuinely varies per instruction (see §3, Direct Entry Configuration).
+Entry's remitter details, trace account) are sourced from static application configuration, not
+carried in the request; a small number of values that never vary at all regardless of
+environment (e.g. Direct Entry's institution code, transaction codes) are hardcoded mapper
+constants instead of configuration — the upstream payload only ever contains the data that
+genuinely varies per instruction, which includes the destination/beneficiary bank details Direct
+Entry credits (see §3, Direct Entry Configuration).
 
 ## 3. Components
 
@@ -37,13 +40,25 @@ contains the data that genuinely varies per instruction (see §3, Direct Entry C
   it does not know which slice will ultimately handle the batch.
 - **Inputs:** HTTP request body containing a plain JSON array of payment instructions, in Shaw
   and Partners' own native payload shape (e.g. `paymentTypeCode`, `accountNo`,
-  `sourceBankAccountName`, `sourceBankAccountNo`, `sourceBankBSB`, `paymentDate`, `amount`,
-  `createBy`) — not a shape pre-mapped to any single bank format's fields.
+  `sourceBankAccountName`, `sourceBankAccountNo`, `sourceBankBSB`, `destinationBankAccountName`,
+  `destinationBankAccountNo`, `destinationBankBsb`, `paymentDate`, `amount`, `createBy`) — not a
+  shape pre-mapped to any single bank format's fields.
 - **Outputs:** JSON response containing either the converted output content as text plus its
   parallel field-by-field mapping breakdown (see Field Mapping Model below), or a validation
   failure with a reason per invalid instruction.
 - **Dependencies:** Wolverine pipeline for dispatching the request to the correct slice.
 - **Technology:** ASP.NET Core Minimal API, .NET 10, Kestrel.
+
+> **Note (experimental, not an approved architectural component):** `POST /convert-to-file`
+> (`Features/PaymentRouting/ConvertToFileRouter.cs`) exists in the codebase alongside `POST
+> /convert`, reusing the same Payment Type Router dispatch across all five payment types. On a
+> successful conversion it returns `ConvertedText` as a downloadable `.txt` file (`Results.File`)
+> instead of inline JSON, falling back to the standard JSON error envelope on rejection/failure.
+> It is explicitly commented `// TEMPORARY` in source by its author and has not been through this
+> project's Developer/Reviewer/Integration loop. It is not a reintroduction of the rejected
+> ADR-007 design — no server-side caching, persistence, separate `GET /conversions/{id}/file`
+> lookup, or expiry — and does not change `/convert`'s own ADR-008 inline-JSON behaviour. Tracked
+> as PMBook F-024/PM-013 pending a product decision to keep, formalize, or remove it.
 
 ### Payment Type Router
 - **Responsibility:** The single top-level, cross-slice dispatcher — explicitly not a vertical
@@ -69,16 +84,24 @@ contains the data that genuinely varies per instruction (see §3, Direct Entry C
 - **Responsibility:** Validates and converts a batch of Direct-Entry-typed instructions into a
   CommBank Direct Entry file: one header record, one detail record per instruction, one
   self-balancing (contra) detail record, then one trailer record, per the fixed-width layout in
-  the Direct Entry spec. Fields the upstream payload does
-  not carry (because they are constant for every Direct Entry submission Shaw and Partners makes —
-  e.g. institution code, name of user supplying file, title of account, lodgement reference, trace
-  BSB/account, name of remitter, transaction code, withholding tax) are populated from the Direct
-  Entry Configuration component, not from the request. The self-balancing detail record is built
-  entirely from Direct Entry Configuration and the batch's own totals — it never carries any
-  upstream payload data — posting the batch's total amount against Shaw and Partners' own
-  configured settlement account (Trace BSB/Account), in the transaction direction opposite the
-  batch's configured Transaction Code, so the file's credit and debit totals reconcile (per the
-  Direct Entry spec's self-balancing/contra-entry requirement, docs/stash/Direct Entry - File
+  the Direct Entry spec. Each detail record's primary destination fields — BSB Number, Account
+  Number to be Credited, Title of Account to be Credited — are sourced from the request's
+  `DestinationBank*` fields (the real beneficiary/destination account being credited), not from
+  configuration; corrected in v13/PMBook v28 from the original implementation, which sourced
+  these primary fields from organisation-level Trace settings instead (a real bug — Direct Entry
+  payments were not crediting the intended destination account — now fixed and confirmed against
+  real CommBank test accounts). Fields the upstream payload does not carry (because they are
+  constant for every Direct Entry submission Shaw and Partners makes — e.g. lodgement reference,
+  trace BSB/account, name of remitter, withholding tax) are populated from the Direct Entry
+  Configuration component; a small number of values that never vary at all (institution code,
+  name of user supplying file, transaction code) are hardcoded mapper constants instead of
+  configuration. The self-balancing detail record posts the batch's total amount against a
+  dedicated settlement account (`SelfBalancingAccountNo`, distinct from the regular detail
+  records' Trace BSB/Account) with a dedicated Name of Remitter and Lodgement Reference Details
+  (`SelfBalancingNameOfRemitter`/`SelfBalancingLodgementReferenceDetails`), all from Direct Entry
+  Configuration; its Title and Transaction Code are hardcoded mapper constants, not configuration,
+  so the file's credit and debit totals reconcile (per the Direct Entry spec's
+  self-balancing/contra-entry requirement, docs/stash/Direct Entry - File
   Specification CommBiz.md §1).
 - **Inputs:** Validated batch of Direct-Entry-typed payment instructions; Direct Entry
   Configuration.
@@ -240,11 +263,13 @@ contains the data that genuinely varies per instruction (see §3, Direct Entry C
 
 ### Direct Entry Configuration
 - **Responsibility:** Holds the organisation-level constants a Direct Entry file requires that
-  never vary per instruction or per request — e.g. CommBank institution code, Shaw and Partners'
-  name/title/APCA user identification number, description of entries, lodgement reference, trace
-  BSB/account, name of remitter, transaction code, withholding tax amount. Kept out of the request
-  payload and out of source code as hardcoded defaults, so there is exactly one place these values
-  are set.
+  vary only by environment/configuration, not by instruction or request — description of entries,
+  lodgement reference, trace BSB/account, name of remitter, withholding tax amount, plus the
+  self-balancing record's dedicated settlement account, name of remitter, and lodgement reference
+  (`SelfBalancingAccountNo`/`SelfBalancingNameOfRemitter`/`SelfBalancingLodgementReferenceDetails`).
+  Values that never vary at all regardless of environment — CommBank institution code, Shaw and
+  Partners' name/title/APCA user identification number, transaction codes — are hardcoded mapper
+  constants instead, kept out of both the request payload and configuration.
 - **Inputs:** None (static configuration, not request-driven).
 - **Outputs:** Confirmed static values consumed by the Direct Entry Conversion Slice's Header,
   Detail, and Trailer record mapping.
@@ -271,14 +296,15 @@ IMT, Priority Payments, and FX differ.
    Direct Entry spec's minimum-2-detail-record rule).
 4. If any instruction is invalid, the batch is rejected in full, with a validation reason
    returned for every invalid instruction. No output is produced.
-5. If all instructions are valid, each is mapped to a Direct Entry detail record — combining the
-   per-instruction data from the payload with the constant values from Direct Entry
-   Configuration; a header record is built from Direct Entry Configuration plus the earliest
-   instruction's payment date; a self-balancing (contra) detail record is built from the batch's
-   total amount and Direct Entry Configuration's settlement account details, posted in the
-   direction opposite the batch's Transaction Code; a trailer record is built with computed
-   totals (credit total, debit total, net total, record count — all including the self-balancing
-   detail record) so the file is self-balancing.
+5. If all instructions are valid, each is mapped to a Direct Entry detail record — the
+   destination BSB/account/title fields come from the request's `DestinationBank*` fields, and
+   the remaining fields from Direct Entry Configuration or hardcoded mapper constants; a header
+   record is built from Direct Entry Configuration and hardcoded mapper constants plus the
+   earliest instruction's payment date; a self-balancing (contra) detail record is built from the
+   batch's total amount and Direct Entry Configuration's dedicated self-balancing settlement
+   account/remitter/lodgement-reference details, with a hardcoded Transaction Code; a trailer
+   record is built with computed totals (credit total, debit total, net total, record count — all
+   including the self-balancing detail record) so the file is self-balancing.
 6. The assembled file content is returned to the caller directly, as text within the JSON
    response body, alongside a success indicator — no download link, no temporary storage.
    Alongside it, the same mapping step that populated each record's fields also emits that
@@ -362,3 +388,4 @@ field/output rules.
 | v10 | 2026-08-17 | Added the missing Priority Payments Conversion Slice component entry to §3 (F-018, Done, had no architecture.md entry) and updated §4 Data Flow's fan-out note to include Priority Payments (`RTGS`) alongside DE/BPAY/IMT | Integration Agent Documentation Drift finding on F-018 |
 | v11 | 2026-08-18 | Added FX as a fifth payment type: new FX Conversion Slice and FX Configuration components (§3) per the confirmed CommBiz IPFX Bulk Settlement Upload field mapping (constant Transaction Type; `accountNo` → Transaction Description; Buy/Sell Currency/Amount; static Instruction and Payment details fields; IDR/CNH/KRW-specific fields deferred, see A6); updated Payment Type Router's dispatch list (also fixed a pre-existing gap where Priority Payments was missing from it); updated §4 Data Flow fan-out note; added FR-010; added Open Question A6 | Ripple from PRD v9 |
 | v12 | 2026-08-18 | Architecture approved | Gate approval |
+| v13 | 2026-08-20 | Corrected stale Direct Entry field-source claims after the user's direct-commit bug fix (PMBook v28): institution code, name of user supplying file, and transaction code (detail `"50"`, self-balancing `"13"`) are hardcoded mapper constants, not config, and were wrongly described as config-sourced in §2/§3; detail records' BSB/Account/Title to be Credited now come from the request's `DestinationBank*` fields, not Direct Entry Configuration (§3 Direct Entry Conversion Slice, previously wrong); self-balancing record now posts against a dedicated `SelfBalancingAccountNo`/`SelfBalancingNameOfRemitter`/`SelfBalancingLodgementReferenceDetails`, not the regular detail records' Trace BSB/Account, and there is no more "batch's configured Transaction Code" to post opposite (§3, §4 step 5, previously wrong on both counts); updated the Direct Entry Configuration component's held-settings list accordingly; added an experimental note on `POST /convert-to-file` (API Host, not a finished component) | Integration Agent Documentation Drift finding on the user's direct-commit round; Finalizer Architecture correction pass |

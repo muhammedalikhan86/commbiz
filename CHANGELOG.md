@@ -5,6 +5,105 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] — 2026-08-20
+
+### Fixed
+
+#### Direct Entry Field-Mapping Correctness (Amended F-003/F-005/F-006/F-014)
+- **Critical Bug Fix:** Direct Entry Detail Record's primary BSB/Account Number/Title fields now correctly sourced from three new required request fields (`DestinationBankBsb`, `DestinationBankAccountNo`, `DestinationBankAccountName` — the actual beneficiary account), instead of from the organisation's own Trace settings
+  - **Impact:** Payments now correctly credit/debit the intended destination account. Previously, Detail Record was incorrectly populated from Trace settings, meaning payments were not crediting the intended beneficiary — now verified against real CommBank test accounts
+  - Organisation's `TraceAccountBsb`/`TraceAccountAccNo`/`NameOfRemitter` now correctly populate only the Trace section
+  - Transaction Code hardcoded to `"50"` (credit) for every detail record (removed configurable `TransactionCode` setting)
+  - Self-balancing (contra) record now uses three new dedicated settings (`SelfBalancingAccountNo`, `SelfBalancingNameOfRemitter`, `SelfBalancingLodgementReferenceDetails`) with hardcoded `"13"` (debit) transaction code and hardcoded Title constant
+  - Header record's `InstitutionCode`/`UserIdentificationNumber`/`NameOfUserSupplyingFile` moved from configuration to hardcoded mapper constants
+  - Indicator changed from `"N"` → `" "` for both Detail and Self-Balancing records
+  - `DirectEntryValidator` enhanced to validate the three new Destination* fields identically to Source*
+
+### Added
+
+#### New `/convert-to-file` Endpoint (Temporary)
+- **F-025 (Informal):** New `POST /convert-to-file` endpoint returns payment conversion's `ConvertedText` as a downloadable `.txt` file instead of inline JSON
+  - Reuses existing `PaymentTypeRouter` dispatch across all five payment types (Direct Entry, BPAY, IMT, Priority Payments, FX)
+  - Falls back to standard JSON error envelope on any rejection/failure
+  - Explicitly marked temporary in code; no product decision yet on permanence
+
+### Changed
+
+#### Breaking: New Required Direct Entry Request Fields
+- `PaymentInstructionRequest` (the `/convert` and `/convert-to-file` request contract for `"DE"`-typed instructions) now requires three additional fields:
+  - `destinationBankBsb` — beneficiary bank BSB number (required, alphanumeric 6 chars)
+  - `destinationBankAccountNo` — beneficiary account number (required, alphanumeric up to 12 chars)
+  - `destinationBankAccountName` — beneficiary account name/title (required, string up to 32 chars)
+- A Direct Entry batch submitted without these fields will fail validation with a clear error message
+- **This is a breaking change to the Direct Entry request contract** for any existing caller; migration required before upgrade
+
+### Modules/Files Modified
+- `src/CommBiz.Api/Features/DirectEntry/`
+  - `ConvertDirectEntryBatchRequest.cs` — Added `DestinationBankBsb`, `DestinationBankAccountNo`, `DestinationBankAccountName` fields (required)
+  - `DirectEntryDetailRecordMapper.cs` — Maps Detail Record primary fields from new Destination* request fields (not Trace settings)
+  - `DirectEntrySelfBalancingRecordMapper.cs` — Rewritten to use dedicated `SelfBalancingAccountNo`, `SelfBalancingNameOfRemitter`, `SelfBalancingLodgementReferenceDetails` settings with hardcoded transaction code `"13"` and Title constant
+  - `DirectEntryHeaderRecordMapper.cs` — Header record's `InstitutionCode`, `UserIdentificationNumber`, `NameOfUserSupplyingFile` now hardcoded mapper constants (removed from settings)
+  - `DirectEntrySettings.cs` — Removed `InstitutionCode`, `UserIdentificationNumber`, `NameOfUserSupplyingFile`, `Title`, `TransactionCode`; added `SelfBalancingAccountNo`, `SelfBalancingNameOfRemitter`, `SelfBalancingLodgementReferenceDetails`
+  - `DirectEntryValidator.cs` — Added validation for new Destination* fields (identical to Source* field validation rules)
+
+- `src/CommBiz.Api/Features/PaymentRouting/`
+  - `ConvertToFileRouter.cs` [new] — New router for `/convert-to-file` endpoint, reuses `PaymentTypeRouter` dispatch logic
+  - `PaymentTypeRouter.cs` — `GetPaymentTypeCode` method made `internal` for reuse by `ConvertToFileRouter`
+
+- `src/CommBiz.Api/Program.cs` [modified]
+  - Registered new `POST /convert-to-file` route (temporary, marked with TODO comment for permanence decision)
+
+- `src/CommBiz.Api/appsettings.json`, `appsettings.Development.json` [modified]
+  - DirectEntry configuration updated to include new `SelfBalancingAccountNo`, `SelfBalancingNameOfRemitter`, `SelfBalancingLodgementReferenceDetails` settings
+  - Removed obsolete settings (`InstitutionCode`, `UserIdentificationNumber`, `NameOfUserSupplyingFile`, `Title`, `TransactionCode` in config)
+
+- `tests/CommBiz.Api.Tests/DirectEntry/` [modified]
+  - Unit tests updated to reflect new Destination* request fields and field-mapping corrections
+  - Validator tests expanded to cover new Destination* field validation
+  - Mapper tests updated to verify Detail Record pulls from Destination* fields (not Trace), Self-Balancing uses dedicated settings
+
+- `tests/CommBiz.Api.Tests/PaymentRouting/` [modified]
+  - New integration tests for `POST /convert-to-file` endpoint (all payment types)
+
+- `tests/smoke/` [reorganised]
+  - `Errors.http` [new] — Consolidated cross-cutting rejection scenarios (e.g., missing Destination* fields, malformed requests)
+  - `DirectEntry.http` [modified] — Updated to include new Destination* fields; smoke tests refactored to use new field-mapping
+  - `PriorityPayments.http` [modified] — Reorganised to align with new Errors.http structure
+
+### Breaking Changes
+**Direct Entry Request Contract Changes** — `PaymentInstructionRequest` for `"DE"`-typed payment instructions now requires:
+- `destinationBankBsb` (new, required)
+- `destinationBankAccountNo` (new, required)
+- `destinationBankAccountName` (new, required)
+
+Any caller of `/convert` or `/convert-to-file` with `"DE"` payment type **must** supply these three fields or requests will fail validation. This is a **breaking change**; existing integrations submitting Direct Entry batches must be updated before upgrading to 1.6.0.
+
+### Test Coverage
+**385 passing tests** (verified via `dotnet test`, 0 failed, 0 skipped; 0 vulnerabilities via `dotnet list package --vulnerable --include-transitive`):
+
+1. **Happy Path — Direct Entry Destination Account Mapping Correctness**
+   - POST valid Direct Entry batch with new Destination* fields (`destinationBankBsb`, `destinationBankAccountNo`, `destinationBankAccountName`) to `POST /convert` with payment type `"DE"`
+   - Verify Detail Record's primary BSB/Account Number/Title are populated from the Destination* fields (the beneficiary account, not remitter)
+   - Confirm Trace section populated from organisation's `TraceAccountBsb`/`TraceAccountAccNo`/`NameOfRemitter` (unchanged)
+   - Validate output against real CommBank test account credentials to confirm payment now credits the intended destination
+   - Confirm `ConvertedText` formatted correctly and matches expected Direct Entry spec
+
+2. **Edge Case — Missing Destination Fields Validation Rejection**
+   - POST Direct Entry batch omitting any one of `destinationBankBsb`, `destinationBankAccountNo`, or `destinationBankAccountName`
+   - Verify validation rejects batch with clear error indicating which Destination* field is missing
+   - Confirm response structure matches existing error handling (validation error envelope)
+   - POST batch with invalid Destination field formats (e.g., BSB wrong length, account number exceeds max width)
+   - Verify validation catches format violations identically to Source* field validation
+
+3. **Regression-Sensitive — Self-Balancing Record Reconciliation**
+   - POST valid Direct Entry batch with new Destination* fields and self-balancing record enabled
+   - Verify Self-Balancing record uses dedicated `SelfBalancingAccountNo`, `SelfBalancingNameOfRemitter`, `SelfBalancingLodgementReferenceDetails` settings (not Detail Record settings)
+   - Confirm Self-Balancing record has hardcoded transaction code `"13"` (debit) and hardcoded Title constant
+   - Validate trailer reconciles to zero net (Detail records' total credits, Self-Balancing record's total debit, sum to zero)
+   - POST valid Revision 6 payloads (F-001–F-024) with all payment types (DE, BPAY, IMT, RTGS, FOREX)
+   - Verify output byte-for-byte identical to Revision 6 behavior (no regression for non-DE payment types)
+   - Confirm `/convert` endpoint (JSON response) remains unchanged; new `/convert-to-file` endpoint correctly returns file download
+
 ## [1.5.0] — 2026-08-18
 
 ### Added

@@ -11,7 +11,7 @@ public class DirectEntryTrailerRecordMapperTests
         TraceAccountBsb = "062-000",
         TraceAccountAccNo = "21120227",
         NameOfRemitter = "SHAW AND PARTNER",
-        AmountOfWithholdingTax = "00000000"        
+        AmountOfWithholdingTax = "00000000"
     };
 
     private static PaymentInstructionRequest Instruction(decimal amount) =>

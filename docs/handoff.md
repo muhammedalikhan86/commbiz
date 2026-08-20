@@ -1,7 +1,7 @@
 # Handoff: Shaw and Partners → CommBank Payment File Conversion Service
 
 > Tranche: v1
-> Last updated: 2026-08-18
+> Last updated: 2026-08-20
 
 ## What Was Done
 
@@ -117,10 +117,76 @@ has zero FX scenarios and no `tests/smoke/Fx.http` file exists (tracked as new P
 the existing test-runbook/handoff/CHANGELOG/REVISION staleness item now also covers F-022/F-023
 (amended PM-011).
 
+**Direct Entry field-mapping bug fix (post-Phase-2, applied directly to already-Done F-003/F-005/
+F-006/F-014) — a real production bug, confirmed fixed against real CommBank test accounts.**
+Previously, the Detail Record's primary "BSB Number"/"Account Number to be Credited/Debited"/"Title
+of Account to be Credited/Debited" fields (positions 2-17, 31-62) were populated from the
+organisation's own static Trace settings, while the "Trace BSB Number"/"Trace Account Number"/"Name
+of Remitter" fields (positions 81-112) were populated from the actual destination account — the
+reverse of what the spec requires. This meant Direct Entry payments were not correctly crediting the
+intended beneficiary. Fixed:
+- Three new required request fields — `DestinationBankBsb`,
+  `DestinationBankAccountNo`, `DestinationBankAccountName` — now correctly populate the primary "to be
+  credited" positions; the organisation's `TraceAccountBsb`/`TraceAccountAccNo`/`NameOfRemitter` now
+  correctly populate only the Trace positions. `DirectEntryValidator` validates the three new
+  Destination* fields identically to the existing Source* fields.
+- Transaction Code is now a hardcoded `"50"` (credit) constant for every detail record — the
+  configurable `TransactionCode` setting was removed, since Direct Entry payments to third parties
+  are always credits.
+- The self-balancing (contra) record now uses three new dedicated settings
+  (`SelfBalancingAccountNo`, `SelfBalancingNameOfRemitter`, `SelfBalancingLodgementReferenceDetails`),
+  distinct from the Detail record's own Trace/Remitter settings, plus a hardcoded `"13"` (debit)
+  transaction code and hardcoded Title constant — previously it reused the Detail record's settings
+  and computed the code as the inverse of `TransactionCode` (see PMBook PM-004, now corrected).
+- The Header record's `InstitutionCode`, `UserIdentificationNumber`, and `NameOfUserSupplyingFile`
+  moved from configuration to hardcoded mapper constants (they never varied). The Indicator literal
+  changed from `"N"` to `" "` (space) for both Detail and Self-Balancing records.
+- `appsettings.json`'s account/remitter identity values were updated (`TraceAccountAccNo` →
+  `"21120075"`, `NameOfRemitter` → `"SHAW - AUD TRUST ACCOUNT"`, matching the account IMT/Priority
+  Payments/FX already use); `appsettings.Development.json` now documents (as inactive, commented-out
+  JSON) the separate Shaw test-account override values used during this round's real-bank
+  verification.
+
+This was applied directly as 8 commits outside the normal Developer/Reviewer feature loop, since it
+is a bug fix to already-Done features rather than new feature work. Integration Agent PASS (385
+tests, 0 vulnerabilities, one formatting violation fixed) and Reviewer-Integration PASS (first
+attempt) both cleared this round for Finalization.
+
+**New (temporary) `POST /convert-to-file` endpoint.** New file
+`src/CommBiz.Api/Features/PaymentRouting/ConvertToFileRouter.cs`, wired in `Program.cs`. Reuses
+`PaymentTypeRouter`'s routing/dispatch across all five payment types; on success, returns
+`ConvertedText` as a downloadable `.txt` file instead of inline JSON; on rejection/failure, falls
+back to the same JSON error envelope `/convert` returns. Explicitly marked `// TEMPORARY` in code by
+the author — no persistence or server-side caching involved (does not reintroduce what the rejected
+[ADR-007](adr/ADR-007-conversion-result-store-download-link.md) download-link design was rejected
+for; does not change `/convert`'s own [ADR-008](adr/ADR-008-inline-json-response.md) inline-JSON
+behavior). Has not been through this pipeline's Developer/Reviewer/Integration formal acceptance
+process — no test-cases.md scenarios, no test-runbook coverage yet. A product decision is still
+needed on whether to keep it temporary, formalize it, or remove it.
+
+**Smoke test reorganisation.** Cross-cutting rejection scenarios (unsupported payment type, mixed
+payment types) consolidated out of individual `tests/smoke/*.http` files into a new
+`tests/smoke/Errors.http`; `tests/smoke/PriorityPayments.http` trimmed to happy-path scenarios only;
+`tests/smoke/DirectEntry.http` updated for the new Destination* fields.
+
+Test count: 374 → **385 passing, 0 failed, 0 vulnerabilities.**
+
 ## Current State
 
-- Service builds, tests, and runs cleanly (374 tests passing, 0 failed, 0 vulnerabilities).
+- Service builds, tests, and runs cleanly (385 tests passing, 0 failed, 0 vulnerabilities).
 - Kestrel-hosted; Wolverine-wired.
+- **Direct Entry's field-mapping bug is fixed and confirmed working against real CommBank test
+  accounts.** Destination account details now correctly populate the Detail Record's primary "to be
+  credited" positions (via three new required request fields, `DestinationBankBsb`/
+  `DestinationBankAccountNo`/`DestinationBankAccountName`); the organisation's Trace settings now
+  correctly populate only the Trace positions. Transaction codes are now hardcoded constants (`"50"`
+  credit for Detail records, `"13"` debit for the self-balancing record) rather than derived from a
+  configurable `TransactionCode` setting, and the self-balancing record uses its own dedicated
+  `SelfBalancing*` settings rather than reusing the Detail record's.
+- **A temporary `POST /convert-to-file` endpoint exists** alongside `/convert`, returning the same
+  conversion result as a downloadable `.txt` file instead of inline JSON. Marked `// TEMPORARY` in
+  code; has not been through the formal Developer/Reviewer/Integration feature process, and a product
+  decision on its permanence is still open.
 - **Phase 1 (Direct Entry Conversion Core) and Phase 2 (Additional Payment Types) are both fully
   Done.** All five payment types now convert end to end through the shared router: route →
   validate → map → assemble, returning the result inline as JSON per
@@ -145,22 +211,25 @@ the existing test-runbook/handoff/CHANGELOG/REVISION staleness item now also cov
 - `GET /health` returns a basic liveness check.
 - Phase 3 (Cross-Cutting Concerns & Hardening) and Phase 4 (Release Readiness) are both Planned,
   not yet started.
-- Known gaps, tracked in the PMBook as PM-011 (amended) and the newly-added PM-012, not yet
-  resolved: [docs/test-cases.md](test-cases.md) has zero scenarios for FX; no `tests/smoke/Fx.http`
-  file exists (both PM-012); [docs/testing/phase-2-additional-payment-types-i.md](testing/phase-2-additional-payment-types-i.md),
-  [ADR-009](adr/ADR-009-shared-field-mapping-response-model.md), this handoff doc, `CHANGELOG.md`,
-  and `REVISION.md` are one feature-pair stale for F-022/F-023 (amended PM-011, previously scoped to
-  F-018 only). These docs should be brought current — and PM-011/PM-012 resolved — before Phase 4's
-  E2E test work (F-013) begins.
+- Known gaps, tracked in the PMBook (see [docs/project-management.md](project-management.md) Open
+  Items for current numbering) not yet resolved: [docs/test-cases.md](test-cases.md) still lacks a
+  corrected TC-030 (self-balancing field positions currently cites stale setting names) and any
+  scenario for the new Destination* validation rules, the corrected field-position mapping, the
+  hardcoded transaction codes, or `/convert-to-file`. [docs/testing/phase-1-direct-entry-conversion-core.md](testing/phase-1-direct-entry-conversion-core.md)
+  needs its sample payloads updated for the new required `destinationBank*` fields. The product
+  decision on `/convert-to-file`'s permanence is also still open. These should be closed before
+  Phase 4's E2E test work (F-013) begins.
 
 ## What's Next
 
 **Documentation gaps to close first**
-- PM-012 (new) — add FX scenarios to [docs/test-cases.md](test-cases.md) and create
-  `tests/smoke/Fx.http`
-- PM-011 (amended) — bring [docs/testing/phase-2-additional-payment-types-i.md](testing/phase-2-additional-payment-types-i.md),
-  [ADR-009](adr/ADR-009-shared-field-mapping-response-model.md), this handoff doc, `CHANGELOG.md`,
-  and `REVISION.md` current for F-022/F-023 (previously amended for F-018 only)
+- Add `docs/test-cases.md` coverage for: the corrected TC-030 self-balancing field positions, the new
+  Destination* validation rules, the corrected primary/Trace field-position mapping, the hardcoded
+  transaction codes (`"50"`/`"13"`), and `/convert-to-file` (currently untested by any TC-xxx scenario)
+- Resolve the open product decision on whether `/convert-to-file` should be kept temporary,
+  formalized, or removed
+- See [docs/project-management.md](project-management.md) Open Items for the current PM-xxx numbering
+  covering these gaps
 
 **Phase 3 — Cross-Cutting Concerns & Hardening (current phase)**
 - F-009 — Shaw.Diagnostics logging + redaction
@@ -169,8 +238,9 @@ the existing test-runbook/handoff/CHANGELOG/REVISION staleness item now also cov
 
 **Phase 4 — Release Readiness**
 - F-012 — Kestrel-only hosting config
-- F-013 — E2E test coverage — should follow closure of PM-011/PM-012's documentation gaps so the
-  E2E suite has accurate FX and Priority Payments test-case coverage to build from
+- F-013 — E2E test coverage — should follow closure of the outstanding documentation gaps so the
+  E2E suite has accurate test-case coverage (including the corrected Direct Entry field mapping and
+  FX/Priority Payments) to build from
 
 ## Important Context
 
@@ -224,3 +294,27 @@ the existing test-runbook/handoff/CHANGELOG/REVISION staleness item now also cov
    Question A6)** — `FxValidator`/`FxRecordMapper` handle the general Buy/Sell currency-pair case
    only; no currency-specific field handling exists yet for those three currencies. Revisit once A6
    is resolved.
+10. **Direct Entry field-mapping bug fix (this round)** — applied as 8 direct commits outside the
+    normal Developer/Reviewer feature loop, since it corrects already-`Done` features (F-003, F-005,
+    F-006, F-014) rather than adding new ones. The request now requires three new fields
+    (`DestinationBankBsb`, `DestinationBankAccountNo`, `DestinationBankAccountName`) which populate
+    the Detail Record's primary "to be credited" positions; the organisation's Trace settings
+    (`TraceAccountBsb`/`TraceAccountAccNo`/`NameOfRemitter`) now populate only the Trace positions
+    (81-112), not the primary ones. `TransactionCode` is no longer a configurable setting — it is a
+    hardcoded `"50"` (credit) for Detail records and `"13"` (debit) for the self-balancing record.
+    The self-balancing record now has its own dedicated `SelfBalancing*` settings instead of reusing
+    the Detail record's. Confirmed working against real CommBank test accounts; Integration Agent
+    PASS (385 tests, 0 vulnerabilities) and Reviewer-Integration PASS (first attempt).
+11. **`POST /convert-to-file` is temporary and unreviewed** — it reuses `PaymentTypeRouter`'s
+    dispatch and returns `ConvertedText` as a downloadable `.txt` file on success (same JSON error
+    envelope as `/convert` on failure). No persistence/caching, so it doesn't reintroduce
+    [ADR-007](adr/ADR-007-conversion-result-store-download-link.md)'s rejected download-link design,
+    and doesn't change `/convert`'s own [ADR-008](adr/ADR-008-inline-json-response.md) inline-JSON
+    behavior. It has not been through the Developer/Reviewer/Integration process and has no
+    test-cases.md or test-runbook coverage — a product decision on keeping, formalizing, or removing
+    it is still open.
+12. **Smoke tests reorganised (this round)** — cross-cutting rejection scenarios moved out of
+    individual `tests/smoke/*.http` files into a new `tests/smoke/Errors.http`;
+    `tests/smoke/PriorityPayments.http` now happy-path only; `tests/smoke/DirectEntry.http` updated
+    for the new Destination* fields.
+

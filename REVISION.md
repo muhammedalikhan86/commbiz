@@ -1,6 +1,12 @@
 # Revision History
 
-**Current Revision:** 6
+**Current Revision:** 7
+## Revision 7
+- **Date:** 2026-08-20
+- **Description:** Direct Entry field-mapping correctness fix and new `/convert-to-file` file-download endpoint
+- **Features:** Amended F-003/F-005/F-006/F-014 (field-mapping bug fix); new temporary file-download endpoint (F-025 informal)
+- **Test Coverage:** 385 passing tests (verified via `dotnet test`); 0 vulnerabilities
+
 ## Revision 6
 - **Date:** 2026-08-18
 - **Description:** FX conversion pipeline for FOREX payment type; fifth payment type added

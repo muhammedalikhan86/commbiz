@@ -1,8 +1,17 @@
 # Test Runbook: Phase 1 — Direct Entry Conversion Core
 
 > Status: DRAFT
-> Version: v2
-> Last updated: 2026-08-14
+> Version: v3
+> Last updated: 2026-08-20
+> Changelog: v3 — production bug fix: the Detail/self-balancing field-source mapping was corrected
+> (BSB/Account Number/Title now come from the request's new `destinationBank*` fields, not
+> `settings.TraceAccountBsb`/`TraceAccountAccNo`/`NameOfRemitter`; Indicator is now `" "`; Transaction
+> Code is now a hardcoded constant, not `settings.TransactionCode`, which no longer exists). Added the
+> three new required `destinationBank*` request fields to every sample payload and to the F-005
+> validation table. Updated Prerequisites and F-014 to the current `DirectEntrySettings` shape
+> (`SelfBalancingAccountNo`/`SelfBalancingNameOfRemitter`/`SelfBalancingLodgementReferenceDetails`
+> replace `TransactionCode`/`Title`). Corrected the stale `TraceAccountAccNo` example value to
+> `21120075`.
 > Covers: F-001–F-008, F-014 (see [docs/project-management.md](../project-management.md))
 > Scenario reference: [docs/test-cases.md](../test-cases.md) TC-001–TC-032
 > Source data: [docs/stash/Direct Entry - File Specification CommBiz.md](../stash/Direct%20Entry%20-%20File%20Specification%20CommBiz.md) §5 (Sample File)
@@ -17,16 +26,21 @@ API.
 > into the real top-level cross-slice router (`Features/PaymentRouting`), which now solely enforces
 > this rule for every payment type. The DirectEntry-local copy was redundant and has been removed.
 
-> **Contract note (v2):** this runbook was rewritten to match the actual current request/response
-> shape. The request body is a **plain JSON array** of payment instructions in Shaw and Partners'
-> native payload shape (`paymentTypeCode`, `accountNo`, `sourceBank*`, `paymentDate`, `amount`,
-> `createBy`) — there is no top-level `fileName`/`instructions` wrapper, and per-instruction fields
-> like `indicator`, `transactionCode`, `accountTitle`, `lodgementReference`, `traceBsb`,
-> `traceAccountNumber` and `remitterName` no longer exist on the request; those are now sourced from
-> the `DirectEntry` configuration section (organisation-level, one value applies to every instruction
-> in the batch). The endpoint is `POST /convert` (not `/direct-entry/convert`), and there is no
-> `/diagnostics/ping` endpoint — it was removed once a real business endpoint existed to smoke-test
-> Wolverine dispatch against.
+> **Contract note (v3):** this runbook matches the actual current request/response shape. The request
+> body is a **plain JSON array** of payment instructions in Shaw and Partners' native payload shape
+> (`paymentTypeCode`, `accountNo`, `sourceBank*`, `paymentDate`, `amount`, `createBy`) plus three
+> **required** destination-account fields — `destinationBankBsb`, `destinationBankAccountNo`,
+> `destinationBankAccountName` — the real beneficiary account being credited/debited (validated
+> identically to their `sourceBank*` counterparts, plus a non-blank check on the name). There is no
+> top-level `fileName`/`instructions` wrapper, and per-instruction fields like `indicator`,
+> `transactionCode`, `accountTitle`, `lodgementReference`, `traceBsb`, `traceAccountNumber` and
+> `remitterName` still don't exist on the request; those remain sourced from either the `DirectEntry`
+> configuration section or hardcoded mapper constants — see F-006/F-014 below for exactly which. The
+> endpoint is `POST /convert` (not `/direct-entry/convert`), and there is no `/diagnostics/ping`
+> endpoint — it was removed once a real business endpoint existed to smoke-test Wolverine dispatch
+> against. A second endpoint, `POST /convert-to-file`, also exists but is explicitly temporary with no
+> formal acceptance criteria yet — out of this runbook's scope, no verification steps are provided for
+> it here.
 
 ## ⚠️ Known caveat: rejection responses return HTTP 200, not 4xx
 
@@ -48,11 +62,18 @@ open product-decision item, not a bug in this runbook or in the implementation i
    useful. Ready-to-run equivalents for every scenario below also live in
    [tests/smoke/DirectEntry.http](../../tests/smoke/DirectEntry.http).
 4. The `DirectEntry` configuration section (`src/CommBiz.Api/appsettings.json`) supplies every
-   organisation-level field used in mapping — `TraceAccountBsb`/`TraceAccountAccNo` (settlement
-   account), `TransactionCode` (the direction applied to every real detail record), `Title`,
-   `LodgementReferenceDetails`, `NameOfRemitter`, `AmountOfWithholdingTax`, etc. Examples below assume
-   the checked-in `appsettings.json` values (`TransactionCode: "13"`, `TraceAccountBsb: "062-000"`,
-   `TraceAccountAccNo: "21120227"`).
+   organisation-level field used in mapping — `TraceAccountBsb`/`TraceAccountAccNo` (used by the real
+   Detail record's Trace fields — see F-006), `LodgementReferenceDetails`, `NameOfRemitter`,
+   `AmountOfWithholdingTax`, `DescriptionOfEntriesOnFile`, plus three settings dedicated to the
+   self-balancing (contra) record (F-014): `SelfBalancingAccountNo`, `SelfBalancingNameOfRemitter`,
+   `SelfBalancingLodgementReferenceDetails`. There is no longer a `TransactionCode` or `Title` setting —
+   both transaction codes (`50` credit for real details, `13` debit for the self-balancing record) and
+   the self-balancing record's account title (`"SHAW AND PARTNERS LIMITED"`) are now hardcoded
+   constants in the mappers, not configuration. Examples below assume the checked-in
+   `appsettings.json` values (`TraceAccountBsb: "062-000"`, `TraceAccountAccNo: "21120075"`,
+   `SelfBalancingAccountNo: "21120075"`, `NameOfRemitter: "SHAW - AUD TRUST ACCOUNT"`,
+   `SelfBalancingNameOfRemitter: "SHAW AND PARTNER"`, `LodgementReferenceDetails: "PAYMENTS"`,
+   `SelfBalancingLodgementReferenceDetails: "SHAW CONSFEES"`).
 
 ---
 
@@ -84,6 +105,9 @@ $body = @'
     "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015141",
+    "destinationBankBSB": "484799",
+    "destinationBankAccountNo": "300500",
+    "destinationBankAccountName": "JOHN CITIZEN",
     "paymentDate": "2026-08-20T10:00:00",
     "sourceCurrency": "AUD",
     "sourceAmount": 0.0,
@@ -132,6 +156,9 @@ $body = @'
     "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015141",
+    "destinationBankBSB": "484799",
+    "destinationBankAccountNo": "300500",
+    "destinationBankAccountName": "JOHN CITIZEN",
     "paymentDate": "2026-08-20T10:00:00",
     "sourceCurrency": "AUD",
     "sourceAmount": 0.0,
@@ -145,6 +172,9 @@ $body = @'
     "sourceBankAccountName": "LIAM NGUYEN",
     "sourceBankAccountNo": "222486115",
     "sourceBankBSB": "063111",
+    "destinationBankBSB": "062999",
+    "destinationBankAccountNo": "412233",
+    "destinationBankAccountName": "OLIVIA BROWN",
     "paymentDate": "2026-08-20T10:00:00",
     "sourceCurrency": "AUD",
     "sourceAmount": 0.0,
@@ -231,6 +261,15 @@ shown.
 | `sourceBankAccountNo` disallowed character | `instructions[0].sourceBankAccountNo = "12345$678"` | `SourceBankAccountNo` ... `is invalid` | `0` |
 | `sourceBankAccountNo` all-zero | `instructions[0].sourceBankAccountNo = "000000000"` | `SourceBankAccountNo` ... `is invalid` | `0` |
 | `sourceBankAccountNo` all-blank | `instructions[0].sourceBankAccountNo = "   "` | `SourceBankAccountNo` ... `is invalid` | `0` |
+| `destinationBankBsb` malformed (hyphen) | `instructions[0].destinationBankBsb = "484-799"` | `DestinationBankBsb '484-799' must be exactly 6 numeric digits` | `0` |
+| `destinationBankBsb` too short | `instructions[0].destinationBankBsb = "48479"` | `DestinationBankBsb` ... `must be exactly 6 numeric digits` | `0` |
+| `destinationBankBsb` too long | `instructions[0].destinationBankBsb = "4847999"` | `DestinationBankBsb` ... `must be exactly 6 numeric digits` | `0` |
+| `destinationBankBsb` non-numeric | `instructions[0].destinationBankBsb = "48479A"` | `DestinationBankBsb` ... `must be exactly 6 numeric digits` | `0` |
+| `destinationBankAccountNo` too long (10 chars) | `instructions[0].destinationBankAccountNo = "1234567890"` | `DestinationBankAccountNo` ... `is invalid` | `0` |
+| `destinationBankAccountNo` disallowed character | `instructions[0].destinationBankAccountNo = "12345$678"` | `DestinationBankAccountNo` ... `is invalid` | `0` |
+| `destinationBankAccountNo` all-zero | `instructions[0].destinationBankAccountNo = "000000000"` | `DestinationBankAccountNo` ... `is invalid` | `0` |
+| `destinationBankAccountNo` all-blank | `instructions[0].destinationBankAccountNo = "   "` | `DestinationBankAccountNo` ... `is invalid` | `0` |
+| `destinationBankAccountName` blank | `instructions[0].destinationBankAccountName = ""` | `DestinationBankAccountName must not be blank` | `0` |
 | `amount` zero | `instructions[0].amount = 0` | `Amount '0' must be positive and convert to at most 10 digits of cents` | `0` |
 | `amount` negative | `instructions[0].amount = -1` | `Amount` ... `must be positive` | `0` |
 | `amount` over 10 digits of cents | `instructions[0].amount = 100000000.00` | `Amount` ... `at most 10 digits of cents` | `0` |
@@ -281,21 +320,22 @@ Note the wording change from the pre-F-014 runbook: the reason now reads **"at l
 
 Using any successful response's `convertedText`, the record **immediately before the trailer** is the
 self-balancing (contra) record. It is 120 characters, same layout as an ordinary detail record, but
-every field except Amount comes from `DirectEntry` configuration rather than any instruction:
+every field except Amount is a fixed literal — a hardcoded constant or `DirectEntry` configuration —
+never sourced from any instruction:
 
 | Field | Position | Width | Expected value |
 |---|---|---|---|
 | Record Type | 1 | 1 | `1` |
-| BSB Number | 2–8 | 7 | `settings.TraceAccountBsb` (settlement account, e.g. `062-000`) |
-| Account Number | 9–17 | 9 | `settings.TraceAccountAccNo`, right-justified, space-padded (e.g. `21120227` → ` 21120227`) |
-| Indicator | 18 | 1 | `N` |
-| Transaction Code | 19–20 | 2 | inverse of `settings.TransactionCode` — `50` when configured code is `13`, or `13` when configured code is `50` |
+| BSB Number | 2–8 | 7 | `settings.TraceAccountBsb` (e.g. `062-000`) |
+| Account Number | 9–17 | 9 | `settings.SelfBalancingAccountNo`, right-justified, space-padded (e.g. `21120075` → ` 21120075`) |
+| Indicator | 18 | 1 | hardcoded constant `" "` (single space) |
+| Transaction Code | 19–20 | 2 | hardcoded constant `13` (debit) — always the opposite direction of the real Detail records' hardcoded `50` (credit); no longer a computed inverse of any setting |
 | Amount (cents, zero-filled) | 21–30 | 10 | sum of every real instruction's `amount`, converted to cents (round-then-sum — see TC-032 below) |
-| Title of Account | 31–62 | 32 | `settings.Title` |
-| Lodgement Reference | 63–80 | 18 | `settings.LodgementReferenceDetails` |
+| Title of Account | 31–62 | 32 | hardcoded constant `"SHAW AND PARTNERS LIMITED"` |
+| Lodgement Reference | 63–80 | 18 | `settings.SelfBalancingLodgementReferenceDetails` (distinct from the real Detail record's `settings.LodgementReferenceDetails`) |
 | Trace BSB | 81–87 | 7 | `settings.TraceAccountBsb` |
-| Trace Account Number | 88–96 | 9 | `settings.TraceAccountAccNo`, right-justified, space-padded |
-| Remitter Name | 97–112 | 16 | `settings.NameOfRemitter` |
+| Trace Account Number | 88–96 | 9 | `settings.SelfBalancingAccountNo`, right-justified, space-padded |
+| Remitter Name | 97–112 | 16 | `settings.SelfBalancingNameOfRemitter` (distinct from the real Detail record's `settings.NameOfRemitter`) |
 | Withholding Tax Amount | 113–120 | 8 | `settings.AmountOfWithholdingTax` (always `00000000`) |
 
 Verify with PowerShell (checked-in `appsettings.json` values, F-003 two-instruction batch: 7500.00 +
@@ -303,10 +343,14 @@ Verify with PowerShell (checked-in `appsettings.json` values, F-003 two-instruct
 ```powershell
 $lines = $text -split "`r`n" | Where-Object { $_ -ne "" }
 $selfBalancing = $lines[-2]   # last real line before the trailer
-$selfBalancing.Substring(1,7)    # "062-000"  (TraceAccountBsb)
-$selfBalancing.Substring(8,9).Trim()  # "21120227" (TraceAccountAccNo)
-$selfBalancing.Substring(18,2)   # "50" (inverse of TransactionCode "13")
-$selfBalancing.Substring(20,10)  # "0002000000"
+$selfBalancing.Substring(1,7)          # "062-000"   (TraceAccountBsb)
+$selfBalancing.Substring(8,9).Trim()   # "21120075"  (SelfBalancingAccountNo)
+$selfBalancing.Substring(17,1)         # " "         (Indicator)
+$selfBalancing.Substring(18,2)         # "13"        (hardcoded debit Transaction Code)
+$selfBalancing.Substring(20,10)        # "0002000000"
+$selfBalancing.Substring(30,32).Trim() # "SHAW AND PARTNERS LIMITED" (hardcoded Title)
+$selfBalancing.Substring(62,18).Trim() # "SHAW CONSFEES" (SelfBalancingLodgementReferenceDetails)
+$selfBalancing.Substring(96,16).Trim() # "SHAW AND PARTNER" (SelfBalancingNameOfRemitter)
 ```
 
 ### TC-031 — Self-balancing record is positioned immediately before the trailer (regression-sensitive)
@@ -325,10 +369,11 @@ trailer (`7`).
 ### TC-032 — Trailer reconciles to zero net once the self-balancing record is included (regression-sensitive)
 
 See F-007 below for the full trailer field table. Key invariant: because the self-balancing record
-always posts the batch total against the inverse of the configured `TransactionCode`, File Credit
-Total always equals File Debit Total (both equal the sum of the real instructions' amounts in cents),
-so File Net Total is always `0000000000`, regardless of how many real instructions are in the batch or
-their individual amounts.
+always posts the batch total against its hardcoded `13` (debit) Transaction Code — the opposite
+direction of the real Detail records' hardcoded `50` (credit) — File Credit Total always equals File
+Debit Total (both equal the sum of the real instructions' amounts in cents), so File Net Total is
+always `0000000000`, regardless of how many real instructions are in the batch or their individual
+amounts.
 
 **Fractional-cent aggregation edge case:** convert a batch of instructions whose `amount` values each
 round to a whole number of cents independently, but whose *sum before rounding* would differ from the
@@ -347,32 +392,45 @@ Using the F-003 happy-path response, extract `convertedText`, split on `\r\n`, a
 (the first real Detail Record — 1-based line 1 is the Header). Each Detail Record is exactly **120
 characters**. Field positions (1-based, inclusive), using the first instruction from the F-003
 two-instruction sample (`sourceBankBSB: "015141"`, `sourceBankAccountNo: "111375004"`,
-`amount: 7500.0`):
+`destinationBankBSB: "484799"`, `destinationBankAccountNo: "300500"`,
+`destinationBankAccountName: "JOHN CITIZEN"`, `amount: 7500.0`):
+
+> **Field-source note (bug fix):** the BSB/Account Number/Title positions below are sourced from the
+> request's **destination** account fields, not the source account fields used for F-005 validation
+> elsewhere in the request — `sourceBank*` never appears anywhere in the converted Detail record.
+> Previously these three positions were (incorrectly) sourced from
+> `settings.TraceAccountBsb`/`TraceAccountAccNo`/`NameOfRemitter` instead, which meant every converted
+> file credited Shaw's own settlement/remitter details rather than the actual payee — this was the
+> primary production bug this round fixed.
 
 | Field | Position | Width | Source | Expected value for instruction 1 |
 |---|---|---|---|---|
 | Record Type | 1 | 1 | constant | `1` |
-| BSB Number | 2–8 | 7 | instruction `sourceBankBSB`, reformatted `nnnnnn` → `nnn-nnn` | `015-141` |
-| Account Number | 9–17 | 9 | instruction `sourceBankAccountNo`, right-justified, space-padded | `111375004` (exactly 9 chars, no padding needed) |
-| Indicator | 18 | 1 | constant | `N` |
-| Transaction Code | 19–20 | 2 | `settings.TransactionCode` — **same value for every instruction in the batch**, not per-instruction | `13` |
+| BSB Number | 2–8 | 7 | instruction `destinationBankBsb`, reformatted `nnnnnn` → `nnn-nnn` | `484-799` |
+| Account Number to be Credited/Debited | 9–17 | 9 | instruction `destinationBankAccountNo`, right-justified, space-padded | `   300500` (6 chars + 3 leading spaces) |
+| Indicator | 18 | 1 | hardcoded constant `" "` (single space) | `" "` |
+| Transaction Code | 19–20 | 2 | hardcoded constant (credit) — **same literal for every real detail record in the batch**, no longer configurable | `50` |
 | Amount (cents, zero-filled) | 21–30 | 10 | instruction `amount` × 100, rounded away-from-zero | `0000750000` |
-| Title of Account | 31–62 | 32 | `settings.Title` | `SHAW AND PARTNERS LIMITED` + trailing spaces |
+| Title of Account to be Credited/Debited | 31–62 | 32 | instruction `destinationBankAccountName` | `JOHN CITIZEN` + trailing spaces |
 | Lodgement Reference | 63–80 | 18 | `settings.LodgementReferenceDetails` | `PAYMENTS` + trailing spaces |
-| Trace BSB | 81–87 | 7 | `settings.TraceAccountBsb` | `062-000` |
-| Trace Account Number | 88–96 | 9 | `settings.TraceAccountAccNo`, right-justified, space-padded | `21120227` (space-padded left by 1) |
-| Remitter Name | 97–112 | 16 | `settings.NameOfRemitter` | `SHAW AND PARTNER` + trailing spaces |
+| Trace BSB Number | 81–87 | 7 | `settings.TraceAccountBsb` | `062-000` |
+| Trace Account Number | 88–96 | 9 | `settings.TraceAccountAccNo`, right-justified, space-padded | `21120075` (space-padded left by 1) |
+| Name of Remitter | 97–112 | 16 | `settings.NameOfRemitter`, truncated/padded to 16 | `SHAW - AUD TRUST` (from `"SHAW - AUD TRUST ACCOUNT"`, truncated to 16 chars) |
 | Withholding Tax Amount | 113–120 | 8 | `settings.AmountOfWithholdingTax` | `00000000` |
 
 Verify with PowerShell (after saving `convertedText` to `$text`):
 ```powershell
 $lines = $text -split "`r`n"
 $detail1 = $lines[1]
-$detail1.Length            # expect 120
-$detail1.Substring(0,1)    # "1"
-$detail1.Substring(1,7)    # "015-141"
-$detail1.Substring(18,2)   # "13"
-$detail1.Substring(20,10)  # "0000750000"
+$detail1.Length                 # expect 120
+$detail1.Substring(0,1)         # "1"
+$detail1.Substring(1,7)         # "484-799"  (destinationBankBsb, reformatted)
+$detail1.Substring(8,9).Trim()  # "300500"   (destinationBankAccountNo)
+$detail1.Substring(17,1)        # " "        (Indicator)
+$detail1.Substring(18,2)        # "50"       (hardcoded credit Transaction Code)
+$detail1.Substring(20,10)       # "0000750000"
+$detail1.Substring(80,7)        # "062-000"  (settings.TraceAccountBsb)
+$detail1.Substring(87,9).Trim() # "21120075" (settings.TraceAccountAccNo)
 ```
 
 **Amount boundary case:** convert an instruction with `amount = 1.00` and confirm the amount field is
@@ -381,9 +439,10 @@ exactly `0000000100` (right-justified, zero-filled, still 10 chars).
 **Fractional-cent rounding case:** convert an instruction with `amount = 10.005` and confirm the
 amount field is `0000001001` (rounds away-from-zero to `10.01` → `1001` cents).
 
-**Account number boundary case:** convert two instructions — one with `sourceBankAccountNo` at
+**Account number boundary case:** convert two instructions — one with `destinationBankAccountNo` at
 exactly 9 characters (`"123456789"`, needs no padding) and one at 4 characters (`"1000"`, expect
-`     1000`, right-justified with 5 leading spaces).
+`     1000`, right-justified with 5 leading spaces). Note this position now reflects
+`destinationBankAccountNo`, not `sourceBankAccountNo` — see the field-source note above.
 
 ---
 
@@ -426,9 +485,10 @@ count of `000001` (the self-balancing record alone) for an empty instruction lis
 unreachable via `POST /convert` because F-005's minimum-1 rule rejects the batch first (TC-029).
 
 Unlike the pre-F-014 contract, there is no longer a "credit-only" vs. "mixed credit/debit" batch
-scenario to test: every real detail record shares the **same** `settings.TransactionCode` (it is
-organisation-level config, not per-instruction), so a batch's real detail records are always all
-credit or all debit together — only the self-balancing record posts the opposite direction.
+scenario to test: every real detail record uses the **same hardcoded** `50` (credit) Transaction Code
+constant (it is no longer configurable, and no longer per-instruction), so a batch's real detail
+records are always all credit together — only the self-balancing record posts the opposite (`13`,
+debit) direction.
 
 ---
 
@@ -468,6 +528,9 @@ the top of this document).
 |---|---|
 | `sourceBankBSB` | exactly 6 numeric digits (no hyphen) |
 | `sourceBankAccountNo` | 9 characters; digits/letters/hyphens/spaces only, not all-zero, not all-blank |
+| `destinationBankBsb` | exactly 6 numeric digits (no hyphen); same rule as `sourceBankBSB` |
+| `destinationBankAccountNo` | 9 characters; digits/letters/hyphens/spaces only, not all-zero, not all-blank; same rule as `sourceBankAccountNo` |
+| `destinationBankAccountName` | must not be blank (no length limit enforced) |
 | `amount` | greater than 0, up to 99,999,999.99 (converts to at most 10 digits of cents) |
 | `accountNo` | must not be blank (no length limit enforced) |
 | minimum batch size | 1 payment instruction (reduced from 2 by F-014) |
