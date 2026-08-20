@@ -12,6 +12,10 @@ public static partial class PriorityPaymentRecordMapper
 {
     private const string TransactionType = "PP"; // field 1 constant - never "RTGS" (Shaw and Partners' routing code)
 
+    // Field 2: Transaction Description, up to 12AN - truncated (not rejected) if longer, never padded
+    // since this is CSV, not fixed-width.
+    private const int MaxTransactionDescriptionLength = 12;
+
     // Field 20 is stricter than IMT's address field: letters/digits/spaces only, no hyphen/apostrophe -
     // do not reuse ImtRecordMapper.SanitizeFreeText, which incorrectly permits both for this field.
     [GeneratedRegex("[^A-Za-z0-9 ]")]
@@ -24,7 +28,7 @@ public static partial class PriorityPaymentRecordMapper
         string.Join(
             ",",
             TransactionType, // 1: Transaction Type
-            instruction.Notes, // 2: Transaction Description
+            TruncateTransactionDescription(instruction.Notes), // 2: Transaction Description
             instruction.PaymentDate.ToString("yyMMdd", CultureInfo.InvariantCulture), // 3: Process Date
             "", // 4: Payment Currency - not applicable
             instruction.Amount.ToString(CultureInfo.InvariantCulture), // 5: Payment Amount
@@ -57,7 +61,11 @@ public static partial class PriorityPaymentRecordMapper
     public static IReadOnlyList<FieldMapping> MapFields(PriorityPaymentInstructionRequest instruction, string debitAccountNumber) =>
         [
             new(nameof(TransactionType), TransactionType, "Transaction Type", TransactionType),
-            new(nameof(instruction.Notes), instruction.Notes, "Transaction Description", instruction.Notes),
+            new(
+                nameof(instruction.Notes),
+                instruction.Notes,
+                "Transaction Description",
+                TruncateTransactionDescription(instruction.Notes)),
             new(
                 nameof(instruction.PaymentDate),
                 instruction.PaymentDate.ToString("O"),
@@ -124,4 +132,7 @@ public static partial class PriorityPaymentRecordMapper
     // silently by deleting them outright, so an address with punctuation doesn't fuse two words together.
     public static string SanitizeAddress(string? value) =>
         value is null ? "" : RepeatedSpacesRegex().Replace(DisallowedAddressCharsRegex().Replace(value, " "), " ").Trim();
+
+    public static string TruncateTransactionDescription(string value) =>
+        value.Length > MaxTransactionDescriptionLength ? value[..MaxTransactionDescriptionLength] : value;
 }

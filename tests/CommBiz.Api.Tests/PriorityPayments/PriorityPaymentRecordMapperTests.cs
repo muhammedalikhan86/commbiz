@@ -50,11 +50,30 @@ public class PriorityPaymentRecordMapperTests
     }
 
     [Fact]
-    public void Field_2_is_Notes()
+    public void Field_2_is_Notes_truncated_to_12_characters()
     {
         var record = PriorityPaymentRecordMapper.Map(ValidInstruction(), DebitAccountNumber);
 
-        Assert.Equal("Accounts has been paid to before.", Fields(record)[1]);
+        // "Accounts has been paid to before." (34 chars) truncates to its first 12 characters.
+        Assert.Equal("Accounts has", Fields(record)[1]);
+    }
+
+    [Fact]
+    public void Field_2_Notes_at_or_under_12_characters_is_not_truncated()
+    {
+        var instruction = ValidInstruction() with { Notes = "Sales comm" };
+        var record = PriorityPaymentRecordMapper.Map(instruction, DebitAccountNumber);
+
+        Assert.Equal("Sales comm", Fields(record)[1]);
+    }
+
+    [Fact]
+    public void Field_2_Notes_alphanumeric_is_preserved_up_to_the_12_character_limit()
+    {
+        var instruction = ValidInstruction() with { Notes = "Invoice123456789" };
+        var record = PriorityPaymentRecordMapper.Map(instruction, DebitAccountNumber);
+
+        Assert.Equal("Invoice12345", Fields(record)[1]);
     }
 
     [Fact]
@@ -181,6 +200,16 @@ public class PriorityPaymentRecordMapperTests
         var fields = PriorityPaymentRecordMapper.MapFields(ValidInstruction(), DebitAccountNumber);
 
         Assert.Equal(27, fields.Count);
+    }
+
+    [Fact]
+    public void MapFields_Transaction_Description_keeps_the_untruncated_request_value_but_truncates_the_response_value()
+    {
+        var fields = PriorityPaymentRecordMapper.MapFields(ValidInstruction(), DebitAccountNumber);
+        var field = fields.Single(f => f.CbaResponseField == "Transaction Description");
+
+        Assert.Equal("Accounts has been paid to before.", field.RequestValue);
+        Assert.Equal("Accounts has", field.CbaResponseValue);
     }
 
     [Fact]
