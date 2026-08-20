@@ -68,6 +68,24 @@ public class ConvertImtBatchHandlerTests
     }
 
     [Fact]
+    public void A_spaced_account_number_and_overlong_bank_name_and_address_are_sanitized_not_rejected()
+    {
+        var command = CommandWith([ValidInstruction() with
+        {
+            DestinationBankAccountNo = "658 450191",
+            IntermediaryBankName = "CHASE MANHATTAN BANK (J.P. MORGAN CHASE & CO)",
+            BeneficiaryAddress = "9101 Alta Drive, Unit 15, Las Vegas, NV 89145",
+        }]);
+
+        var result = ConvertImtBatchHandler.Handle(command, Settings);
+
+        Assert.True(result.Success);
+        var fields = result.ConvertedText!.Split(',');
+        Assert.Equal("658450191", fields[17]); // field 18: Beneficiary - Account Number, space stripped
+        Assert.Equal("CHASE MANHATTAN BANK J P MORGA", fields[10]); // field 11, sanitized then truncated to 30 chars
+    }
+
+    [Fact]
     public void Multi_instruction_batch_is_joined_with_CRLF_and_has_no_trailing_CRLF()
     {
         var first = ValidInstruction();

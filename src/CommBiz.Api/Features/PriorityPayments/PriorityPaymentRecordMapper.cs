@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 using CommBiz.Api.Features.Shared;
+using static CommBiz.Api.Features.Shared.MappingUtilities;
 
 namespace CommBiz.Api.Features.PriorityPayments;
 
@@ -28,7 +29,7 @@ public static partial class PriorityPaymentRecordMapper
         string.Join(
             ",",
             TransactionType, // 1: Transaction Type
-            TruncateTransactionDescription(instruction.Notes), // 2: Transaction Description
+            Truncate(instruction.Notes, MaxTransactionDescriptionLength), // 2: Transaction Description
             instruction.PaymentDate.ToString("yyMMdd", CultureInfo.InvariantCulture), // 3: Process Date
             "", // 4: Payment Currency - not applicable
             instruction.Amount.ToString(CultureInfo.InvariantCulture), // 5: Payment Amount
@@ -65,7 +66,7 @@ public static partial class PriorityPaymentRecordMapper
                 nameof(instruction.Notes),
                 instruction.Notes,
                 "Transaction Description",
-                TruncateTransactionDescription(instruction.Notes)),
+                Truncate(instruction.Notes, MaxTransactionDescriptionLength)),
             new(
                 nameof(instruction.PaymentDate),
                 instruction.PaymentDate.ToString("O"),
@@ -132,7 +133,4 @@ public static partial class PriorityPaymentRecordMapper
     // silently by deleting them outright, so an address with punctuation doesn't fuse two words together.
     public static string SanitizeAddress(string? value) =>
         value is null ? "" : RepeatedSpacesRegex().Replace(DisallowedAddressCharsRegex().Replace(value, " "), " ").Trim();
-
-    public static string TruncateTransactionDescription(string value) =>
-        value.Length > MaxTransactionDescriptionLength ? value[..MaxTransactionDescriptionLength] : value;
 }

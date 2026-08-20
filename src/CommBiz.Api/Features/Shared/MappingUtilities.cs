@@ -10,4 +10,8 @@ public static class MappingUtilities
     // Truncates rather than overflows a fixed-width record if a value is longer than its field.
     public static string FixedWidth(string value, int width) =>
         value.Length >= width ? value[..width] : value.PadRight(width);
+
+    // Truncates a CSV/free-text field to a max length - unlike FixedWidth, never pads shorter values.
+    public static string Truncate(string value, int maxLength) =>
+        value.Length > maxLength ? value[..maxLength] : value;
 }

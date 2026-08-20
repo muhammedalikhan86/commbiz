@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 using CommBiz.Api.Features.Shared;
+using static CommBiz.Api.Features.Shared.MappingUtilities;
 
 namespace CommBiz.Api.Features.Imt;
 
@@ -12,6 +13,10 @@ namespace CommBiz.Api.Features.Imt;
 public static partial class ImtRecordMapper
 {
     private const string TransactionType = "IMT"; // field 1 constant - never "TT" (the API's routing code)
+
+    // Field 2: Transaction Description, up to 12AN - truncated (not rejected) if longer, never padded
+    // since this is CSV, not fixed-width.
+    private const int MaxTransactionDescriptionLength = 12;
 
     [GeneratedRegex("[^A-Za-z0-9 '-]")]
     private static partial Regex DisallowedFreeTextCharsRegex();
@@ -28,7 +33,7 @@ public static partial class ImtRecordMapper
         return string.Join(
             ",",
             TransactionType, // 1: Transaction Type
-            instruction.Notes, // 2: Transaction Description
+            Truncate(instruction.Notes, MaxTransactionDescriptionLength), // 2: Transaction Description
             instruction.PaymentDate.ToString("yyMMdd", CultureInfo.InvariantCulture), // 3: Process Date
             instruction.SourceCurrency, // 4: Payment Currency
             FormatAmount(instruction.SourceAmount), // 5: Payment Amount
@@ -67,7 +72,11 @@ public static partial class ImtRecordMapper
         return
         [
             new(nameof(TransactionType), TransactionType, "Transaction Type", TransactionType),
-            new(nameof(instruction.Notes), instruction.Notes, "Transaction Description", instruction.Notes),
+            new(
+                nameof(instruction.Notes),
+                instruction.Notes,
+                "Transaction Description",
+                Truncate(instruction.Notes, MaxTransactionDescriptionLength)),
             new(
                 nameof(instruction.PaymentDate),
                 instruction.PaymentDate.ToString("O"),

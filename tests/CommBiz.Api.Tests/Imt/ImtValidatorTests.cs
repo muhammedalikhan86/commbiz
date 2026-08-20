@@ -191,9 +191,8 @@ public class ImtValidatorTests
         AssertValid(BatchWith(ValidInstruction() with { DestinationBankName = new string('A', 30) }));
 
     [Fact]
-    public void IntermediaryBankName_over_30_chars_is_rejected() =>
-        AssertSingleInvalidField(
-            BatchWith(ValidInstruction() with { IntermediaryBankName = new string('A', 31) }), 0, "IntermediaryBankName");
+    public void IntermediaryBankName_over_30_chars_is_no_longer_rejected_by_Validate_itself() =>
+        AssertValid(BatchWith(ValidInstruction() with { IntermediaryBankName = new string('A', 31) }));
 
     [Fact]
     public void IntermediaryBankName_null_is_valid_since_field_11_is_optional() =>
@@ -203,11 +202,11 @@ public class ImtValidatorTests
 
     [Theory]
     [InlineData("658450191", true)]
-    [InlineData("6584 50191", false)] // contains space
-    [InlineData("6584-50191", false)] // contains hyphen
-    [InlineData("6584,50191", false)] // contains comma
+    [InlineData("6584 50191", true)] // no longer rejected by Validate - Sanitize strips the space first
+    [InlineData("6584-50191", true)] // no longer rejected by Validate - Sanitize strips the hyphen first
+    [InlineData("6584,50191", true)] // no longer rejected by Validate - Sanitize strips the comma first
     [InlineData("", false)] // blank
-    public void DestinationBankAccountNo_must_not_contain_space_hyphen_or_comma(string accountNo, bool expectedValid)
+    public void DestinationBankAccountNo_separators_are_no_longer_rejected_by_Validate_itself(string accountNo, bool expectedValid)
     {
         var batch = BatchWith(ValidInstruction() with { DestinationBankAccountNo = accountNo });
 
@@ -264,9 +263,8 @@ public class ImtValidatorTests
         AssertSingleInvalidField(BatchWith(ValidInstruction() with { BeneficiaryAddress = "" }), 0, "BeneficiaryAddress");
 
     [Fact]
-    public void BeneficiaryAddress_still_too_long_after_sanitization_is_rejected() =>
-        AssertSingleInvalidField(
-            BatchWith(ValidInstruction() with { BeneficiaryAddress = new string('A', 41) }), 0, "BeneficiaryAddress");
+    public void BeneficiaryAddress_length_is_no_longer_rejected_by_Validate_itself() =>
+        AssertValid(BatchWith(ValidInstruction() with { BeneficiaryAddress = new string('A', 41) }));
 
     // --- Payment Details (field 27) - sanitize, then validate length ---
 
@@ -323,5 +321,61 @@ public class ImtValidatorTests
         Assert.Equal(2, errors.Count);
         Assert.Equal(0, errors[0].Index);
         Assert.Equal(1, errors[1].Index);
+    }
+
+    // --- Sanitize (runs before Validate - replaces what used to be reject-on-invalid rules) ---
+
+    [Theory]
+    [InlineData("6584 50191", "658450191")]
+    [InlineData("6584-50191", "658450191")]
+    [InlineData("6584,50191", "658450191")]
+    public void Sanitize_strips_spaces_hyphens_and_commas_from_DestinationBankAccountNo(string accountNo, string expected)
+    {
+        var sanitized = ImtValidator.Sanitize(ValidInstruction() with { DestinationBankAccountNo = accountNo });
+
+        Assert.Equal(expected, sanitized.DestinationBankAccountNo);
+    }
+
+    [Fact]
+    public void Sanitize_truncates_IntermediaryBankName_to_30_characters()
+    {
+        var sanitized = ImtValidator.Sanitize(ValidInstruction() with { IntermediaryBankName = new string('A', 31) });
+
+        Assert.Equal(new string('A', 30), sanitized.IntermediaryBankName);
+    }
+
+    [Fact]
+    public void Sanitize_removes_disallowed_characters_from_IntermediaryBankName()
+    {
+        var sanitized = ImtValidator.Sanitize(ValidInstruction() with { IntermediaryBankName = "J.P. Morgan & Co, Ltd." });
+
+        Assert.Equal("J P Morgan Co Ltd", sanitized.IntermediaryBankName);
+    }
+
+    [Fact]
+    public void Sanitize_leaves_null_IntermediaryBankName_as_null() =>
+        Assert.Null(ImtValidator.Sanitize(ValidInstruction() with { IntermediaryBankName = null }).IntermediaryBankName);
+
+    [Fact]
+    public void Sanitize_removes_disallowed_characters_and_truncates_BeneficiaryAddress_to_40_characters()
+    {
+        var sanitized = ImtValidator.Sanitize(
+            ValidInstruction() with { BeneficiaryAddress = "9101 Alta Drive, Unit 15, Las Vegas, NV 89145" });
+
+        Assert.Equal(40, sanitized.BeneficiaryAddress.Length);
+        Assert.Equal("9101 Alta Drive Unit 15 Las Vegas NV 891", sanitized.BeneficiaryAddress);
+    }
+
+    [Fact]
+    public void Sanitized_over_length_fields_pass_Validate_afterwards()
+    {
+        var sanitized = ImtValidator.Sanitize(ValidInstruction() with
+        {
+            DestinationBankAccountNo = "6584 50191",
+            IntermediaryBankName = new string('A', 31),
+            BeneficiaryAddress = new string('A', 41),
+        });
+
+        AssertValid(BatchWith(sanitized));
     }
 }

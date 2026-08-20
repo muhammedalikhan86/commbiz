@@ -1,4 +1,5 @@
 using System.Globalization;
+using static CommBiz.Api.Features.Shared.MappingUtilities;
 
 namespace CommBiz.Api.Features.Imt;
 
@@ -25,6 +26,21 @@ public static class ImtValidator
 
     // Fields 5/6: 1-11 digits before the decimal point, 1-2 after.
     private const decimal MaxAmount = 99_999_999_999.99m;
+
+    // Sanitises fields before Validate runs, replacing what used to be reject-on-invalid rules for
+    // these three fields with strip/truncate-and-continue behaviour - never rejects the batch for them.
+    public static ImtPaymentInstructionRequest Sanitize(ImtPaymentInstructionRequest instruction) =>
+        instruction with
+        {
+            DestinationBankAccountNo = RemoveAccountNoSeparators(instruction.DestinationBankAccountNo),
+            BeneficiaryAddress = Truncate(ImtRecordMapper.SanitizeFreeText(instruction.BeneficiaryAddress), MaxBeneficiaryAddressLength),
+            IntermediaryBankName = instruction.IntermediaryBankName is null
+                ? null
+                : Truncate(ImtRecordMapper.SanitizeFreeText(instruction.IntermediaryBankName), MaxBankNameLength),
+        };
+
+    private static string RemoveAccountNoSeparators(string value) =>
+        value.Replace(" ", "").Replace("-", "").Replace(",", "");
 
     public static IReadOnlyList<PaymentInstructionError>? Validate(IReadOnlyList<ImtPaymentInstructionRequest> instructions)
     {
@@ -88,11 +104,6 @@ public static class ImtValidator
             yield return $"IntermediaryBankSwiftCode '{instruction.IntermediaryBankSwiftCode}' must be 8 or 11 alphanumeric characters.";
         }
 
-        if (instruction.IntermediaryBankName is { Length: > MaxBankNameLength })
-        {
-            yield return $"IntermediaryBankName exceeds the maximum of {MaxBankNameLength} characters.";
-        }
-
         if (!IsValidSwiftCode(instruction.DestinationBankSwiftCode))
         {
             yield return $"DestinationBankSwiftCode '{instruction.DestinationBankSwiftCode}' must be 8 or 11 alphanumeric characters.";
@@ -105,8 +116,7 @@ public static class ImtValidator
 
         if (!IsValidBeneficiaryAccountNo(instruction.DestinationBankAccountNo))
         {
-            yield return $"DestinationBankAccountNo '{instruction.DestinationBankAccountNo}' must be 1-{MaxBeneficiaryAccountNoLength} " +
-                "characters and must not contain spaces, hyphens, or commas.";
+            yield return $"DestinationBankAccountNo '{instruction.DestinationBankAccountNo}' must be 1-{MaxBeneficiaryAccountNoLength} characters.";
         }
 
         if (!IsValidBeneficiaryAccountName(instruction.DestinationBankAccountName))
@@ -118,10 +128,6 @@ public static class ImtValidator
         if (string.IsNullOrWhiteSpace(instruction.BeneficiaryAddress))
         {
             yield return "BeneficiaryAddress must not be blank.";
-        }
-        else if (ImtRecordMapper.SanitizeFreeText(instruction.BeneficiaryAddress).Length > MaxBeneficiaryAddressLength)
-        {
-            yield return $"BeneficiaryAddress exceeds the maximum of {MaxBeneficiaryAddressLength} characters after sanitization.";
         }
 
         if (string.IsNullOrWhiteSpace(instruction.PaymentReference))
@@ -177,8 +183,7 @@ public static class ImtValidator
 
     private static bool IsValidBeneficiaryAccountNo(string accountNo) =>
         !string.IsNullOrEmpty(accountNo)
-        && accountNo.Length <= MaxBeneficiaryAccountNoLength
-        && !accountNo.Any(c => c is ' ' or '-' or ',');
+        && accountNo.Length <= MaxBeneficiaryAccountNoLength;
 
     private static bool IsValidBeneficiaryAccountName(string accountName) =>
         !string.IsNullOrEmpty(accountName)

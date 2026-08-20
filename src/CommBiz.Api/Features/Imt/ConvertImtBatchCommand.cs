@@ -11,7 +11,9 @@ public static class ConvertImtBatchHandler
     // has no header/trailer record of its own - do not "fix" this later to match the other two slices.
     public static ConvertImtBatchResponse Handle(ConvertImtBatchCommand command, ImtSettings settings)
     {
-        var instructions = command.Instructions;
+        // Sanitise before validating, so DestinationBankAccountNo/BeneficiaryAddress/IntermediaryBankName
+        // are already cleaned up by the time Validate and Map ever see them.
+        var instructions = command.Instructions.Select(ImtValidator.Sanitize).ToList();
 
         var validationErrors = ImtValidator.Validate(instructions);
         if (validationErrors is not null)

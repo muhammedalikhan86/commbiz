@@ -59,6 +59,35 @@ public class ImtRecordMapperTests
     }
 
     [Fact]
+    public void Field_2_Notes_at_or_under_12_characters_is_not_truncated()
+    {
+        var record = ImtRecordMapper.Map(ValidInstruction(), DebitAccountNumber);
+
+        Assert.Equal("10 bps on fx", Fields(record)[1]);
+    }
+
+    [Fact]
+    public void Field_2_Notes_over_12_characters_is_truncated()
+    {
+        var instruction = ValidInstruction() with { Notes = "Invoice payment for August services" };
+        var record = ImtRecordMapper.Map(instruction, DebitAccountNumber);
+
+        Assert.Equal("Invoice paym", Fields(record)[1]);
+    }
+
+    [Fact]
+    public void MapFields_Transaction_Description_keeps_the_untruncated_request_value_but_truncates_the_response_value()
+    {
+        var instruction = ValidInstruction() with { Notes = "Invoice payment for August services" };
+
+        var fields = ImtRecordMapper.MapFields(instruction, DebitAccountNumber);
+        var field = fields.Single(f => f.CbaResponseField == "Transaction Description");
+
+        Assert.Equal("Invoice payment for August services", field.RequestValue);
+        Assert.Equal("Invoice paym", field.CbaResponseValue);
+    }
+
+    [Fact]
     public void Field_3_process_date_is_formatted_YYMMDD()
     {
         var record = ImtRecordMapper.Map(ValidInstruction(), DebitAccountNumber);
