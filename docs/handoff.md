@@ -49,8 +49,8 @@ all Done.**
   and Priority Payments were the pending work (IMT is now also done, via F-017).
 - F-016 — Full BPAY Batch Payments conversion slice (validator, header/detail CSV mappers,
   handler), replacing the F-015 stub. No trailer/self-balancing record — not part of the BPay
-  spec. Files: `src/CommBiz.Api/Features/BPay/*.cs`, `README.md`. Known open item:
-  `BPaySettings.FundingAccount`/`FileNumber` are still placeholder values (PM-007).
+  spec. Files: `src/CommBiz.Api/Features/BPay/*.cs`, `README.md`. `BPaySettings.FundingAccount`/
+  `FileNumber` are confirmed real values (PM-007 resolved), not placeholders.
 - F-017 — Full IMT (International Money Transfers) conversion slice: 27-field MT101-family CSV,
   SWIFT-derived country codes, reject-vs-sanitize field handling, no-trailing-CRLF assembly. The
   router was extended to recognise the API's `TT` code (mapped to the file's `IMT` Transaction

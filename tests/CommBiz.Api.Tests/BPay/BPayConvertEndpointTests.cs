@@ -10,8 +10,8 @@ namespace CommBiz.Api.Tests.BPay;
 public class BPayConvertEndpointTests(WebApplicationFactory<Program> factory)
     : IClassFixture<WebApplicationFactory<Program>>
 {
-    // Confirmed-shape placeholder BPay config, set explicitly in the test host so this test doesn't
-    // depend on appsettings.json's contents (mirrors DirectEntryConvertEndpointTests' approach).
+    // Test-only BPay config (not appsettings.json's real value), set explicitly in the test host so
+    // this test doesn't depend on appsettings.json's contents (mirrors DirectEntryConvertEndpointTests').
     private static readonly Dictionary<string, string?> BPayConfig = new()
     {
         ["BPay:FundingAccount"] = "06200012345678",

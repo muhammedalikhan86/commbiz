@@ -11,6 +11,5 @@ instruction, CRLF-terminated). Dispatched to from the top-level Payment Type Rou
 Unlike Direct Entry, BPay's output is CSV (comma-delimited, not fixed-width) and has no
 trailer or self-balancing record — the file is simply Header + Details.
 
-**Assumption needing confirmation:** `appsettings.json`'s `BPay` section (`FundingAccount`,
-`FileNumber`) uses placeholder values only, no real funding account has been confirmed yet
-(same open-config treatment as Direct Entry's PM-003 values).
+`appsettings.json`'s `BPay` section (`FundingAccount`, `FileNumber`) uses real, confirmed values
+(same settlement account IMT/Priority Payments/FX already use), not placeholders.

@@ -21,7 +21,7 @@ Fields 13/17/26 (country codes) are derived from characters 5-6 of the relevant 
 than supplied directly by the request - there is no discrete country field in the payload. Field 7
 (the debit account number) is derived entirely from the static `ImtSettings` configuration (BSB
 last-4 + account number), never from the request, mirroring Direct Entry's
-`TraceAccountBsb`/`TraceAccountAccNo` and BPay's `FundingAccount` pattern.
+`TraceAccountBsb`/`TraceAccountAccNo` and BPay's confirmed `FundingAccount` pattern.
 
 **Reject-vs-sanitize split (per the confirmed field mapping):** legal/identity data (Beneficiary
 Account Number, Beneficiary Account Name, bank names, SWIFT codes) is rejected outright on invalid

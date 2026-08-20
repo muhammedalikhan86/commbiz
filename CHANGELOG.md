@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] — 2026-08-20
+
+### Fixed
+
+#### BPay Documentation Finalisation (Amended F-016, PM-007 resolved)
+- **Documentation only, no behaviour change.** BPay is now finalised and tested: `appsettings.json`'s `BPay.FundingAccount` (`"06200021120075"`, the same 062-000/2112 0075 settlement account IMT/Priority Payments/FX already use) and `FileNumber` (`"001"`) are confirmed real values, not placeholders
+- Removed stale "placeholder"/"not yet confirmed" wording from `BPaySettings.cs`, `Features/BPay/README.md`, `Features/Imt/README.md`, `docs/handoff.md`, and the Phase 2 test runbook
+- Added a Header Record / Payment Details Record field-mapping reference table to the Phase 2 test runbook's F-016 section, mirroring the Header/Trailer field tables already documented for Direct Entry
+
 ## [1.6.0] — 2026-08-20
 
 ### Fixed

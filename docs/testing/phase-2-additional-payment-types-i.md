@@ -44,9 +44,10 @@ open product-decision item, not a bug in this runbook or in the implementation i
    [tests/smoke/Errors.http](../../tests/smoke/Errors.http). **No `tests/smoke/Fx.http` file exists
    yet** — the F-022/F-023 FX scenarios below (TC-075–TC-084) are written directly in this runbook
    instead; creating an `Fx.http` mirroring the others is tracked as a follow-up, not fabricated here.
-4. `appsettings.json`'s `BPay` section (`FundingAccount`, `FileNumber`) uses placeholder values only —
-   no real funding account has been confirmed yet (per [Features/BPay/README.md](../../src/CommBiz.Api/Features/BPay/README.md)).
-   `appsettings.json`'s `Imt` section (`DebitAccountBsb`, `DebitAccountNumber`, `DebitAccountName`) uses
+4. `appsettings.json`'s `BPay` section (`FundingAccount`, `FileNumber`) uses real, confirmed values
+   (per [Features/BPay/README.md](../../src/CommBiz.Api/Features/BPay/README.md)) — same settlement
+   account IMT/Priority Payments/FX already use. `appsettings.json`'s `Imt` section
+   (`DebitAccountBsb`, `DebitAccountNumber`, `DebitAccountName`) also uses
    real, confirmed values (per [Features/Imt/README.md](../../src/CommBiz.Api/Features/Imt/README.md)).
 
 ---
@@ -268,6 +269,52 @@ one Payment Details record (`RecordType "50"`) per instruction, each CRLF-termin
 **Automated equivalents:**
 [tests/CommBiz.Api.Tests/BPay/BPayValidatorTests.cs](../../tests/CommBiz.Api.Tests/BPay/BPayValidatorTests.cs),
 [tests/CommBiz.Api.Tests/BPay/BPayConvertEndpointTests.cs](../../tests/CommBiz.Api.Tests/BPay/BPayConvertEndpointTests.cs)
+
+**Header Record** (line 1 of `convertedText`), comma-delimited, 8 fields — every field is either a
+constant, `BPaySettings`-sourced, or the batch's earliest `PaymentDate`/summed cents total:
+
+| Field | CSV position | Source | Expected value (TC-056 instruction 1) |
+|---|---|---|---|
+| Record Type | 1 | constant | `01` |
+| File Creation Date | 2 | `DateTime.UtcNow` | e.g. `20260811` |
+| File Creation Time | 3 | `DateTime.UtcNow` | e.g. `120000` |
+| File Number | 4 | `settings.FileNumber` (checked-in `appsettings.json`) | `001` |
+| Payment Account | 5 | `settings.FundingAccount` (checked-in `appsettings.json`) | `06200021120075` |
+| Payment Date | 6 | **earliest** instruction's `PaymentDate` in the batch | `20260811` |
+| Number of Payment Records | 7 | `instructions.Count` | `2` |
+| Total Amount of Payments | 8 | sum of `AmountToCents(instruction.Amount)` over the batch | `282590` |
+
+**Payment Details Record** (one line per instruction), comma-delimited, 25 fields — unlike Direct
+Entry there is no trailer/self-balancing record to reconcile against, so every position the spec
+doesn't assign to this record type is simply left blank:
+
+| Field | CSV position | Source | Expected value (TC-056 instruction 1) |
+|---|---|---|---|
+| Record Type | 1 | constant | `50` |
+| File Creation Date | 2 | reserved (blank on detail records) | empty |
+| File Creation Time | 3 | reserved | empty |
+| File Number | 4 | reserved | empty |
+| Payment Account | 5 | reserved | empty |
+| Payment Date | 6 | reserved | empty |
+| Number of Payment Records | 7 | reserved | empty |
+| Currency Code of Payment | 8 | reserved | empty |
+| Biller Code | 9 | `instruction.BPayBillerCode` | `488577` |
+| Service Code | 10 | reserved | empty |
+| Customer Reference Number | 11 | `instruction.BPayReference` | `1202194308172126` |
+| Payment Method | 12 | reserved | empty |
+| Entry Method | 13 | reserved | empty |
+| Amount | 14 | `AmountToCents(instruction.Amount)` | `62590` |
+| Transaction Reference Number | 15 | reserved | empty |
+| Original Reference Number | 16 | reserved | empty |
+| BPAY Settlement Date | 17 | reserved | empty |
+| Date Payment Accepted | 18 | reserved | empty |
+| Time Payment Accepted | 19 | reserved | empty |
+| Payer Name | 20 | reserved | empty |
+| Additional Reference Code | 21 | reserved | empty |
+| Error Correction Reason | 22 | reserved | empty |
+| Discount Method | 23 | reserved | empty |
+| Discount Reference | 24 | reserved | empty |
+| Discretionary Data | 25 | reserved | empty |
 
 ### TC-056 — Happy path: 2 valid instructions
 

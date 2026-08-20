@@ -1,6 +1,12 @@
 # Revision History
 
-**Current Revision:** 7
+**Current Revision:** 8
+## Revision 8
+- **Date:** 2026-08-20
+- **Description:** BPay documentation finalisation — `BPaySettings.FundingAccount`/`FileNumber` confirmed real values, PM-007 resolved (documentation only, no behaviour change)
+- **Features:** Amended F-016 documentation
+- **Test Coverage:** 385 passing tests (verified via `dotnet test`); 0 vulnerabilities
+
 ## Revision 7
 - **Date:** 2026-08-20
 - **Description:** Direct Entry field-mapping correctness fix and new `/convert-to-file` file-download endpoint
