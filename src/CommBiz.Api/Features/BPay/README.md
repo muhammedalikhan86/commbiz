@@ -68,3 +68,32 @@ is left blank.
 | Discount Method | 23 | not mapped | empty |
 | Discount Reference | 24 | not mapped | empty |
 | Discretionary Data | 25 | not mapped | empty |
+
+## Exception List (Non-Negotiables)
+
+Conditions checked by `BPayValidator` that cause the whole batch to be thrown back (rejected) rather
+than converted. Any one of these, on any single instruction, rejects the entire file - no partial
+conversion.
+
+| Field | Non-negotiable rule |
+|---|---|
+| Batch size | 1-200 payment instructions per file (File Format Rules §1.1 rule 9) |
+| AccountNo | must not be blank |
+| BPayBillerCode | numeric only, 1-10 digits |
+| BPayReference | numeric only, 1-20 digits |
+| Amount | must be positive and convert to at most 12 digits of cents (≤ 9,999,999,999.99) |
+
+## Sanitisation (Pre-Validation)
+
+BPay has **no pre-validation sanitisation step** - there is no `Sanitize`-style method run before
+`BPayValidator.Validate`. Every request field that reaches the mapper (`BPayBillerCode`,
+`BPayReference`, `Amount`) is written through exactly as validated. The only transformations applied
+in the mapper (cents conversion, date/time formatting) are format changes on aggregate/derived
+values (see the Transformation column above) - not sanitisation of raw request input, per the
+distinction: a transformation reshapes a value into a different format, a sanitisation strips or
+truncates part of the value's content.
+
+## Pattern Compliance (request → sanitisation → validation → map)
+
+✅ **Compliant.** BPay has no sanitisation step, so there is nothing that can run out of order
+relative to validation. Every field the validator checks is the exact same value the mapper writes.

@@ -67,3 +67,43 @@ the comma-separated CSV row (27 fields total — no header/trailer record).
 | Beneficiary - Postcode | 25 | not applicable | empty |
 | Beneficiary - Country Code | 26 | not applicable | empty |
 | Beneficiary Payment Details | 27 | not applicable | empty (Notes already maps to field 2) |
+
+## Exception List (Non-Negotiables)
+
+Conditions checked by `PriorityPaymentValidator` that cause the whole batch to be thrown back
+(rejected) rather than converted. Any one of these, on any single instruction, rejects the entire
+file - no partial conversion.
+
+| Field | Non-negotiable rule |
+|---|---|
+| Batch size | 1-350 transactions per file (shared IMT/PP/NonCBA limit) |
+| Notes | must not be blank |
+| PaymentDate | between today and 14 months ahead |
+| Amount | positive, at most 11 integer + 2 decimal digits (≤ 99,999,999,999.99) |
+| DestinationBankBsb | exactly 6 numeric digits |
+| DestinationBankAccountNo | 3-9 alphanumeric characters |
+| DestinationBankAccountName | must not be blank, letters/digits/spaces only, at most 32 characters |
+| BeneficiaryAddress (optional) | if present: at most 40 characters, letters/digits/spaces only |
+
+## Sanitisation (Pre-Validation)
+
+Priority Payments has **no pre-validation sanitisation step** - there is no `Sanitize`-style method
+run before `PriorityPaymentValidator.Validate`.
+
+`PriorityPaymentRecordMapper.SanitizeAddress` (replace disallowed characters with a space, collapse
+repeated spaces) runs only in the mapping layer, *after* validation. In practice its
+character-replacement behaviour is unreachable: `PriorityPaymentValidator` already rejects any
+address containing a character outside letters/digits/spaces, so by the time `SanitizeAddress` runs
+there are no disallowed characters left to replace. The only part of `SanitizeAddress` that has any
+real effect is collapsing repeated spaces, which validation permits (space is a valid character) but
+which still changes the value between what was validated and what is written to the file.
+
+## Pattern Compliance (request → sanitisation → validation → map)
+
+⚠️ **Minor violation (low severity, likely acceptable).** `BeneficiaryAddress` is validated in its
+raw form (which may contain repeated spaces) and then cosmetically altered in the map step - so the
+exact bytes validated and the exact bytes written can differ, which breaks "validate what you
+actually write." Unlike Direct Entry/Fx's gaps, this can't let an otherwise-invalid value slip
+through (the character-set check already ran), so the practical risk is limited to whitespace
+cosmetics. Recommend moving the space-collapse into an explicit pre-validation sanitise step (same
+shape as `ImtValidator.Sanitize`) purely for consistency, not because of any known defect.

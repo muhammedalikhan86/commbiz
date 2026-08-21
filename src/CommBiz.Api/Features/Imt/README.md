@@ -74,3 +74,53 @@ reflects what `ImtRecordMapper` itself still does to the (by then already-saniti
 | Beneficiary - Postcode | 25 | no discrete field available | empty |
 | Beneficiary - Country | 26 | request.DestinationBankSwiftCode (aggregate) | derived: same as field 17 |
 | Beneficiary Payment Details | 27 | request.PaymentReference | sanitized (disallowed characters replaced with a space); still rejected if the sanitized value exceeds 105 characters |
+
+## Exception List (Non-Negotiables)
+
+Conditions checked by `ImtValidator.Validate` (running on the already-sanitised instruction - see
+Sanitisation below) that cause the whole batch to be thrown back (rejected) rather than converted.
+Any one of these, on any single instruction, rejects the entire file - no partial conversion.
+
+| Field | Non-negotiable rule |
+|---|---|
+| Batch size | 1-350 transactions per file |
+| Notes | must not be blank |
+| PaymentDate | between today and today + 7 days |
+| SourceCurrency | exactly 3 upper-case letters |
+| SourceAmount / Amount | exactly one of the two must be > 0, and the populated one must be positive with at most 11 integer + 2 decimal digits |
+| IntermediaryBankSwiftCode (if provided) | 8 or 11 alphanumeric characters |
+| DestinationBankSwiftCode | 8 or 11 alphanumeric characters |
+| DestinationBankName | must not be blank, at most 30 characters - rejected outright, never sanitised |
+| DestinationBankAccountNo (post-sanitisation) | 1-34 characters |
+| DestinationBankAccountName | must contain at least one letter, letters/digits/spaces/hyphens/apostrophes only, at most 62 characters - rejected outright, never sanitised |
+| BeneficiaryAddress (post-sanitisation) | must not be blank |
+| PaymentReference | must not be blank; sanitised value must not exceed 105 characters |
+
+## Sanitisation (Pre-Validation)
+
+IMT is the **reference model** for this pattern: `ImtValidator.Sanitize` runs in
+`ConvertImtBatchHandler` *before* `ImtValidator.Validate` is ever called, so validation and mapping
+only ever see already-cleaned values:
+
+| Field | Sanitisation applied |
+|---|---|
+| DestinationBankAccountNo | spaces/hyphens/commas stripped |
+| BeneficiaryAddress | disallowed characters (anything but letters/digits/space/hyphen/apostrophe) replaced with a space, repeated spaces collapsed, then truncated to 40 characters |
+| IntermediaryBankName | same character sanitisation as above, then truncated to 30 characters |
+
+This is a genuine sanitisation (content is stripped/shortened), not a transformation - contrast with
+fields like Process Date (`yyMMdd` formatting) or the country-code derivation from a SWIFT BIC,
+which reshape a value into a different format without discarding any of its meaning.
+
+**Reject-vs-sanitise split:** `DestinationBankAccountName`, `DestinationBankName`, and the SWIFT
+codes are rejected outright on invalid characters or overlong values - never silently altered.
+`PaymentReference` is sanitised (disallowed characters replaced with a space) but *still* rejected if
+the sanitised value is too long. Only `DestinationBankAccountNo`, `BeneficiaryAddress`, and
+`IntermediaryBankName` are sanitised and truncated rather than rejected.
+
+## Pattern Compliance (request → sanitisation → validation → map)
+
+✅ **Fully compliant.** Sanitisation runs first (`ImtValidator.Sanitize`), validation runs against
+the sanitised instruction, and mapping (`ImtRecordMapper`) writes the same sanitised values it was
+validated with - there is no field that is altered *after* validation has already passed. This is
+the pattern the other slices should be measured against.

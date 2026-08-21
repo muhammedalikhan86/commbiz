@@ -84,3 +84,41 @@ Same layout/widths as the Detail Record above.
 | Blank | 24 | not mapped | literal spaces |
 | File (User) Count of Record Type 1 | 6 | request (aggregate: instruction count + 1 for contra) | pad left to 6 with `0` |
 | Blank | 40 | not mapped | literal spaces |
+
+## Exception List (Non-Negotiables)
+
+Conditions checked by `DirectEntryValidator` that cause the whole batch to be thrown back (rejected)
+rather than converted. Any one of these, on any single instruction, rejects the entire file - no
+partial conversion.
+
+| Field | Non-negotiable rule |
+|---|---|
+| Batch size | at least 1 payment instruction per file |
+| AccountNo | must not be blank |
+| SourceBankBsb / DestinationBankBsb | exactly 6 numeric digits |
+| SourceBankAccountNo / DestinationBankAccountNo | 1-9 characters, letters/digits/hyphen/space only, not blank once separators are stripped, not all zeros |
+| DestinationBankAccountName | must not be blank |
+| Amount | must be positive and convert to at most 10 digits of cents (≤ 99,999,999.99) |
+
+## Sanitisation (Pre-Validation)
+
+DirectEntry has **no dedicated pre-validation sanitisation step** - there is no `Sanitize`-style
+method run before `DirectEntryValidator.Validate`.
+
+**Known gap:** `DestinationBankAccountName` is silently truncated to 32 characters in
+`DirectEntryDetailRecordMapper` (`FixedWidth`, fixed-width pad/truncate). This is sanitisation
+(truncation of content, not a format change) but it happens only in the mapping layer, after
+validation - and `DirectEntryValidator` never checks this field's length, only that it isn't blank.
+A name longer than 32 characters is therefore never rejected, and is truncated without the caller
+ever being told. See Pattern Compliance below.
+
+## Pattern Compliance (request → sanitisation → validation → map)
+
+⚠️ **Minor violation.** `DestinationBankAccountName` is truncated in the *map* step instead of
+before validation, and its length is never validated at all - the pattern is effectively
+request → validation → map(with untracked truncation). Practical impact is low (silent data loss
+in a display/reference field, not a routing or settlement field), but it's inconsistent with IMT's
+stricter reject-vs-sanitise split, where every truncated/stripped field is either sanitised
+*before* validation or rejected outright. Recommend picking one: add a max-length rejection to
+`DirectEntryValidator`, or move the truncation into an explicit pre-validation sanitise step so the
+validator sees (and can log/reject on) the same value that ends up in the file.
