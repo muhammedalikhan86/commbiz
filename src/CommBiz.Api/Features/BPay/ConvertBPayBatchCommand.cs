@@ -8,11 +8,11 @@ public static class ConvertBPayBatchHandler
 {
     // F-016: validate -> map details -> map header -> assemble. Header + Details only - BPay has no
     // trailer/self-balancing record (docs/stash/BPay Payments - CommBiz File Specification.md).
-    public static ConvertBPayBatchResponse Handle(ConvertBPayBatchCommand command, BPaySettings settings)
+    public static ConvertBPayBatchResponse Handle(ConvertBPayBatchCommand command, BPaySettings settings, TimeProvider timeProvider)
     {
         var instructions = command.Instructions;
 
-        var validationErrors = BPayValidator.Validate(instructions);
+        var validationErrors = BPayValidator.Validate(instructions, timeProvider);
         if (validationErrors is not null)
         {
             return new ConvertBPayBatchResponse(false, null, validationErrors);
@@ -23,7 +23,7 @@ public static class ConvertBPayBatchHandler
 
         // F-021: resolved once and passed to both Map and MapFields below so ConvertedText and Mappings
         // can never disagree on the header's File Creation Date/Time (AC5).
-        var now = DateTime.UtcNow;
+        var now = timeProvider.GetUtcNow().UtcDateTime;
 
         var convertedText =
             BPayHeaderRecordMapper.Map(instructions, settings, now) + "\r\n" +

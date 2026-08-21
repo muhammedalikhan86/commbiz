@@ -42,7 +42,8 @@ public static class ImtValidator
     private static string RemoveAccountNoSeparators(string value) =>
         value.Replace(" ", "").Replace("-", "").Replace(",", "");
 
-    public static IReadOnlyList<PaymentInstructionError>? Validate(IReadOnlyList<ImtPaymentInstructionRequest> instructions)
+    public static IReadOnlyList<PaymentInstructionError>? Validate(
+        IReadOnlyList<ImtPaymentInstructionRequest> instructions, TimeProvider timeProvider)
     {
         List<PaymentInstructionError>? errors = null;
 
@@ -66,7 +67,7 @@ public static class ImtValidator
 
         for (var index = 0; index < instructions.Count; index++)
         {
-            foreach (var reason in ValidateInstruction(instructions[index]))
+            foreach (var reason in ValidateInstruction(instructions[index], timeProvider))
             {
                 errors ??= [];
                 errors.Add(new PaymentInstructionError(index, reason));
@@ -76,14 +77,14 @@ public static class ImtValidator
         return errors;
     }
 
-    private static IEnumerable<string> ValidateInstruction(ImtPaymentInstructionRequest instruction)
+    private static IEnumerable<string> ValidateInstruction(ImtPaymentInstructionRequest instruction, TimeProvider timeProvider)
     {
         if (string.IsNullOrWhiteSpace(instruction.Notes))
         {
             yield return "Notes (Transaction Description) must not be blank.";
         }
 
-        if (!IsWithinProcessDateWindow(instruction.PaymentDate))
+        if (!IsWithinProcessDateWindow(instruction.PaymentDate, timeProvider))
         {
             yield return $"PaymentDate '{instruction.PaymentDate:yyyy-MM-dd}' must be between today and " +
                 $"today + {MaxProcessDateDaysAhead} days.";
@@ -140,9 +141,9 @@ public static class ImtValidator
         }
     }
 
-    private static bool IsWithinProcessDateWindow(DateTime paymentDate)
+    private static bool IsWithinProcessDateWindow(DateTime paymentDate, TimeProvider timeProvider)
     {
-        var today = DateTime.UtcNow.Date;
+        var today = timeProvider.GetUtcNow().Date;
         var processDate = paymentDate.Date;
         return processDate >= today && processDate <= today.AddDays(MaxProcessDateDaysAhead);
     }
@@ -164,7 +165,7 @@ public static class ImtValidator
         }
 
         var populatedAmount = paymentAmountPopulated ? sourceAmount : amount;
-        if (!IsValidAmountFormat(populatedAmount))
+        if (!IsValidAmountFormat(populatedAmount, MaxAmount))
         {
             reason = $"The populated amount '{populatedAmount.ToString(CultureInfo.InvariantCulture)}' must be positive, " +
                 "with at most 11 integer digits and 2 decimal digits.";
@@ -174,9 +175,6 @@ public static class ImtValidator
         reason = null;
         return true;
     }
-
-    private static bool IsValidAmountFormat(decimal amount) =>
-        amount > 0 && amount <= MaxAmount && Math.Round(amount, 2) == amount;
 
     private static bool IsValidSwiftCode(string swiftCode) =>
         swiftCode.Length is 8 or 11 && swiftCode.All(char.IsLetterOrDigit);

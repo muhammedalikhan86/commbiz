@@ -16,12 +16,12 @@ public class BPayValidatorTests
         instructions;
 
     private static void AssertValid(IReadOnlyList<BPayPaymentInstructionRequest> instructions) =>
-        Assert.Null(BPayValidator.Validate(instructions));
+        Assert.Null(BPayValidator.Validate(instructions, TimeProvider.System));
 
     private static void AssertSingleInvalidField(
         IReadOnlyList<BPayPaymentInstructionRequest> instructions, int expectedIndex, string fieldNameSubstring)
     {
-        var errors = BPayValidator.Validate(instructions);
+        var errors = BPayValidator.Validate(instructions, TimeProvider.System);
         Assert.NotNull(errors);
         var error = Assert.Single(errors);
         Assert.Equal(expectedIndex, error.Index);
@@ -126,7 +126,7 @@ public class BPayValidatorTests
     [Fact]
     public void Zero_instructions_is_rejected_with_minimum_count_reason()
     {
-        var errors = BPayValidator.Validate(BatchWithCount(0));
+        var errors = BPayValidator.Validate(BatchWithCount(0), TimeProvider.System);
 
         Assert.NotNull(errors);
         Assert.Contains(errors, e => e.Index == -1 && e.Reason.Contains("at least 1"));
@@ -143,7 +143,7 @@ public class BPayValidatorTests
     [Fact]
     public void More_than_200_instructions_is_rejected_with_max_count_reason()
     {
-        var errors = BPayValidator.Validate(BatchWithCount(201));
+        var errors = BPayValidator.Validate(BatchWithCount(201), TimeProvider.System);
 
         Assert.NotNull(errors);
         Assert.Contains(errors, e => e.Index == -1 && e.Reason.Contains("at most 200"));
@@ -162,7 +162,7 @@ public class BPayValidatorTests
             ValidInstruction() with { BPayBillerCode = "" },
             ValidInstruction() with { BPayReference = "" });
 
-        var errors = BPayValidator.Validate(batch);
+        var errors = BPayValidator.Validate(batch, TimeProvider.System);
 
         Assert.NotNull(errors);
         Assert.Equal(2, errors.Count);

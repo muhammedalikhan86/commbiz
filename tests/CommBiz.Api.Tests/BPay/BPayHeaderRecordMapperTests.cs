@@ -10,6 +10,10 @@ public class BPayHeaderRecordMapperTests
         FileNumber = "001",
     };
 
+    // Fixed clock for tests that don't care about the actual time value, now that the mapper requires
+    // an explicit `now` from every caller instead of defaulting to TimeProvider.System internally.
+    private static readonly DateTime Now = new(2026, 8, 20, 23, 59, 59, DateTimeKind.Utc);
+
     private static BPayPaymentInstructionRequest Instruction(DateTime paymentDate, decimal amount = 10000.00m) =>
         new(
             PaymentTypeCode: "BPAY",
@@ -26,7 +30,7 @@ public class BPayHeaderRecordMapperTests
     [Fact]
     public void Record_has_exactly_8_comma_separated_fields()
     {
-        var record = BPayHeaderRecordMapper.Map(ValidInstructions(), Settings);
+        var record = BPayHeaderRecordMapper.Map(ValidInstructions(), Settings, Now);
 
         Assert.Equal(8, Fields(record).Length);
     }
@@ -34,7 +38,7 @@ public class BPayHeaderRecordMapperTests
     [Fact]
     public void Record_type_is_literal_01()
     {
-        var record = BPayHeaderRecordMapper.Map(ValidInstructions(), Settings);
+        var record = BPayHeaderRecordMapper.Map(ValidInstructions(), Settings, Now);
 
         Assert.Equal("01", Fields(record)[0]);
     }
@@ -43,7 +47,8 @@ public class BPayHeaderRecordMapperTests
     public void File_creation_date_and_time_are_the_current_utc_moment()
     {
         var before = DateTime.UtcNow;
-        var record = BPayHeaderRecordMapper.Map(ValidInstructions(), Settings);
+        var now = TimeProvider.System.GetUtcNow().UtcDateTime;
+        var record = BPayHeaderRecordMapper.Map(ValidInstructions(), Settings, now);
         var after = DateTime.UtcNow;
 
         var fields = Fields(record);
@@ -56,7 +61,7 @@ public class BPayHeaderRecordMapperTests
     [Fact]
     public void File_number_comes_from_settings()
     {
-        var record = BPayHeaderRecordMapper.Map(ValidInstructions(), Settings with { FileNumber = "007" });
+        var record = BPayHeaderRecordMapper.Map(ValidInstructions(), Settings with { FileNumber = "007" }, Now);
 
         Assert.Equal("007", Fields(record)[3]);
     }
@@ -64,7 +69,7 @@ public class BPayHeaderRecordMapperTests
     [Fact]
     public void Payment_account_comes_from_settings_funding_account()
     {
-        var record = BPayHeaderRecordMapper.Map(ValidInstructions(), Settings);
+        var record = BPayHeaderRecordMapper.Map(ValidInstructions(), Settings, Now);
 
         Assert.Equal("06200012345678", Fields(record)[4]);
     }
@@ -79,7 +84,7 @@ public class BPayHeaderRecordMapperTests
             Instruction(new DateTime(2026, 8, 25, 10, 0, 0)),
         };
 
-        var record = BPayHeaderRecordMapper.Map(instructions, Settings);
+        var record = BPayHeaderRecordMapper.Map(instructions, Settings, Now);
 
         Assert.Equal("20260814", Fields(record)[5]);
     }
@@ -93,7 +98,7 @@ public class BPayHeaderRecordMapperTests
             Instruction(new DateTime(2026, 8, 20, 10, 0, 0)),
         };
 
-        var record = BPayHeaderRecordMapper.Map(instructions, Settings);
+        var record = BPayHeaderRecordMapper.Map(instructions, Settings, Now);
 
         Assert.Equal("2", Fields(record)[6]);
     }
@@ -107,7 +112,7 @@ public class BPayHeaderRecordMapperTests
             Instruction(new DateTime(2026, 8, 20, 10, 0, 0), amount: 50.00m), // 5000 cents
         };
 
-        var record = BPayHeaderRecordMapper.Map(instructions, Settings);
+        var record = BPayHeaderRecordMapper.Map(instructions, Settings, Now);
 
         Assert.Equal("15001", Fields(record)[7]);
     }
@@ -121,7 +126,7 @@ public class BPayHeaderRecordMapperTests
             Instruction(new DateTime(2026, 3, 8, 0, 0, 0), amount: 1095.89m),
         };
 
-        var record = BPayHeaderRecordMapper.Map(instructions, Settings with { FundingAccount = "06200012345678" });
+        var record = BPayHeaderRecordMapper.Map(instructions, Settings with { FundingAccount = "06200012345678" }, Now);
         var fields = Fields(record);
 
         Assert.Equal("01", fields[0]);
@@ -135,7 +140,7 @@ public class BPayHeaderRecordMapperTests
     [Fact]
     public void MapFields_returns_the_8_header_fields_in_spec_order()
     {
-        var fields = BPayHeaderRecordMapper.MapFields(ValidInstructions(), Settings);
+        var fields = BPayHeaderRecordMapper.MapFields(ValidInstructions(), Settings, Now);
 
         Assert.Equal(
             new[]
@@ -155,7 +160,7 @@ public class BPayHeaderRecordMapperTests
     [Fact]
     public void MapFields_funding_account_and_file_number_are_attributed_to_the_static_appsettings_field_name()
     {
-        var fields = BPayHeaderRecordMapper.MapFields(ValidInstructions(), Settings);
+        var fields = BPayHeaderRecordMapper.MapFields(ValidInstructions(), Settings, Now);
 
         Assert.Equal(nameof(BPaySettings.FundingAccount), fields.Single(f => f.CbaResponseField == "Payment Account").RequestField);
         Assert.Equal("06200012345678", fields.Single(f => f.CbaResponseField == "Payment Account").RequestValue);
@@ -171,8 +176,8 @@ public class BPayHeaderRecordMapperTests
             Instruction(new DateTime(2026, 8, 20, 10, 0, 0)),
             Instruction(new DateTime(2026, 8, 14, 10, 0, 0)),
         };
-        var record = BPayHeaderRecordMapper.Map(instructions, Settings);
-        var fields = BPayHeaderRecordMapper.MapFields(instructions, Settings);
+        var record = BPayHeaderRecordMapper.Map(instructions, Settings, Now);
+        var fields = BPayHeaderRecordMapper.MapFields(instructions, Settings, Now);
 
         Assert.Equal(Fields(record)[5], fields.Single(f => f.CbaResponseField == "Payment Date").CbaResponseValue);
         Assert.Equal(Fields(record)[6], fields.Single(f => f.CbaResponseField == "Number of Payment Records").CbaResponseValue);
@@ -185,10 +190,9 @@ public class BPayHeaderRecordMapperTests
     public void Map_and_MapFields_given_the_same_explicit_now_produce_identical_file_creation_date_and_time()
     {
         var instructions = ValidInstructions();
-        var now = new DateTime(2026, 8, 20, 23, 59, 59, DateTimeKind.Utc);
 
-        var record = BPayHeaderRecordMapper.Map(instructions, Settings, now);
-        var fields = BPayHeaderRecordMapper.MapFields(instructions, Settings, now);
+        var record = BPayHeaderRecordMapper.Map(instructions, Settings, Now);
+        var fields = BPayHeaderRecordMapper.MapFields(instructions, Settings, Now);
 
         Assert.Equal(Fields(record)[1], fields.Single(f => f.CbaResponseField == "File Creation Date").CbaResponseValue);
         Assert.Equal(Fields(record)[2], fields.Single(f => f.CbaResponseField == "File Creation Time").CbaResponseValue);

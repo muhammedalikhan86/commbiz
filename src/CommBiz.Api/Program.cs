@@ -12,6 +12,7 @@ using Wolverine;
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseWolverine();
 builder.Services.AddOpenApi();
+builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.Configure<DirectEntrySettings>(builder.Configuration.GetSection("DirectEntry"));
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<DirectEntrySettings>>().Value);
 builder.Services.Configure<BPaySettings>(builder.Configuration.GetSection("BPay"));
@@ -36,8 +37,8 @@ app.MapPost("/convert", async (JsonElement body, IMessageBus bus) =>
     await PaymentTypeRouter.RouteAndDispatchAsync(body, bus));
 
 // TEMPORARY: same routing/conversion as /convert, but returns ConvertedText as a downloadable .txt file.
-app.MapPost("/convert-to-file", async (JsonElement body, IMessageBus bus) =>
-    await ConvertToFileRouter.RouteAndDispatchAsync(body, bus));
+app.MapPost("/convert-to-file", async (JsonElement body, IMessageBus bus, TimeProvider timeProvider) =>
+    await ConvertToFileRouter.RouteAndDispatchAsync(body, bus, timeProvider));
 
 app.Run();
 

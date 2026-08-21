@@ -8,11 +8,12 @@ public static class ConvertPriorityPaymentBatchHandler
 {
     // F-018: validate -> map each instruction to its 27-field CSV row -> join with CRLF. Same shape
     // as IMT - no header/trailer record, and no trailing CRLF after the last row.
-    public static ConvertPriorityPaymentBatchResponse Handle(ConvertPriorityPaymentBatchCommand command, PriorityPaymentsSettings settings)
+    public static ConvertPriorityPaymentBatchResponse Handle(
+        ConvertPriorityPaymentBatchCommand command, PriorityPaymentsSettings settings, TimeProvider timeProvider)
     {
         var instructions = command.Instructions;
 
-        var validationErrors = PriorityPaymentValidator.Validate(instructions);
+        var validationErrors = PriorityPaymentValidator.Validate(instructions, timeProvider);
         if (validationErrors is not null)
         {
             return new ConvertPriorityPaymentBatchResponse(false, null, validationErrors);

@@ -13,11 +13,10 @@ public static class BPayHeaderRecordMapper
     // A BPay file has exactly one header date but each instruction carries its own PaymentDate; the
     // earliest instruction's date in the batch is used as the header's Payment Date, consistent with
     // how Direct Entry's header already picks the earliest instruction date.
-    public static string Map(IReadOnlyList<BPayPaymentInstructionRequest> instructions, BPaySettings settings) =>
-        Map(instructions, settings, DateTime.UtcNow);
-
-    // F-021: overload taking an explicit `now` so a caller building both ConvertedText and Mappings for
-    // the same header can guarantee they share one timestamp - see ConvertBPayBatchCommand.
+    //
+    // No convenience overload defaulting to TimeProvider.System here - every caller (production or test)
+    // must supply `now` explicitly, so the time source is always visible at the call site, never hidden
+    // inside this mapper. See ConvertBPayBatchCommand for the production caller.
     public static string Map(IReadOnlyList<BPayPaymentInstructionRequest> instructions, BPaySettings settings, DateTime now)
     {
         var values = ResolveValues(instructions, settings, now);
@@ -34,10 +33,6 @@ public static class BPayHeaderRecordMapper
             values.TotalAmountInCents.ToString());
     }
 
-    public static IReadOnlyList<FieldMapping> MapFields(
-        IReadOnlyList<BPayPaymentInstructionRequest> instructions, BPaySettings settings) =>
-        MapFields(instructions, settings, DateTime.UtcNow);
-
     // F-021: same resolved values as Map, so the field-mapping breakdown can never drift from ConvertedText.
     public static IReadOnlyList<FieldMapping> MapFields(
         IReadOnlyList<BPayPaymentInstructionRequest> instructions, BPaySettings settings, DateTime now)
@@ -48,12 +43,12 @@ public static class BPayHeaderRecordMapper
         [
             new(nameof(RecordType), RecordType, "Record Type", RecordType),
             new(
-                "DateTime.UtcNow",
+                "TimeProvider.GetUtcNow()",
                 values.Now.ToString("O"),
                 "File Creation Date",
                 values.Now.ToString("yyyyMMdd")),
             new(
-                "DateTime.UtcNow",
+                "TimeProvider.GetUtcNow()",
                 values.Now.ToString("O"),
                 "File Creation Time",
                 values.Now.ToString("HHmmss")),

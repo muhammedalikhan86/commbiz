@@ -9,13 +9,13 @@ public static class ConvertImtBatchHandler
     // F-017: validate -> map each instruction to its 27-field CSV row -> join with CRLF. Unlike Direct
     // Entry/BPAY, the IMT spec explicitly forbids a trailing CRLF after the last row (§1.2 rule 2) and
     // has no header/trailer record of its own - do not "fix" this later to match the other two slices.
-    public static ConvertImtBatchResponse Handle(ConvertImtBatchCommand command, ImtSettings settings)
+    public static ConvertImtBatchResponse Handle(ConvertImtBatchCommand command, ImtSettings settings, TimeProvider timeProvider)
     {
         // Sanitise before validating, so DestinationBankAccountNo/BeneficiaryAddress/IntermediaryBankName
         // are already cleaned up by the time Validate and Map ever see them.
         var instructions = command.Instructions.Select(ImtValidator.Sanitize).ToList();
 
-        var validationErrors = ImtValidator.Validate(instructions);
+        var validationErrors = ImtValidator.Validate(instructions, timeProvider);
         if (validationErrors is not null)
         {
             return new ConvertImtBatchResponse(false, null, validationErrors);

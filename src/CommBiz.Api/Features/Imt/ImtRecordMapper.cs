@@ -8,8 +8,9 @@ namespace CommBiz.Api.Features.Imt;
 // IMT record mapping (F-017, docs/stash/CommBiz File Specification - International Money Transfers
 // Priority Payments Non CBA Payment Requests (MT101) v9.md §1.2/§1.4): manual field concatenation
 // only, per ADR-004 (no AutoMapper). CSV, comma-delimited, 27 fields, NOT fixed-width/padded.
-// SanitizeFreeText/DeriveCountryFromSwift are shared with ImtValidator so sanitization/derivation is
-// each computed with one rule, not duplicated between validate and map.
+// SanitizeFreeText is shared with ImtValidator so sanitization is computed with one rule, not
+// duplicated between validate and map. DeriveCountryFromSwift now lives in Shared/MappingUtilities
+// (shared with FX, no longer a per-slice copy).
 public static partial class ImtRecordMapper
 {
     private const string TransactionType = "IMT"; // field 1 constant - never "TT" (the API's routing code)
@@ -163,18 +164,8 @@ public static partial class ImtRecordMapper
 
     // Field 7: last 4 digits of the static ImtSettings BSB (hyphens stripped) + the static account
     // number (spaces stripped). Batch-invariant - compute once per batch, not once per instruction.
-    public static string DeriveDebitAccountNumber(ImtSettings settings)
-    {
-        var bsbDigits = settings.DebitAccountBsb.Replace("-", "");
-        var last4 = bsbDigits.Length > 4 ? bsbDigits[^4..] : bsbDigits;
-        var accountDigits = settings.DebitAccountNumber.Replace(" ", "");
-        return last4 + accountDigits;
-    }
-
-    // A SWIFT BIC's 5th-6th characters are the ISO country code (e.g. CHASUS33 -> US), per §1.2
-    // rules 11/12 and confirmed in the spec's Appendix C.
-    public static string DeriveCountryFromSwift(string? swiftCode) =>
-        swiftCode is { Length: >= 6 } ? swiftCode.Substring(4, 2).ToUpperInvariant() : "";
+    public static string DeriveDebitAccountNumber(ImtSettings settings) =>
+        MappingUtilities.DeriveDebitAccountNumber(settings.DebitAccountBsb, settings.DebitAccountNumber);
 
     // Fields 20/27: replace disallowed characters (anything other than letters/digits/space/hyphen/
     // apostrophe, per §1.2 rule 7) with a space, then collapse repeated spaces - never drop characters

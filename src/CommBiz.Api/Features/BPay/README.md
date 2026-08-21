@@ -27,8 +27,8 @@ so there is no width column here).
 | CBA Field | Position | Source | Transformation |
 |---|---|---|---|
 | Record Type | 1 | constants.RecordType | none |
-| File Creation Date | 2 | request (aggregate: `DateTime.UtcNow`) | formatted `yyyyMMdd` |
-| File Creation Time | 3 | request (aggregate: `DateTime.UtcNow`) | formatted `HHmmss` |
+| File Creation Date | 2 | request (aggregate: `TimeProvider.GetUtcNow()`) | formatted `yyyyMMdd` |
+| File Creation Time | 3 | request (aggregate: `TimeProvider.GetUtcNow()`) | formatted `HHmmss` |
 | File Number | 4 | appsetting.FileNumber | none |
 | Payment Account | 5 | appsetting.FundingAccount | none |
 | Payment Date | 6 | request.PaymentDate (aggregate: earliest in batch) | formatted `yyyyMMdd` |

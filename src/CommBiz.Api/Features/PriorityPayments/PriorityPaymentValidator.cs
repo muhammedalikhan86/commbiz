@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
+using static CommBiz.Api.Features.Shared.MappingUtilities;
 
 namespace CommBiz.Api.Features.PriorityPayments;
 
@@ -35,7 +36,8 @@ public static partial class PriorityPaymentValidator
     [GeneratedRegex("^[A-Za-z0-9]{3,9}$")]
     private static partial Regex AccountNoRegex();
 
-    public static IReadOnlyList<PaymentInstructionError>? Validate(IReadOnlyList<PriorityPaymentInstructionRequest> instructions)
+    public static IReadOnlyList<PaymentInstructionError>? Validate(
+        IReadOnlyList<PriorityPaymentInstructionRequest> instructions, TimeProvider timeProvider)
     {
         List<PaymentInstructionError>? errors = null;
 
@@ -59,7 +61,7 @@ public static partial class PriorityPaymentValidator
 
         for (var index = 0; index < instructions.Count; index++)
         {
-            foreach (var reason in ValidateInstruction(instructions[index]))
+            foreach (var reason in ValidateInstruction(instructions[index], timeProvider))
             {
                 errors ??= [];
                 errors.Add(new PaymentInstructionError(index, reason));
@@ -69,20 +71,20 @@ public static partial class PriorityPaymentValidator
         return errors;
     }
 
-    private static IEnumerable<string> ValidateInstruction(PriorityPaymentInstructionRequest instruction)
+    private static IEnumerable<string> ValidateInstruction(PriorityPaymentInstructionRequest instruction, TimeProvider timeProvider)
     {
         if (string.IsNullOrWhiteSpace(instruction.Notes))
         {
             yield return "Notes (Transaction Description) must not be blank.";
         }
 
-        if (!IsWithinProcessDateWindow(instruction.PaymentDate))
+        if (!IsWithinProcessDateWindow(instruction.PaymentDate, timeProvider))
         {
             yield return $"PaymentDate '{instruction.PaymentDate:yyyy-MM-dd}' must be between today and " +
                 $"{MaxProcessDateMonthsAhead} months ahead.";
         }
 
-        if (!IsValidAmountFormat(instruction.Amount))
+        if (!IsValidAmountFormat(instruction.Amount, MaxAmount))
         {
             yield return $"Amount '{instruction.Amount.ToString(CultureInfo.InvariantCulture)}' must be greater than zero, " +
                 "with at most 11 integer digits and 2 decimal digits.";
@@ -112,15 +114,12 @@ public static partial class PriorityPaymentValidator
         }
     }
 
-    private static bool IsWithinProcessDateWindow(DateTime paymentDate)
+    private static bool IsWithinProcessDateWindow(DateTime paymentDate, TimeProvider timeProvider)
     {
-        var today = DateTime.UtcNow.Date;
+        var today = timeProvider.GetUtcNow().Date;
         var processDate = paymentDate.Date;
         return processDate >= today && processDate <= today.AddMonths(MaxProcessDateMonthsAhead);
     }
-
-    private static bool IsValidAmountFormat(decimal amount) =>
-        amount > 0 && amount <= MaxAmount && Math.Round(amount, 2) == amount;
 
     private static bool IsValidBeneficiaryAccountName(string accountName) =>
         !string.IsNullOrWhiteSpace(accountName)

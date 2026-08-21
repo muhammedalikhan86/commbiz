@@ -20,12 +20,12 @@ public class PriorityPaymentValidatorTests
         instructions;
 
     private static void AssertValid(IReadOnlyList<PriorityPaymentInstructionRequest> instructions) =>
-        Assert.Null(PriorityPaymentValidator.Validate(instructions));
+        Assert.Null(PriorityPaymentValidator.Validate(instructions, TimeProvider.System));
 
     private static void AssertSingleInvalidField(
         IReadOnlyList<PriorityPaymentInstructionRequest> instructions, int expectedIndex, string fieldNameSubstring)
     {
-        var errors = PriorityPaymentValidator.Validate(instructions);
+        var errors = PriorityPaymentValidator.Validate(instructions, TimeProvider.System);
         Assert.NotNull(errors);
         var error = Assert.Single(errors);
         Assert.Equal(expectedIndex, error.Index);
@@ -205,7 +205,7 @@ public class PriorityPaymentValidatorTests
     [Fact]
     public void Zero_instructions_is_rejected_with_minimum_count_reason()
     {
-        var errors = PriorityPaymentValidator.Validate(BatchWithCount(0));
+        var errors = PriorityPaymentValidator.Validate(BatchWithCount(0), TimeProvider.System);
 
         Assert.NotNull(errors);
         Assert.Contains(errors, e => e.Index == -1 && e.Reason.Contains("at least 1"));
@@ -218,7 +218,7 @@ public class PriorityPaymentValidatorTests
     [Fact]
     public void More_than_350_instructions_is_rejected_with_max_count_reason()
     {
-        var errors = PriorityPaymentValidator.Validate(BatchWithCount(351));
+        var errors = PriorityPaymentValidator.Validate(BatchWithCount(351), TimeProvider.System);
 
         Assert.NotNull(errors);
         Assert.Contains(errors, e => e.Index == -1 && e.Reason.Contains("at most 350"));
@@ -231,7 +231,7 @@ public class PriorityPaymentValidatorTests
             ValidInstruction() with { Notes = "" },
             ValidInstruction() with { DestinationBankBsb = "" });
 
-        var errors = PriorityPaymentValidator.Validate(batch);
+        var errors = PriorityPaymentValidator.Validate(batch, TimeProvider.System);
 
         Assert.NotNull(errors);
         Assert.Equal(2, errors.Count);

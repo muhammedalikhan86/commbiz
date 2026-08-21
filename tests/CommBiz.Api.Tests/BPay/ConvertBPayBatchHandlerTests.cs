@@ -26,7 +26,7 @@ public class ConvertBPayBatchHandlerTests
     {
         var command = CommandWith([ValidInstruction()]);
 
-        var result = ConvertBPayBatchHandler.Handle(command, Settings);
+        var result = ConvertBPayBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.True(result.Success);
         Assert.False(string.IsNullOrEmpty(result.ConvertedText));
@@ -38,7 +38,7 @@ public class ConvertBPayBatchHandlerTests
     {
         var command = CommandWith([ValidInstruction() with { BPayBillerCode = "" }]);
 
-        var result = ConvertBPayBatchHandler.Handle(command, Settings);
+        var result = ConvertBPayBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.False(result.Success);
         Assert.Null(result.ConvertedText);
@@ -53,7 +53,7 @@ public class ConvertBPayBatchHandlerTests
     {
         var command = CommandWith([]);
 
-        var result = ConvertBPayBatchHandler.Handle(command, Settings);
+        var result = ConvertBPayBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.False(result.Success);
         Assert.Null(result.ConvertedText);
@@ -67,7 +67,7 @@ public class ConvertBPayBatchHandlerTests
         var instructions = Enumerable.Repeat(ValidInstruction(), 201).ToArray();
         var command = CommandWith(instructions);
 
-        var result = ConvertBPayBatchHandler.Handle(command, Settings);
+        var result = ConvertBPayBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.False(result.Success);
         Assert.Null(result.ConvertedText);
@@ -81,7 +81,7 @@ public class ConvertBPayBatchHandlerTests
         var instructions = Enumerable.Repeat(ValidInstruction(), 200).ToArray();
         var command = CommandWith(instructions);
 
-        var result = ConvertBPayBatchHandler.Handle(command, Settings);
+        var result = ConvertBPayBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.True(result.Success);
         Assert.False(string.IsNullOrEmpty(result.ConvertedText));
@@ -95,7 +95,7 @@ public class ConvertBPayBatchHandlerTests
         var second = ValidInstruction();
         var command = CommandWith([first, second]);
 
-        var result = ConvertBPayBatchHandler.Handle(command, Settings);
+        var result = ConvertBPayBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.True(result.Success);
         var lines = result.ConvertedText!.Split("\r\n");
@@ -113,7 +113,7 @@ public class ConvertBPayBatchHandlerTests
     {
         var command = CommandWith([ValidInstruction(), ValidInstruction()]);
 
-        var result = ConvertBPayBatchHandler.Handle(command, Settings);
+        var result = ConvertBPayBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.True(result.Success);
         Assert.Equal(["header", "detail1", "detail2"], result.Mappings!.Select(line => line.Line));
@@ -124,7 +124,7 @@ public class ConvertBPayBatchHandlerTests
     {
         var command = CommandWith([ValidInstruction()]);
 
-        var result = ConvertBPayBatchHandler.Handle(command, Settings);
+        var result = ConvertBPayBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         var header = result.Mappings!.Single(line => line.Line == "header");
         Assert.Equal(nameof(BPaySettings.FundingAccount), header.Fields.Single(f => f.CbaResponseField == "Payment Account").RequestField);
@@ -136,7 +136,7 @@ public class ConvertBPayBatchHandlerTests
     {
         var command = CommandWith([ValidInstruction() with { BPayBillerCode = "" }]);
 
-        var result = ConvertBPayBatchHandler.Handle(command, Settings);
+        var result = ConvertBPayBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.False(result.Success);
         Assert.Null(result.Mappings);
@@ -149,7 +149,7 @@ public class ConvertBPayBatchHandlerTests
     {
         var command = CommandWith([ValidInstruction()]);
 
-        var result = ConvertBPayBatchHandler.Handle(command, Settings);
+        var result = ConvertBPayBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         var headerLine = result.ConvertedText!.Split("\r\n")[0].Split(",");
         var header = result.Mappings!.Single(line => line.Line == "header");

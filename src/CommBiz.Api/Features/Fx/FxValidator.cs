@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
+using static CommBiz.Api.Features.Shared.MappingUtilities;
 
 namespace CommBiz.Api.Features.Fx;
 
@@ -92,7 +93,7 @@ public static partial class FxValidator
             yield return $"SellCurrency '{instruction.SellCurrency}' must be exactly 3 uppercase alphabetic characters.";
         }
 
-        if (!IsValidAmountFormat(instruction.Amount))
+        if (!IsValidAmountFormat(instruction.Amount, MaxAmount))
         {
             yield return $"Amount '{instruction.Amount.ToString(CultureInfo.InvariantCulture)}' must be greater than zero, " +
                 "with at most 11 integer digits and 2 decimal digits.";
@@ -103,7 +104,4 @@ public static partial class FxValidator
             yield return $"AccountNo '{instruction.AccountNo}' must be 1-{MaxAccountNoLength} alphanumeric characters.";
         }
     }
-
-    private static bool IsValidAmountFormat(decimal amount) =>
-        amount > 0 && amount <= MaxAmount && Math.Round(amount, 2) == amount;
 }

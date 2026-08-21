@@ -22,7 +22,8 @@ public static class BPayValidator
     // ImtValidator/PriorityPaymentValidator's own PaymentDate checks.
     private const int MaxPaymentDateMonthsAhead = 15;
 
-    public static IReadOnlyList<BPayInstructionError>? Validate(IReadOnlyList<BPayPaymentInstructionRequest> instructions)
+    public static IReadOnlyList<BPayInstructionError>? Validate(
+        IReadOnlyList<BPayPaymentInstructionRequest> instructions, TimeProvider timeProvider)
     {
         List<BPayInstructionError>? errors = null;
 
@@ -46,7 +47,7 @@ public static class BPayValidator
 
         for (var index = 0; index < instructions.Count; index++)
         {
-            foreach (var reason in ValidateInstruction(instructions[index]))
+            foreach (var reason in ValidateInstruction(instructions[index], timeProvider))
             {
                 errors ??= [];
                 errors.Add(new BPayInstructionError(index, reason));
@@ -56,7 +57,7 @@ public static class BPayValidator
         return errors;
     }
 
-    private static IEnumerable<string> ValidateInstruction(BPayPaymentInstructionRequest instruction)
+    private static IEnumerable<string> ValidateInstruction(BPayPaymentInstructionRequest instruction, TimeProvider timeProvider)
     {
         if (!IsValidNumericField(instruction.BPayBillerCode, MaxBillerCodeLength))
         {
@@ -73,7 +74,7 @@ public static class BPayValidator
             yield return $"Amount '{instruction.Amount}' must be positive and convert to at most 12 digits of cents.";
         }
 
-        if (!IsWithinPaymentDateWindow(instruction.PaymentDate))
+        if (!IsWithinPaymentDateWindow(instruction.PaymentDate, timeProvider))
         {
             yield return $"PaymentDate '{instruction.PaymentDate:yyyy-MM-dd}' must be between today and " +
                 $"{MaxPaymentDateMonthsAhead} months ahead.";
@@ -83,9 +84,9 @@ public static class BPayValidator
     private static bool IsValidNumericField(string value, int maxLength) =>
         !string.IsNullOrEmpty(value) && value.Length <= maxLength && value.All(char.IsDigit);
 
-    private static bool IsWithinPaymentDateWindow(DateTime paymentDate)
+    private static bool IsWithinPaymentDateWindow(DateTime paymentDate, TimeProvider timeProvider)
     {
-        var today = DateTime.UtcNow.Date;
+        var today = timeProvider.GetUtcNow().Date;
         var processDate = paymentDate.Date;
         return processDate >= today && processDate <= today.AddMonths(MaxPaymentDateMonthsAhead);
     }

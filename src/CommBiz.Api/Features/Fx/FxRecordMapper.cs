@@ -121,10 +121,4 @@ public static class FxRecordMapper
             new("", "", "Social Security Number (SSN)", ""),
         ];
     }
-
-    // A SWIFT BIC's 5th-6th characters are the ISO country code (e.g. CHASUS33 -> US) - same
-    // derivation ImtRecordMapper uses, kept as FX's own copy per ADR-002 (slices don't share logic
-    // beyond the sanctioned Shared/ helpers).
-    private static string DeriveCountryFromSwift(string? swiftCode) =>
-        swiftCode is { Length: >= 6 } ? swiftCode.Substring(4, 2).ToUpperInvariant() : "";
 }

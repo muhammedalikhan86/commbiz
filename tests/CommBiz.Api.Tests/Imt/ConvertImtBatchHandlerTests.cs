@@ -35,7 +35,7 @@ public class ConvertImtBatchHandlerTests
     {
         var command = CommandWith([ValidInstruction()]);
 
-        var result = ConvertImtBatchHandler.Handle(command, Settings);
+        var result = ConvertImtBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.True(result.Success);
         Assert.False(string.IsNullOrEmpty(result.ConvertedText));
@@ -47,7 +47,7 @@ public class ConvertImtBatchHandlerTests
     {
         var command = CommandWith([ValidInstruction() with { Notes = "" }]);
 
-        var result = ConvertImtBatchHandler.Handle(command, Settings);
+        var result = ConvertImtBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.False(result.Success);
         Assert.Null(result.ConvertedText);
@@ -67,7 +67,7 @@ public class ConvertImtBatchHandlerTests
             BeneficiaryAddress = "9101 Alta Drive, Unit 15, Las Vegas, NV 89145",
         }]);
 
-        var result = ConvertImtBatchHandler.Handle(command, Settings);
+        var result = ConvertImtBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.True(result.Success);
         var fields = result.ConvertedText!.Split(',');
@@ -82,7 +82,7 @@ public class ConvertImtBatchHandlerTests
         var second = ValidInstruction() with { PaymentReference = "TT-000002" };
         var command = CommandWith([first, second]);
 
-        var result = ConvertImtBatchHandler.Handle(command, Settings);
+        var result = ConvertImtBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.True(result.Success);
         var convertedText = result.ConvertedText!;
@@ -99,7 +99,7 @@ public class ConvertImtBatchHandlerTests
     {
         var command = CommandWith([ValidInstruction()]);
 
-        var result = ConvertImtBatchHandler.Handle(command, Settings);
+        var result = ConvertImtBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.DoesNotContain("\r\n", result.ConvertedText);
     }
@@ -110,7 +110,7 @@ public class ConvertImtBatchHandlerTests
         var instructions = Enumerable.Repeat(ValidInstruction(), 351).ToArray();
         var command = CommandWith(instructions);
 
-        var result = ConvertImtBatchHandler.Handle(command, Settings);
+        var result = ConvertImtBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.False(result.Success);
         Assert.Null(result.ConvertedText);
@@ -125,7 +125,7 @@ public class ConvertImtBatchHandlerTests
         var second = ValidInstruction() with { PaymentReference = "TT-000002" };
         var command = CommandWith([first, second]);
 
-        var result = ConvertImtBatchHandler.Handle(command, Settings);
+        var result = ConvertImtBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.True(result.Success);
         Assert.Equal(["row1", "row2"], result.Mappings!.Select(line => line.Line));
@@ -138,7 +138,7 @@ public class ConvertImtBatchHandlerTests
         var second = ValidInstruction() with { PaymentReference = "TT-000002" };
         var command = CommandWith([first, second]);
 
-        var result = ConvertImtBatchHandler.Handle(command, Settings);
+        var result = ConvertImtBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         var row1 = result.Mappings!.Single(line => line.Line == "row1");
         var row2 = result.Mappings!.Single(line => line.Line == "row2");
@@ -151,7 +151,7 @@ public class ConvertImtBatchHandlerTests
     {
         var command = CommandWith([ValidInstruction() with { Notes = "" }]);
 
-        var result = ConvertImtBatchHandler.Handle(command, Settings);
+        var result = ConvertImtBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.False(result.Success);
         Assert.Null(result.Mappings);

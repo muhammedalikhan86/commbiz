@@ -31,7 +31,7 @@ public class ConvertPriorityPaymentBatchHandlerTests
     {
         var command = CommandWith([ValidInstruction()]);
 
-        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings);
+        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.True(result.Success);
         Assert.False(string.IsNullOrEmpty(result.ConvertedText));
@@ -43,7 +43,7 @@ public class ConvertPriorityPaymentBatchHandlerTests
     {
         var command = CommandWith([ValidInstruction() with { Notes = "" }]);
 
-        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings);
+        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.False(result.Success);
         Assert.Null(result.ConvertedText);
@@ -60,7 +60,7 @@ public class ConvertPriorityPaymentBatchHandlerTests
         var second = ValidInstruction() with { Notes = "Second payment" };
         var command = CommandWith([first, second]);
 
-        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings);
+        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.True(result.Success);
         var convertedText = result.ConvertedText!;
@@ -78,7 +78,7 @@ public class ConvertPriorityPaymentBatchHandlerTests
     {
         var command = CommandWith([ValidInstruction()]);
 
-        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings);
+        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.DoesNotContain("\r\n", result.ConvertedText);
     }
@@ -89,7 +89,7 @@ public class ConvertPriorityPaymentBatchHandlerTests
         var instructions = Enumerable.Repeat(ValidInstruction(), 351).ToArray();
         var command = CommandWith(instructions);
 
-        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings);
+        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.False(result.Success);
         Assert.Null(result.ConvertedText);
@@ -104,7 +104,7 @@ public class ConvertPriorityPaymentBatchHandlerTests
         var second = ValidInstruction() with { Notes = "Second payment" };
         var command = CommandWith([first, second]);
 
-        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings);
+        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.True(result.Success);
         Assert.Equal(["row1", "row2"], result.Mappings!.Select(line => line.Line));
@@ -117,7 +117,7 @@ public class ConvertPriorityPaymentBatchHandlerTests
         var second = ValidInstruction() with { Notes = "Second payment" };
         var command = CommandWith([first, second]);
 
-        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings);
+        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         var row1 = result.Mappings!.Single(line => line.Line == "row1");
         var row2 = result.Mappings!.Single(line => line.Line == "row2");
@@ -132,7 +132,7 @@ public class ConvertPriorityPaymentBatchHandlerTests
     {
         var command = CommandWith([ValidInstruction() with { Notes = "" }]);
 
-        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings);
+        var result = ConvertPriorityPaymentBatchHandler.Handle(command, Settings, TimeProvider.System);
 
         Assert.False(result.Success);
         Assert.Null(result.Mappings);

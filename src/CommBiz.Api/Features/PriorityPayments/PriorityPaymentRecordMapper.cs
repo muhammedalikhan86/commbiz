@@ -119,14 +119,9 @@ public static partial class PriorityPaymentRecordMapper
         ];
 
     // Field 7: last 4 digits of the static PriorityPaymentsSettings BSB (hyphens stripped) + the
-    // static account number (spaces stripped) - same derivation as ImtRecordMapper.DeriveDebitAccountNumber.
-    public static string DeriveDebitAccountNumber(PriorityPaymentsSettings settings)
-    {
-        var bsbDigits = settings.DebitAccountBsb.Replace("-", "");
-        var last4 = bsbDigits.Length > 4 ? bsbDigits[^4..] : bsbDigits;
-        var accountDigits = settings.DebitAccountNumber.Replace(" ", "");
-        return last4 + accountDigits;
-    }
+    // static account number (spaces stripped) - shared derivation, see Shared/MappingUtilities.
+    public static string DeriveDebitAccountNumber(PriorityPaymentsSettings settings) =>
+        MappingUtilities.DeriveDebitAccountNumber(settings.DebitAccountBsb, settings.DebitAccountNumber);
 
     // Field 20: replace disallowed characters (anything other than letters/digits/space, per the
     // stricter PP address rule) with a space, then collapse repeated spaces - never drop characters

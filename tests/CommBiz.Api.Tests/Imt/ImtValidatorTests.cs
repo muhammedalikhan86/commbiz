@@ -25,12 +25,12 @@ public class ImtValidatorTests
         instructions;
 
     private static void AssertValid(IReadOnlyList<ImtPaymentInstructionRequest> instructions) =>
-        Assert.Null(ImtValidator.Validate(instructions));
+        Assert.Null(ImtValidator.Validate(instructions, TimeProvider.System));
 
     private static void AssertSingleInvalidField(
         IReadOnlyList<ImtPaymentInstructionRequest> instructions, int expectedIndex, string fieldNameSubstring)
     {
-        var errors = ImtValidator.Validate(instructions);
+        var errors = ImtValidator.Validate(instructions, TimeProvider.System);
         Assert.NotNull(errors);
         var error = Assert.Single(errors);
         Assert.Equal(expectedIndex, error.Index);
@@ -279,7 +279,7 @@ public class ImtValidatorTests
     [Fact]
     public void Zero_instructions_is_rejected_with_minimum_count_reason()
     {
-        var errors = ImtValidator.Validate(BatchWithCount(0));
+        var errors = ImtValidator.Validate(BatchWithCount(0), TimeProvider.System);
 
         Assert.NotNull(errors);
         Assert.Contains(errors, e => e.Index == -1 && e.Reason.Contains("at least 1"));
@@ -292,7 +292,7 @@ public class ImtValidatorTests
     [Fact]
     public void More_than_350_instructions_is_rejected_with_max_count_reason()
     {
-        var errors = ImtValidator.Validate(BatchWithCount(351));
+        var errors = ImtValidator.Validate(BatchWithCount(351), TimeProvider.System);
 
         Assert.NotNull(errors);
         Assert.Contains(errors, e => e.Index == -1 && e.Reason.Contains("at most 350"));
@@ -305,7 +305,7 @@ public class ImtValidatorTests
             ValidInstruction() with { Notes = "" },
             ValidInstruction() with { PaymentReference = "" });
 
-        var errors = ImtValidator.Validate(batch);
+        var errors = ImtValidator.Validate(batch, TimeProvider.System);
 
         Assert.NotNull(errors);
         Assert.Equal(2, errors.Count);
