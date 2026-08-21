@@ -105,13 +105,9 @@ Content-Type: application/json
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605677",
-    "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015141",
     "paymentDate": "2026-08-20T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
-    "amount": 7500.0,
-    "createBy": "James Harris"
+    "amount": 7500.0
   }
 ]

@@ -9,14 +9,10 @@ namespace CommBiz.Api.Features.DirectEntry;
 public record PaymentInstructionRequest(
     string PaymentTypeCode,
     string AccountNo,
-    string SourceBankAccountName,
     string SourceBankAccountNo,
     string SourceBankBsb,
     string DestinationBankBsb,
     string DestinationBankAccountNo,
     string DestinationBankAccountName,
     DateTime PaymentDate,
-    string SourceCurrency,
-    decimal SourceAmount,
-    decimal Amount,
-    string CreateBy);
+    decimal Amount);

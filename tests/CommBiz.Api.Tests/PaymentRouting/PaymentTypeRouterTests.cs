@@ -47,17 +47,13 @@ public class PaymentTypeRouterTests(WebApplicationFactory<Program> factory)
         {
             PaymentTypeCode = paymentTypeCode,
             AccountNo = accountNo,
-            SourceBankAccountName = "SOPHIA CLARK",
             SourceBankAccountNo = "111375004",
             SourceBankBsb = "015141",
             DestinationBankBsb = "484799",
             DestinationBankAccountNo = "300500",
             DestinationBankAccountName = "JOHN CITIZEN",
             PaymentDate = new DateTime(2026, 8, 20, 10, 0, 0),
-            SourceCurrency = "AUD",
-            SourceAmount = 0.0m,
             Amount = 7500.0m,
-            CreateBy = "James Harris",
         };
 
     [Fact]

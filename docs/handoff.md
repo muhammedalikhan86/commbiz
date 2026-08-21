@@ -12,9 +12,8 @@ including the F-014 self-balancing amendment.**
 - F-002 — Wired up Wolverine (in-process CQRS/command dispatch)
 - F-003 — Direct Entry request/response contract, reshaped to Shaw and Partners' native upstream
   payload shape: `POST /convert` accepts a plain JSON array of `PaymentInstructionRequest`
-  (`paymentTypeCode`, `accountNo`, `sourceBankAccountName`,
-  `sourceBankAccountNo`, `sourceBankBsb`, `paymentDate`, `sourceCurrency`, `sourceAmount`, `amount`,
-  `createBy`); organisation-level constants (title, lodgement reference, trace BSB/account, remitter
+  (`paymentTypeCode`, `accountNo`,
+  `sourceBankAccountNo`, `sourceBankBsb`, `paymentDate`, `amount`); organisation-level constants (title, lodgement reference, trace BSB/account, remitter
   name, indicator, transaction code, withholding tax) are sourced from `appsettings.json`'s
   `DirectEntry` section via `DirectEntrySettings`, not the request
 - F-004 — Payment Type Router (whole-batch rejection on unsupported `paymentTypeCode`, case-insensitive `"DE"` match). Originally a DirectEntry-local check; removed once F-015 centralized this rule into the top-level cross-slice router (`Features/PaymentRouting`), which alone now enforces it

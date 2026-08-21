@@ -18,17 +18,13 @@ public class DirectEntryHeaderRecordMapperTests
         new(
             PaymentTypeCode: "DE",
             AccountNo: "S1605677",
-            SourceBankAccountName: "SOPHIA CLARK",
             SourceBankAccountNo: "111375004",
             SourceBankBsb: "015141",
             DestinationBankBsb: "484799",
             DestinationBankAccountNo: "300500",
             DestinationBankAccountName: "JOHN CITIZEN",
             PaymentDate: paymentDate,
-            SourceCurrency: "AUD",
-            SourceAmount: 0.0m,
-            Amount: 7500.0m,
-            CreateBy: "James Harris");
+            Amount: 7500.0m);
 
     private static IReadOnlyList<PaymentInstructionRequest> ValidInstructions() =>
         [Instruction(new DateTime(2026, 12, 5, 10, 0, 0))];

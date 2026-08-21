@@ -40,8 +40,8 @@ Entry credits (see §3, Direct Entry Configuration).
   it does not know which slice will ultimately handle the batch.
 - **Inputs:** HTTP request body containing a plain JSON array of payment instructions, in Shaw
   and Partners' own native payload shape (e.g. `paymentTypeCode`, `accountNo`,
-  `sourceBankAccountName`, `sourceBankAccountNo`, `sourceBankBSB`, `destinationBankAccountName`,
-  `destinationBankAccountNo`, `destinationBankBsb`, `paymentDate`, `amount`, `createBy`) — not a
+  `sourceBankAccountNo`, `sourceBankBSB`, `destinationBankAccountName`,
+  `destinationBankAccountNo`, `destinationBankBsb`, `paymentDate`, `amount`) — not a
   shape pre-mapped to any single bank format's fields.
 - **Outputs:** JSON response containing either the converted output content as text plus its
   parallel field-by-field mapping breakdown (see Field Mapping Model below), or a validation

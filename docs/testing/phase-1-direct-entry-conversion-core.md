@@ -28,7 +28,7 @@ API.
 
 > **Contract note (v3):** this runbook matches the actual current request/response shape. The request
 > body is a **plain JSON array** of payment instructions in Shaw and Partners' native payload shape
-> (`paymentTypeCode`, `accountNo`, `sourceBank*`, `paymentDate`, `amount`, `createBy`) plus three
+> (`paymentTypeCode`, `accountNo`, `sourceBank*`, `paymentDate`, `amount`) plus three
 > **required** destination-account fields — `destinationBankBsb`, `destinationBankAccountNo`,
 > `destinationBankAccountName` — the real beneficiary account being credited/debited (validated
 > identically to their `sourceBank*` counterparts, plus a non-blank check on the name). There is no
@@ -101,17 +101,13 @@ $body = @'
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605677",
-    "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015141",
     "destinationBankBSB": "484799",
     "destinationBankAccountNo": "300500",
     "destinationBankAccountName": "JOHN CITIZEN",
     "paymentDate": "2026-08-20T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
     "amount": 7500.0,
-    "createBy": "James Harris"
   }
 ]
 '@
@@ -151,32 +147,24 @@ $body = @'
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605677",
-    "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015141",
     "destinationBankBSB": "484799",
     "destinationBankAccountNo": "300500",
     "destinationBankAccountName": "JOHN CITIZEN",
     "paymentDate": "2026-08-20T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
     "amount": 7500.0,
-    "createBy": "James Harris"
   },
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605678",
-    "sourceBankAccountName": "LIAM NGUYEN",
     "sourceBankAccountNo": "222486115",
     "sourceBankBSB": "063111",
     "destinationBankBSB": "062999",
     "destinationBankAccountNo": "412233",
     "destinationBankAccountName": "OLIVIA BROWN",
     "paymentDate": "2026-08-20T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
     "amount": 12500.0,
-    "createBy": "James Harris"
   }
 ]
 '@

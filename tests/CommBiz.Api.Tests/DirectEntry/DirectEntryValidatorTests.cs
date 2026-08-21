@@ -18,17 +18,13 @@ public class DirectEntryValidatorTests
         new(
             PaymentTypeCode: "DE",
             AccountNo: "S1605677",
-            SourceBankAccountName: "SOPHIA CLARK",
             SourceBankAccountNo: "111375004",
             SourceBankBsb: "015141",
             DestinationBankBsb: "484799",
             DestinationBankAccountNo: "300500",
             DestinationBankAccountName: "JOHN CITIZEN",
             PaymentDate: new DateTime(2026, 8, 20, 10, 0, 0),
-            SourceCurrency: "AUD",
-            SourceAmount: 0.0m,
-            Amount: 7500.0m,
-            CreateBy: "James Harris");
+            Amount: 7500.0m);
 
     // F-014 dropped the request-level minimum to 1, so field-focused tests below can use a single
     // instruction directly without needing padding to satisfy a higher minimum-count rule.
