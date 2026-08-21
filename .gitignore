@@ -55,3 +55,6 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Graphify (matches at any depth, e.g. src/graphify-out/, not just repo root)
+**/graphify-out/

@@ -291,6 +291,48 @@ Entry remains the primary worked example below, since it is the most structurall
 (header + details + self-balancing record + trailer); see the note after step 6 for how BPay,
 IMT, Priority Payments, and FX differ.
 
+**Request flow** (source: `docs/diagrams/mmd/request-flow-payment-routing.mmd`; rendered PNG:
+`docs/diagrams/img/request-flow-payment-routing.png`):
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Client
+    participant Endpoint as POST /convert<br/>(Program.cs)
+    participant Router as PaymentTypeRouter
+    participant Bus as IMessageBus<br/>(Wolverine)
+    participant Handler as Slice Handler<br/>(e.g. ConvertDirectEntryBatchHandler)
+    participant Validator as Slice Validator
+    participant Mapper as Slice Mapper(s)
+
+    Client->>Endpoint: JSON array of payment instructions
+    Endpoint->>Router: RouteAndDispatchAsync(body, bus)
+
+    Router->>Router: peek paymentTypeCode per instruction
+    alt batch empty, mixed types, or unsupported type
+        Router-->>Endpoint: PaymentRoutingResponse (Success=false, Errors)
+        Endpoint-->>Client: 200 OK (rejection envelope)
+    else single recognised type
+        Router->>Router: deserialize into slice's request shape
+        Router->>Bus: InvokeAsync(slice Command)
+        Bus->>Handler: Handle(command, settings)
+        Handler->>Validator: Validate(instructions)
+        alt validation errors
+            Validator-->>Handler: errors
+            Handler-->>Bus: Response (Success=false, Errors)
+        else valid
+            Validator-->>Handler: null (no errors)
+            Handler->>Mapper: Map(instructions, settings)
+            Mapper-->>Handler: record fields / lines
+            Handler->>Handler: assemble ConvertedText + LineMapping[]
+            Handler-->>Bus: Response (Success=true, ConvertedText, Mappings)
+        end
+        Bus-->>Router: slice Response
+        Router-->>Endpoint: Results.Ok(response)
+        Endpoint-->>Client: 200 OK (JSON response)
+    end
+```
+
 1. Shaw and Partners' system sends a batch of payment instructions, in its own native payload
    shape, to the API Host's `POST /convert` endpoint.
 2. The Payment Type Router checks every instruction's declared payment type code, rejecting the

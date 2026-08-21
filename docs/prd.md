@@ -1,8 +1,8 @@
 # PRD: Shaw and Partners → CommBank Payment File Conversion Service
 
 > Status: APPROVED
-> Version: v10
-> Last updated: 2026-08-18
+> Version: v11
+> Last updated: 2026-08-21
 
 ## Problem Statement
 Shaw and Partners raises individual client payment instructions from its own platform — each
@@ -13,6 +13,16 @@ CommBiz business banking channel only accepts payment/reporting files in its own
 formats. Today, getting a payment instruction from Shaw and Partners into a state CommBank can
 process requires a manual or ad-hoc conversion step, which is slow and error-prone and blocks
 straight-through processing.
+
+## Business Context
+Advisors raise client payment instructions through a Shaw and Partners portal called **Straight
+Through Payments (STP)**, submitted to the Back Office team for processing. A Power Automate
+workflow periodically identifies the delta of instructions not yet processed and passes them to
+this service as REST calls, receiving the converted CommBank-format content back in response. This
+service's responsibility ends there: packaging the returned content into a file, placing that file
+in a folder for pickup, and the Back Office team picking it up and posting it to CommBank's
+CommBiz portal are all handled outside this service, by the Power Automate workflow and the Back
+Office team respectively — not by this product.
 
 ## Goals
 - Automatically convert a Shaw and Partners payment file into the equivalent CommBank
@@ -48,6 +58,11 @@ straight-through processing.
 - Not reconciling bank responses/returns back into Shaw and Partners' systems — this product's
   responsibility ends once the converted submission is produced. Ingesting CommBank return/status
   files is out of scope, permanently, not just deferred.
+- Not responsible for tracking which instructions have already been processed (the delta of
+  unprocessed instructions the calling Power Automate workflow submits), packaging converted
+  output into a file, or delivering/posting that file to CommBank's CommBiz portal — these are the
+  responsibility of the calling workflow and the Back Office team, not this service (see Business
+  Context above).
 
 ## User Stories
 - As a payments operations user at Shaw and Partners, I want a payment run to be automatically
@@ -111,3 +126,4 @@ straight-through processing.
 | v8 | 2026-08-17 | Added Goal: every conversion also exposes a field-by-field breakdown of the converted output, for the testing team's convenience validating conversions against source data | Triage edit — downstream Architecture change (field-level mapping response contract) |
 | v9 | 2026-08-18 | Added foreign currency exchange (FX) as a new in-scope payment type: Goal (convert FX instructions into CommBank's FX settlement submission) and corresponding User Story. Confirmed CommBank file specification and source request shape provided; both carried into Architecture, not recorded here per Document Boundaries | Triage edit |
 | v10 | 2026-08-18 | PRD approved | Gate approval |
+| v11 | 2026-08-21 | Added Business Context section describing the actual operational flow: Advisors raise instructions via the Straight Through Payments (STP) portal to the Back Office team; a Power Automate workflow submits the delta of unprocessed instructions to this service as REST calls and receives converted CommBank-format content back; packaging that content into a file and posting it to CommBank's CommBiz portal is handled by the workflow and Back Office team, not this service. Added a corresponding Non-Goal | User-provided business context |
