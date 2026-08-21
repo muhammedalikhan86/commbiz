@@ -11,15 +11,10 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "RTGS",
-    "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
-    "sourceBankAccountNo": "114316871",
-    "sourceBankBSB": "012141",
     "destinationBankAccountName": "ORS APP GATB",
     "destinationBankAccountNo": "838629371",
     "destinationBankBSB": "012110",
     "paymentDate": "2026-08-18T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
     "amount": 10775.0,
     "notes": "Accounts has been paid to before.",
     "beneficiaryAddress": null
@@ -36,30 +31,20 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "RTGS",
-    "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
-    "sourceBankAccountNo": "114316871",
-    "sourceBankBSB": "012141",
     "destinationBankAccountName": "ORS APP GATB",
     "destinationBankAccountNo": "838629371",
     "destinationBankBSB": "012110",
     "paymentDate": "2026-08-18T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
     "amount": 10775.0,
     "notes": "Accounts has been paid to before.",
     "beneficiaryAddress": null
   },
   {
     "paymentTypeCode": "RTGS",
-    "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
-    "sourceBankAccountNo": "114316871",
-    "sourceBankBSB": "012141",
     "destinationBankAccountName": "SUNRISE HOLDINGS PTY LTD",
     "destinationBankAccountNo": "552017743",
     "destinationBankBSB": "062000",
     "paymentDate": "2026-08-19T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
     "amount": 4250.50,
     "notes": "Quarterly service fee",
     "beneficiaryAddress": "9101 Alta Drive U15"

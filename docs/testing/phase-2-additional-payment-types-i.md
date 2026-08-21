@@ -71,26 +71,14 @@ $body = @'
   {
     "paymentTypeCode": "BPAY",
     "accountNo": "S1605677",
-    "sourceBankAccountName": "SOPHIA CLARK",
-    "sourceBankAccountNo": "111375004",
-    "sourceBankBSB": "015141",
     "paymentDate": "2026-08-20T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
     "amount": 7500.0,
-    "createBy": "James Harris"
   },
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605678",
-    "sourceBankAccountName": "LIAM NGUYEN",
-    "sourceBankAccountNo": "222486115",
-    "sourceBankBSB": "063111",
     "paymentDate": "2026-08-20T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
     "amount": 12500.0,
-    "createBy": "James Harris"
   }
 ]
 '@
@@ -122,14 +110,8 @@ $body = @'
   {
     "paymentTypeCode": "XX",
     "accountNo": "S1605677",
-    "sourceBankAccountName": "SOPHIA CLARK",
-    "sourceBankAccountNo": "111375004",
-    "sourceBankBSB": "015141",
     "paymentDate": "2026-08-20T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
     "amount": 7500.0,
-    "createBy": "James Harris"
   }
 ]
 '@
@@ -185,10 +167,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "tt",
-    "sourceBankAccountName": null,
-    "sourceBankAccountNo": null,
-    "sourceBankBSB": null,
-    "destinationBankTypeCode": null,
     "destinationBankAccountName": "SAMER MOHAMMED KIKI",
     "destinationBankAccountNo": "658450191",
     "paymentDate": "2026-08-18T10:00:00",
@@ -197,16 +175,11 @@ $body = @'
     "amount": 0.0,
     "paymentReference": "TT-000001",
     "notes": "10 bps on fx",
-    "currency": null,
-    "destinationBankIBAN": null,
     "destinationBankSWIFTCode": "CHASUS33",
     "destinationBankName": "NATIONAL FINANCIAL SERVICES",
-    "destinationBankAddress": "640 5TH AVENUE NEW YORK NY 10019",
     "beneficiaryAddress": "9101 Alta Drive, U15, Las Vegas, NV 89145",
-    "intermediaryBankIBAN": null,
     "intermediaryBankSWIFTCode": "CHASUS33",
     "intermediaryBankName": "CHASE MANHATTAN BANK",
-    "intermediaryBankAddress": "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005"
   }
 ]
 '@
@@ -232,14 +205,8 @@ $body = @'
   {
     "paymentTypeCode": "de",
     "accountNo": "S1605677",
-    "sourceBankAccountName": "SOPHIA CLARK",
-    "sourceBankAccountNo": "111375004",
-    "sourceBankBSB": "015141",
     "paymentDate": "2026-08-20T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
     "amount": 7500.0,
-    "createBy": "James Harris"
   }
 ]
 '@
@@ -451,10 +418,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "TT",
-    "sourceBankAccountName": null,
-    "sourceBankAccountNo": null,
-    "sourceBankBSB": null,
-    "destinationBankTypeCode": null,
     "destinationBankAccountName": "SAMER MOHAMMED KIKI",
     "destinationBankAccountNo": "658450191",
     "paymentDate": "2026-08-18T10:00:00",
@@ -463,16 +426,11 @@ $body = @'
     "amount": 0.0,
     "paymentReference": "TT-000001",
     "notes": "10 bps on fx",
-    "currency": null,
-    "destinationBankIBAN": null,
     "destinationBankSWIFTCode": "CHASUS33",
     "destinationBankName": "NATIONAL FINANCIAL SERVICES",
-    "destinationBankAddress": "640 5TH AVENUE NEW YORK NY 10019",
     "beneficiaryAddress": "9101 Alta Drive, U15, Las Vegas, NV 89145",
-    "intermediaryBankIBAN": null,
     "intermediaryBankSWIFTCode": "CHASUS33",
     "intermediaryBankName": "CHASE MANHATTAN BANK",
-    "intermediaryBankAddress": "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005"
   }
 ]
 '@
@@ -502,10 +460,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "TT",
-    "sourceBankAccountName": null,
-    "sourceBankAccountNo": null,
-    "sourceBankBSB": null,
-    "destinationBankTypeCode": null,
     "destinationBankAccountName": "SAMER MOHAMMED KIKI",
     "destinationBankAccountNo": "658450191",
     "paymentDate": "2026-08-18T10:00:00",
@@ -514,23 +468,14 @@ $body = @'
     "amount": 0.0,
     "paymentReference": "TT-000001",
     "notes": "10 bps on fx",
-    "currency": null,
-    "destinationBankIBAN": null,
     "destinationBankSWIFTCode": "CHASUS33",
     "destinationBankName": "NATIONAL FINANCIAL SERVICES",
-    "destinationBankAddress": "640 5TH AVENUE NEW YORK NY 10019",
     "beneficiaryAddress": "9101 Alta Drive, U 15, Las Vegas, NV 89145",
-    "intermediaryBankIBAN": null,
     "intermediaryBankSWIFTCode": "CHASUS33",
     "intermediaryBankName": "CHASE MANHATTAN BANK",
-    "intermediaryBankAddress": "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005"
   },
   {
     "paymentTypeCode": "TT",
-    "sourceBankAccountName": null,
-    "sourceBankAccountNo": null,
-    "sourceBankBSB": null,
-    "destinationBankTypeCode": null,
     "destinationBankAccountName": "GLOBEX TRADING PTY LTD",
     "destinationBankAccountNo": "4471820033",
     "paymentDate": "2026-08-18T10:00:00",
@@ -539,16 +484,11 @@ $body = @'
     "amount": 0.0,
     "paymentReference": "TT-000002",
     "notes": "Supplier invoice settlement",
-    "currency": null,
-    "destinationBankIBAN": null,
     "destinationBankSWIFTCode": "BARCGB22",
     "destinationBankName": "BARCLAYS BANK UK PLC",
-    "destinationBankAddress": "1 CHURCHILL PLACE LONDON E14 5HP",
     "beneficiaryAddress": "27 Oxford Street, London W1D 2DZ",
-    "intermediaryBankIBAN": null,
     "intermediaryBankSWIFTCode": null,
     "intermediaryBankName": null,
-    "intermediaryBankAddress": null
   }
 ]
 '@
@@ -578,10 +518,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "TT",
-    "sourceBankAccountName": null,
-    "sourceBankAccountNo": null,
-    "sourceBankBSB": null,
-    "destinationBankTypeCode": null,
     "destinationBankAccountName": "SAMER MOHAMMED KIKI",
     "destinationBankAccountNo": "658450191",
     "paymentDate": "2026-08-18T10:00:00",
@@ -590,16 +526,11 @@ $body = @'
     "amount": 0.0,
     "paymentReference": "TT-000001",
     "notes": "",
-    "currency": null,
-    "destinationBankIBAN": null,
     "destinationBankSWIFTCode": "CHASUS33",
     "destinationBankName": "NATIONAL FINANCIAL SERVICES",
-    "destinationBankAddress": "640 5TH AVENUE NEW YORK NY 10019",
     "beneficiaryAddress": "9101 Alta Drive, U15, Las Vegas, NV 89145",
-    "intermediaryBankIBAN": null,
     "intermediaryBankSWIFTCode": "CHASUS33",
     "intermediaryBankName": "CHASE MANHATTAN BANK (J.P. MORGAN CHASE & CO)",
-    "intermediaryBankAddress": "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005"
   }
 ]
 '@
@@ -810,9 +741,9 @@ account number. Two further rules differ materially from IMT:
   (see IMT's `DestinationBankAccountName` rule above) — Priority Payments does not.
 
 The debit (source) account is **always** taken from the static `PriorityPaymentsSettings` configuration
-(`appsettings.json`'s `PriorityPayments` section) — never from the request body, even though the request
-carries its own `sourceBankAccountName`/`sourceBankAccountNo`/`sourceBankBSB` fields (those are present
-on the request DTO but not used to populate the debit side of the output).
+(`appsettings.json`'s `PriorityPayments` section) — never from the request body; the request's own
+`SourceBankAccountName`/`SourceBankAccountNo`/`SourceBankBsb` fields have since been removed from the
+request DTO entirely, as they were never used to populate the debit side of the output.
 
 **Automated equivalents:**
 [tests/CommBiz.Api.Tests/PriorityPayments/PriorityPaymentValidatorTests.cs](../../tests/CommBiz.Api.Tests/PriorityPayments/PriorityPaymentValidatorTests.cs),
@@ -835,15 +766,10 @@ $body = @'
 [
   {
     "paymentTypeCode": "RTGS",
-    "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
-    "sourceBankAccountNo": "114316871",
-    "sourceBankBSB": "012141",
     "destinationBankAccountName": "ORS APP GATB",
     "destinationBankAccountNo": "838629371",
     "destinationBankBSB": "012110",
     "paymentDate": "2026-08-18T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
     "amount": 10775.0,
     "notes": "Accounts has been paid to before.",
     "beneficiaryAddress": null
@@ -890,26 +816,15 @@ $body = @'
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605677",
-    "sourceBankAccountName": "SOPHIA CLARK",
-    "sourceBankAccountNo": "111375004",
-    "sourceBankBSB": "015141",
     "paymentDate": "2026-08-20T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
     "amount": 7500.0,
-    "createBy": "James Harris"
   },
   {
     "paymentTypeCode": "RTGS",
-    "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
-    "sourceBankAccountNo": "114316871",
-    "sourceBankBSB": "012141",
     "destinationBankAccountName": "ORS APP GATB",
     "destinationBankAccountNo": "838629371",
     "destinationBankBSB": "012110",
     "paymentDate": "2026-08-18T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
     "amount": 10775.0,
     "notes": "Accounts has been paid to before.",
     "beneficiaryAddress": null
@@ -944,15 +859,10 @@ $body = @'
 [
   {
     "paymentTypeCode": "RTGS",
-    "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
-    "sourceBankAccountNo": "114316871",
-    "sourceBankBSB": "012141",
     "destinationBankAccountName": "ORS APP GATB",
     "destinationBankAccountNo": "838629371",
     "destinationBankBSB": "",
     "paymentDate": "2026-08-18T10:00:00",
-    "sourceCurrency": "AUD",
-    "sourceAmount": 0.0,
     "amount": 10775.0,
     "notes": "Accounts has been paid to before.",
     "beneficiaryAddress": null

@@ -29,15 +29,10 @@ public class PriorityPaymentConvertEndpointTests(WebApplicationFactory<Program> 
         new
         {
             PaymentTypeCode = "RTGS",
-            SourceBankAccountName = "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
-            SourceBankAccountNo = "114316871",
-            SourceBankBSB = "012141",
             DestinationBankAccountName = "ORS APP GATB",
             DestinationBankAccountNo = "838629371",
             DestinationBankBSB = "012110",
             PaymentDate = DateTime.UtcNow.Date.AddDays(1),
-            SourceCurrency = "AUD",
-            SourceAmount = 0.0m,
             Amount = 10775.0m,
             Notes = notes,
             BeneficiaryAddress = (string?)null,

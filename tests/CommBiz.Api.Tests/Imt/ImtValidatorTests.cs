@@ -7,10 +7,6 @@ public class ImtValidatorTests
     private static ImtPaymentInstructionRequest ValidInstruction() =>
         new(
             PaymentTypeCode: "TT",
-            SourceBankAccountName: null,
-            SourceBankAccountNo: null,
-            SourceBankBsb: null,
-            DestinationBankTypeCode: null,
             DestinationBankAccountName: "SAMER MOHAMMED KIKI",
             DestinationBankAccountNo: "658450191",
             PaymentDate: DateTime.UtcNow.Date.AddDays(1),
@@ -19,16 +15,11 @@ public class ImtValidatorTests
             Amount: 0.0m,
             PaymentReference: "TT-000001",
             Notes: "10 bps on fx",
-            Currency: null,
-            DestinationBankIBAN: null,
             DestinationBankSwiftCode: "CHASUS33",
             DestinationBankName: "NATIONAL FINANCIAL SERVICES",
-            DestinationBankAddress: "640 5TH AVENUE NEW YORK NY 10019",
             BeneficiaryAddress: "9101 Alta Drive, U15, Las Vegas, NV 89145",
-            IntermediaryBankIBAN: null,
             IntermediaryBankSwiftCode: "CHASUS33",
-            IntermediaryBankName: "CHASE MANHATTAN BANK",
-            IntermediaryBankAddress: "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005");
+            IntermediaryBankName: "CHASE MANHATTAN BANK");
 
     private static IReadOnlyList<ImtPaymentInstructionRequest> BatchWith(params ImtPaymentInstructionRequest[] instructions) =>
         instructions;

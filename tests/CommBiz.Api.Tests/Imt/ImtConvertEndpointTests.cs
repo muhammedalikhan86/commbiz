@@ -29,10 +29,6 @@ public class ImtConvertEndpointTests(WebApplicationFactory<Program> factory)
         new
         {
             PaymentTypeCode = "TT",
-            SourceBankAccountName = (string?)null,
-            SourceBankAccountNo = (string?)null,
-            SourceBankBSB = (string?)null,
-            DestinationBankTypeCode = (string?)null,
             DestinationBankAccountName = "SAMER MOHAMMED KIKI",
             DestinationBankAccountNo = "658450191",
             PaymentDate = DateTime.UtcNow.Date.AddDays(1),
@@ -41,16 +37,11 @@ public class ImtConvertEndpointTests(WebApplicationFactory<Program> factory)
             Amount = 0.0m,
             PaymentReference = paymentReference,
             Notes = "10 bps on fx",
-            Currency = (string?)null,
-            DestinationBankIBAN = (string?)null,
             DestinationBankSWIFTCode = "CHASUS33",
             DestinationBankName = "NATIONAL FINANCIAL SERVICES",
-            DestinationBankAddress = "640 5TH AVENUE NEW YORK NY 10019",
             BeneficiaryAddress = "9101 Alta Drive, U15, Las Vegas, NV 89145",
-            IntermediaryBankIBAN = (string?)null,
             IntermediaryBankSWIFTCode = "CHASUS33",
             IntermediaryBankName = "CHASE MANHATTAN BANK",
-            IntermediaryBankAddress = "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005",
         };
 
     [Fact]

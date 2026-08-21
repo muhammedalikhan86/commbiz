@@ -11,10 +11,6 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "TT",
-    "sourceBankAccountName": null,
-    "sourceBankAccountNo": null,
-    "sourceBankBSB": null,
-    "destinationBankTypeCode": null,
     "destinationBankAccountName": "SAMER MOHAMMED KIKI",
     "destinationBankAccountNo": "658450191",
     "paymentDate": "2026-08-18T10:00:00",
@@ -23,16 +19,11 @@ Content-Type: application/json
     "amount": 0.0,
     "paymentReference": "TT-000001",
     "notes": "10 bps on fx",
-    "currency": null,
-    "destinationBankIBAN": null,
     "destinationBankSWIFTCode": "CHASUS33",
     "destinationBankName": "NATIONAL FINANCIAL SERVICES",
-    "destinationBankAddress": "640 5TH AVENUE NEW YORK NY 10019",
     "beneficiaryAddress": "9101 Alta Drive, U15, Las Vegas, NV 89145",
-    "intermediaryBankIBAN": null,
     "intermediaryBankSWIFTCode": "CHASUS33",
     "intermediaryBankName": "CHASE MANHATTAN BANK",
-    "intermediaryBankAddress": "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005"
   }
 ]
 
@@ -48,10 +39,6 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "TT",
-    "sourceBankAccountName": null,
-    "sourceBankAccountNo": null,
-    "sourceBankBSB": null,
-    "destinationBankTypeCode": null,
     "destinationBankAccountName": "SAMER MOHAMMED KIKI",
     "destinationBankAccountNo": "658450191",
     "paymentDate": "2026-08-18T10:00:00",
@@ -60,23 +47,14 @@ Content-Type: application/json
     "amount": 0.0,
     "paymentReference": "TT-000001",
     "notes": "10 bps on fx",
-    "currency": null,
-    "destinationBankIBAN": null,
     "destinationBankSWIFTCode": "CHASUS33",
     "destinationBankName": "NATIONAL FINANCIAL SERVICES",
-    "destinationBankAddress": "640 5TH AVENUE NEW YORK NY 10019",
     "beneficiaryAddress": "9101 Alta Drive, U 15, Las Vegas, NV 89145",
-    "intermediaryBankIBAN": null,
     "intermediaryBankSWIFTCode": "CHASUS33",
     "intermediaryBankName": "CHASE MANHATTAN BANK",
-    "intermediaryBankAddress": "1 CHASE MANHATTAN PLAZA NEW YORK NY 10005"
   },
   {
     "paymentTypeCode": "TT",
-    "sourceBankAccountName": null,
-    "sourceBankAccountNo": null,
-    "sourceBankBSB": null,
-    "destinationBankTypeCode": null,
     "destinationBankAccountName": "GLOBEX TRADING PTY LTD",
     "destinationBankAccountNo": "4471820033",
     "paymentDate": "2026-08-18T10:00:00",
@@ -85,15 +63,10 @@ Content-Type: application/json
     "amount": 0.0,
     "paymentReference": "TT-000002",
     "notes": "Supplier invoice settlement",
-    "currency": null,
-    "destinationBankIBAN": null,
     "destinationBankSWIFTCode": "BARCGB22",
     "destinationBankName": "BARCLAYS BANK UK PLC",
-    "destinationBankAddress": "1 CHURCHILL PLACE LONDON E14 5HP",
     "beneficiaryAddress": "27 Oxford Street, London W1D 2DZ",
-    "intermediaryBankIBAN": null,
     "intermediaryBankSWIFTCode": null,
     "intermediaryBankName": null,
-    "intermediaryBankAddress": null
   }
 ]
