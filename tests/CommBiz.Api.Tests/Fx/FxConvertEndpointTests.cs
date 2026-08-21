@@ -31,15 +31,9 @@ public class FxConvertEndpointTests(WebApplicationFactory<Program> factory)
         new
         {
             PaymentTypeCode = "FOREX",
-            PaymentDate = DateTime.UtcNow.Date,
             Amount = 500.00m,
-            Notes = "New Settlement",
             BuyCurrency = buyCurrency,
             SellCurrency = "AUD",
-            RateTypeCode = "SPOT",
-            ValueDateTypeCode = "STANDARD",
-            FeeTypeCode = "OUR",
-            FeeOtherTypeCode = "",
             AccountNo = accountNo,
         };
 

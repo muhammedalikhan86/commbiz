@@ -10,15 +10,9 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
-    "notes": "New Settlement",
     "buyCurrency": "USD",
     "sellCurrency": "AUD",
-    "rateTypeCode": "SPOT",
-    "valueDateTypeCode": "STANDARD",
-    "feeTypeCode": "OUR",
-    "feeOtherTypeCode": "",
     "accountNo": "Payment2"
   }
 ]
@@ -32,28 +26,16 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
-    "notes": "New Settlement",
     "buyCurrency": "USD",
     "sellCurrency": "AUD",
-    "rateTypeCode": "SPOT",
-    "valueDateTypeCode": "STANDARD",
-    "feeTypeCode": "OUR",
-    "feeOtherTypeCode": "",
     "accountNo": "Payment2"
   },
   {
     "paymentTypeCode": "FOREX",
-    "paymentDate": "2026-08-18T10:00:00",
     "amount": 1250.75,
-    "notes": "New Settlement",
     "buyCurrency": "GBP",
     "sellCurrency": "AUD",
-    "rateTypeCode": "SPOT",
-    "valueDateTypeCode": "STANDARD",
-    "feeTypeCode": "OUR",
-    "feeOtherTypeCode": "",
     "accountNo": "Payment3"
   }
 ]
@@ -68,15 +50,9 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
-    "notes": "New Settlement",
     "buyCurrency": "usd",
     "sellCurrency": "AUD",
-    "rateTypeCode": "SPOT",
-    "valueDateTypeCode": "STANDARD",
-    "feeTypeCode": "OUR",
-    "feeOtherTypeCode": "",
     "accountNo": "Payment2"
   }
 ]
@@ -91,15 +67,9 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
-    "notes": "New Settlement",
     "buyCurrency": "USD",
     "sellCurrency": "AUD",
-    "rateTypeCode": "SPOT",
-    "valueDateTypeCode": "STANDARD",
-    "feeTypeCode": "OUR",
-    "feeOtherTypeCode": "",
     "accountNo": "Payment2"
   },
   {

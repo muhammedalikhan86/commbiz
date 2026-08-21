@@ -16,15 +16,9 @@ public class FxRecordMapperTests
     private static FxPaymentInstructionRequest ValidInstruction() =>
         new(
             PaymentTypeCode: "FOREX",
-            PaymentDate: new DateTime(2026, 4, 10, 10, 0, 0),
             Amount: 500.00m,
-            Notes: "New Settlement",
             BuyCurrency: "USD",
             SellCurrency: "AUD",
-            RateTypeCode: "SPOT",
-            ValueDateTypeCode: "STANDARD",
-            FeeTypeCode: "OUR",
-            FeeOtherTypeCode: "",
             AccountNo: "Payment2");
 
     private static string[] Fields(string record) => record.Split(',');
@@ -363,13 +357,5 @@ public class FxRecordMapperTests
         Assert.Equal("CN", fields.Single(f => f.CbaResponseField == "Beneficiary - Country").CbaResponseValue);
         Assert.Equal("ABC Limited", fields.Single(f => f.CbaResponseField == "Beneficiary - Account Name").CbaResponseValue);
         Assert.Equal("1 Fifth Av", fields.Single(f => f.CbaResponseField == "Beneficiary - Address line 1").CbaResponseValue);
-    }
-
-    [Fact]
-    public void MapFields_Notes_is_never_present_as_a_request_field()
-    {
-        var fields = FxRecordMapper.MapFields(ValidInstruction(), Settings);
-
-        Assert.DoesNotContain(fields, f => f.RequestField == nameof(FxPaymentInstructionRequest.Notes));
     }
 }

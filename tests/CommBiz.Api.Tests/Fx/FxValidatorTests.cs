@@ -8,15 +8,9 @@ public class FxValidatorTests
     private static FxPaymentInstructionRequest ValidInstruction() =>
         new(
             PaymentTypeCode: "FOREX",
-            PaymentDate: DateTime.UtcNow.Date,
             Amount: 500.00m,
-            Notes: "New Settlement",
             BuyCurrency: "USD",
             SellCurrency: "AUD",
-            RateTypeCode: "SPOT",
-            ValueDateTypeCode: "STANDARD",
-            FeeTypeCode: "OUR",
-            FeeOtherTypeCode: "",
             AccountNo: "Payment2");
 
     private static IReadOnlyList<FxPaymentInstructionRequest> BatchWith(params FxPaymentInstructionRequest[] instructions) =>

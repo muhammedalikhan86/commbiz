@@ -915,15 +915,9 @@ $body = @'
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
-    "notes": "New Settlement",
     "buyCurrency": "USD",
     "sellCurrency": "AUD",
-    "rateTypeCode": "SPOT",
-    "valueDateTypeCode": "STANDARD",
-    "feeTypeCode": "OUR",
-    "feeOtherTypeCode": "",
     "accountNo": "Payment2"
   }
 ]
@@ -947,15 +941,9 @@ $body = @'
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
-    "notes": "New Settlement",
     "buyCurrency": "US",
     "sellCurrency": "AUD",
-    "rateTypeCode": "SPOT",
-    "valueDateTypeCode": "STANDARD",
-    "feeTypeCode": "OUR",
-    "feeOtherTypeCode": "",
     "accountNo": "Payment2"
   }
 ]
@@ -988,15 +976,9 @@ $body = @'
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
-    "notes": "New Settlement",
     "buyCurrency": "USD",
     "sellCurrency": "AUD",
-    "rateTypeCode": "SPOT",
-    "valueDateTypeCode": "STANDARD",
-    "feeTypeCode": "OUR",
-    "feeOtherTypeCode": "",
     "accountNo": "Payment2"
   },
   {
@@ -1088,28 +1070,16 @@ $body = @'
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
-    "notes": "New Settlement",
     "buyCurrency": "USD",
     "sellCurrency": "AUD",
-    "rateTypeCode": "SPOT",
-    "valueDateTypeCode": "STANDARD",
-    "feeTypeCode": "OUR",
-    "feeOtherTypeCode": "",
     "accountNo": "Payment2"
   },
   {
     "paymentTypeCode": "FOREX",
-    "paymentDate": "2026-08-18T10:00:00",
     "amount": 1250.75,
-    "notes": "New Settlement",
     "buyCurrency": "GBP",
     "sellCurrency": "AUD",
-    "rateTypeCode": "SPOT",
-    "valueDateTypeCode": "STANDARD",
-    "feeTypeCode": "OUR",
-    "feeOtherTypeCode": "",
     "accountNo": "Payment3"
   }
 ]
@@ -1147,15 +1117,9 @@ function New-FxBatch([int]$count) {
     1..$count | ForEach-Object {
         [PSCustomObject]@{
             paymentTypeCode  = "FOREX"
-            paymentDate      = "2026-08-18T10:00:00"
             amount           = 500.00
-            notes            = "New Settlement"
             buyCurrency      = "USD"
             sellCurrency     = "AUD"
-            rateTypeCode     = "SPOT"
-            valueDateTypeCode = "STANDARD"
-            feeTypeCode      = "OUR"
-            feeOtherTypeCode = ""
             accountNo        = "FX{0:D6}" -f $_
         }
     }
@@ -1182,15 +1146,9 @@ function New-FxCurrencyPairBatch([string[]]$buyCurrencies) {
     $buyCurrencies | ForEach-Object {
         [PSCustomObject]@{
             paymentTypeCode  = "FOREX"
-            paymentDate      = "2026-08-18T10:00:00"
             amount           = 500.00
-            notes            = "New Settlement"
             buyCurrency      = $_
             sellCurrency     = "AUD"
-            rateTypeCode     = "SPOT"
-            valueDateTypeCode = "STANDARD"
-            feeTypeCode      = "OUR"
-            feeOtherTypeCode = ""
             accountNo        = "FX-$_"
         }
     }
@@ -1235,15 +1193,9 @@ $body = @'
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
-    "notes": "New Settlement",
     "buyCurrency": "US",
     "sellCurrency": "AUD",
-    "rateTypeCode": "SPOT",
-    "valueDateTypeCode": "STANDARD",
-    "feeTypeCode": "OUR",
-    "feeOtherTypeCode": "",
     "accountNo": "Payment2"
   }
 ]
