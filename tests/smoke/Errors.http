@@ -11,9 +11,6 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "XX",
-    "accountNo": "S1605677",
-    "sourceBankAccountNo": "111375004",
-    "sourceBankBSB": "015141",
     "paymentDate": "2026-08-20T10:00:00",
     "amount": 7500.0
   }
@@ -28,17 +25,11 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "BPAY",
-    "accountNo": "S1605677",
-    "sourceBankAccountNo": "111375004",
-    "sourceBankBSB": "015141",
     "paymentDate": "2026-08-20T10:00:00",
     "amount": 7500.0
   },
   {
     "paymentTypeCode": "DE",
-    "accountNo": "S1605678",
-    "sourceBankAccountNo": "222486115",
-    "sourceBankBSB": "063111",
     "paymentDate": "2026-08-20T10:00:00",
     "amount": 12500.0
   }
@@ -55,9 +46,6 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "DE",
-    "accountNo": "S1605677",
-    "sourceBankAccountNo": "111375004",
-    "sourceBankBSB": "015141",
     "paymentDate": "2026-08-20T10:00:00",
     "amount": 7500.0
   },
@@ -91,37 +79,6 @@ Content-Type: application/json
     "amount": 10775.0,
     "notes": "Accounts has been paid to before.",
     "beneficiaryAddress": null
-  }
-]
-
-### Malformed sourceBankBSB ("015-141", containing a hyphen instead of 6 raw digits) on instruction 0
-### — everything else valid so the SourceBankBsb failure is isolated. Expect: 200 OK, Success: false,
-### Errors containing "SourceBankBsb '015-141' must be exactly 6 numeric digits." tied to index 0.
-POST {{baseUrl}}/convert
-Content-Type: application/json
-
-[
-  {
-    "paymentTypeCode": "DE",
-    "accountNo": "S1605677",
-    "sourceBankAccountNo": "111375004",
-    "sourceBankBSB": "015-141",
-    "destinationBankBSB": "484799",
-    "destinationBankAccountNo": "300500",
-    "destinationBankAccountName": "JOHN CITIZEN",
-    "paymentDate": "2026-08-20T10:00:00",
-    "amount": 7500.0
-  },
-  {
-    "paymentTypeCode": "DE",
-    "accountNo": "S1605678",
-    "sourceBankAccountNo": "222486115",
-    "sourceBankBSB": "063111",
-    "destinationBankBSB": "062999",
-    "destinationBankAccountNo": "412233",
-    "destinationBankAccountName": "OLIVIA BROWN",
-    "paymentDate": "2026-08-20T10:00:00",
-    "amount": 12500.0
   }
 ]
 

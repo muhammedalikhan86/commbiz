@@ -17,9 +17,6 @@ public class DirectEntryHeaderRecordMapperTests
     private static PaymentInstructionRequest Instruction(DateTime paymentDate) =>
         new(
             PaymentTypeCode: "DE",
-            AccountNo: "S1605677",
-            SourceBankAccountNo: "111375004",
-            SourceBankBsb: "015141",
             DestinationBankBsb: "484799",
             DestinationBankAccountNo: "300500",
             DestinationBankAccountName: "JOHN CITIZEN",

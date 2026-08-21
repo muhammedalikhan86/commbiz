@@ -42,13 +42,10 @@ public class PaymentTypeRouterTests(WebApplicationFactory<Program> factory)
                 builder.ConfigureAppConfiguration((_, config) => config.AddInMemoryCollection(PriorityPaymentsConfig)))
             .CreateClient();
 
-    private static object ValidDirectEntryInstruction(string paymentTypeCode = "DE", string accountNo = "S1605677") =>
+    private static object ValidDirectEntryInstruction(string paymentTypeCode = "DE") =>
         new
         {
             PaymentTypeCode = paymentTypeCode,
-            AccountNo = accountNo,
-            SourceBankAccountNo = "111375004",
-            SourceBankBsb = "015141",
             DestinationBankBsb = "484799",
             DestinationBankAccountNo = "300500",
             DestinationBankAccountName = "JOHN CITIZEN",
@@ -139,7 +136,6 @@ public class PaymentTypeRouterTests(WebApplicationFactory<Program> factory)
             new
             {
                 PaymentTypeCode = paymentTypeCode,
-                AccountNo = "S1218937",
                 PaymentDate = DateTime.UtcNow.Date.AddDays(1),
                 Amount = 10000.00m,
                 BPayBillerCode = "488577",

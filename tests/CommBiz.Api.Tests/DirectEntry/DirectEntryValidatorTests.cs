@@ -17,9 +17,6 @@ public class DirectEntryValidatorTests
     private static PaymentInstructionRequest ValidInstruction() =>
         new(
             PaymentTypeCode: "DE",
-            AccountNo: "S1605677",
-            SourceBankAccountNo: "111375004",
-            SourceBankBsb: "015141",
             DestinationBankBsb: "484799",
             DestinationBankAccountNo: "300500",
             DestinationBankAccountName: "JOHN CITIZEN",
@@ -42,53 +39,6 @@ public class DirectEntryValidatorTests
         var error = Assert.Single(errors);
         Assert.Equal(expectedIndex, error.Index);
         Assert.Contains(fieldNameSubstring, error.Reason);
-    }
-
-    // --- SourceBankBsb ---
-
-    [Theory]
-    [InlineData("015141", true)]
-    [InlineData("015-141", false)] // hyphen not allowed on the raw field
-    [InlineData("01514", false)] // 5 digits, too short
-    [InlineData("0151411", false)] // 7 digits, too long
-    [InlineData("01514A", false)] // non-numeric
-    [InlineData("", false)]
-    public void SourceBankBsb_must_be_exactly_6_numeric_digits(string sourceBankBsb, bool expectedValid)
-    {
-        var batch = BatchWith(ValidInstruction() with { SourceBankBsb = sourceBankBsb });
-
-        if (expectedValid)
-        {
-            AssertValid(batch);
-        }
-        else
-        {
-            AssertSingleInvalidField(batch, 0, "SourceBankBsb");
-        }
-    }
-
-    // --- SourceBankAccountNo ---
-
-    [Theory]
-    [InlineData("111375004", true)]
-    [InlineData("123456789", true)] // exactly 9 chars, boundary
-    [InlineData("1234567890", false)] // 10 chars, over max
-    [InlineData("12345$678", false)] // disallowed character
-    [InlineData("000000000", false)] // all zeros
-    [InlineData("", false)] // all blank
-    [InlineData("   ", false)] // all blank (spaces)
-    public void SourceBankAccountNo_rules_are_enforced(string sourceBankAccountNo, bool expectedValid)
-    {
-        var batch = BatchWith(ValidInstruction() with { SourceBankAccountNo = sourceBankAccountNo });
-
-        if (expectedValid)
-        {
-            AssertValid(batch);
-        }
-        else
-        {
-            AssertSingleInvalidField(batch, 0, "SourceBankAccountNo");
-        }
     }
 
     // --- Amount ---
@@ -171,16 +121,6 @@ public class DirectEntryValidatorTests
     public void DestinationBankAccountName_populated_is_valid() =>
         AssertValid(BatchWith(ValidInstruction() with { DestinationBankAccountName = "JOHN CITIZEN" }));
 
-    // --- AccountNo ---
-
-    [Fact]
-    public void AccountNo_blank_is_invalid() =>
-        AssertSingleInvalidField(BatchWith(ValidInstruction() with { AccountNo = "" }), 0, "AccountNo");
-
-    [Fact]
-    public void AccountNo_populated_is_valid() =>
-        AssertValid(BatchWith(ValidInstruction() with { AccountNo = "S1605677" }));
-
     // --- Minimum instruction count (F-014): self-balancing record guarantees the output's own
     // >=2 detail record structural rule, so the request-level minimum is now 1 payment instruction ---
 
@@ -221,15 +161,15 @@ public class DirectEntryValidatorTests
     [Fact]
     public void Multiple_simultaneous_field_failures_on_one_instruction_are_all_reported()
     {
-        var batch = BatchWith(ValidInstruction() with { SourceBankBsb = "bad", AccountNo = "" });
+        var batch = BatchWith(ValidInstruction() with { DestinationBankBsb = "bad", DestinationBankAccountName = "" });
 
         var errors = DirectEntryValidator.Validate(batch);
 
         Assert.NotNull(errors);
         Assert.Equal(2, errors.Count);
         Assert.All(errors, e => Assert.Equal(0, e.Index));
-        Assert.Contains(errors, e => e.Reason.Contains("SourceBankBsb"));
-        Assert.Contains(errors, e => e.Reason.Contains("AccountNo"));
+        Assert.Contains(errors, e => e.Reason.Contains("DestinationBankBsb"));
+        Assert.Contains(errors, e => e.Reason.Contains("DestinationBankAccountName"));
     }
 
 }

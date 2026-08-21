@@ -7,7 +7,6 @@ public class BPayValidatorTests
     private static BPayPaymentInstructionRequest ValidInstruction() =>
         new(
             PaymentTypeCode: "BPAY",
-            AccountNo: "S1218937",
             PaymentDate: DateTime.UtcNow.Date.AddDays(1),
             Amount: 10000.00m,
             BPayBillerCode: "488577",
@@ -94,16 +93,6 @@ public class BPayValidatorTests
             AssertSingleInvalidField(batch, 0, "Amount");
         }
     }
-
-    // --- AccountNo ---
-
-    [Fact]
-    public void AccountNo_blank_is_invalid() =>
-        AssertSingleInvalidField(BatchWith(ValidInstruction() with { AccountNo = "" }), 0, "AccountNo");
-
-    [Fact]
-    public void AccountNo_populated_is_valid() =>
-        AssertValid(BatchWith(ValidInstruction() with { AccountNo = "S1218937" }));
 
     // --- PaymentDate ---
 

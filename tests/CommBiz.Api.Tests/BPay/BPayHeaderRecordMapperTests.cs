@@ -13,7 +13,6 @@ public class BPayHeaderRecordMapperTests
     private static BPayPaymentInstructionRequest Instruction(DateTime paymentDate, decimal amount = 10000.00m) =>
         new(
             PaymentTypeCode: "BPAY",
-            AccountNo: "S1218937",
             PaymentDate: paymentDate,
             Amount: amount,
             BPayBillerCode: "488577",

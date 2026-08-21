@@ -9,9 +9,6 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "DE",
-    "accountNo": "S1605677",
-    "sourceBankAccountNo": "111375004",
-    "sourceBankBSB": "015141",
     "destinationBankBSB": "484799",
     "destinationBankAccountNo": "300500",
     "destinationBankAccountName": "JOHN CITIZEN",
@@ -20,9 +17,6 @@ Content-Type: application/json
   },
   {
     "paymentTypeCode": "DE",
-    "accountNo": "S1605678",
-    "sourceBankAccountNo": "222486115",
-    "sourceBankBSB": "063111",
     "destinationBankBSB": "062999",
     "destinationBankAccountNo": "412233",
     "destinationBankAccountName": "OLIVIA BROWN",
@@ -42,9 +36,6 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "DE",
-    "accountNo": "S1605677",
-    "sourceBankAccountNo": "111375004",
-    "sourceBankBSB": "015141",
     "destinationBankBSB": "484799",
     "destinationBankAccountNo": "300500",
     "destinationBankAccountName": "JOHN CITIZEN",

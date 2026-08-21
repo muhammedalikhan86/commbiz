@@ -78,7 +78,6 @@ conversion.
 | Field | Non-negotiable rule |
 |---|---|
 | Batch size | 1-200 payment instructions per file (File Format Rules §1.1 rule 9) |
-| AccountNo | must not be blank |
 | BPayBillerCode | numeric only, 1-10 digits |
 | BPayReference | numeric only, 1-20 digits |
 | Amount | must be positive and convert to at most 12 digits of cents (≤ 9,999,999,999.99) |

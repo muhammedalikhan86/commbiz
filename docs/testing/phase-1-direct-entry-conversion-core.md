@@ -1,8 +1,12 @@
 # Test Runbook: Phase 1 — Direct Entry Conversion Core
 
 > Status: DRAFT
-> Version: v3
-> Last updated: 2026-08-20
+> Version: v4
+> Last updated: 2026-08-21
+> Changelog: v4 — removed `accountNo`/`sourceBankAccountNo`/`sourceBankBSB` from every sample payload
+> and the F-005 validation table: these fields were validated but never mapped to output, and have
+> been removed entirely from `PaymentInstructionRequest`/`DirectEntryValidator` (see
+> [docs/project-management.md](../project-management.md) PM-015).
 > Changelog: v3 — production bug fix: the Detail/self-balancing field-source mapping was corrected
 > (BSB/Account Number/Title now come from the request's new `destinationBank*` fields, not
 > `settings.TraceAccountBsb`/`TraceAccountAccNo`/`NameOfRemitter`; Indicator is now `" "`; Transaction
@@ -26,12 +30,13 @@ API.
 > into the real top-level cross-slice router (`Features/PaymentRouting`), which now solely enforces
 > this rule for every payment type. The DirectEntry-local copy was redundant and has been removed.
 
-> **Contract note (v3):** this runbook matches the actual current request/response shape. The request
+> **Contract note (v4):** this runbook matches the actual current request/response shape. The request
 > body is a **plain JSON array** of payment instructions in Shaw and Partners' native payload shape
-> (`paymentTypeCode`, `accountNo`, `sourceBank*`, `paymentDate`, `amount`) plus three
+> (`paymentTypeCode`, `paymentDate`, `amount`) plus three
 > **required** destination-account fields — `destinationBankBsb`, `destinationBankAccountNo`,
-> `destinationBankAccountName` — the real beneficiary account being credited/debited (validated
-> identically to their `sourceBank*` counterparts, plus a non-blank check on the name). There is no
+> `destinationBankAccountName` — the real beneficiary account being credited/debited. `accountNo`,
+> `sourceBankAccountNo`, and `sourceBankBSB` no longer exist on the request at all (removed per
+> PM-015 — they were validated but never mapped to output). There is no
 > top-level `fileName`/`instructions` wrapper, and per-instruction fields like `indicator`,
 > `transactionCode`, `accountTitle`, `lodgementReference`, `traceBsb`, `traceAccountNumber` and
 > `remitterName` still don't exist on the request; those remain sourced from either the `DirectEntry`
@@ -100,9 +105,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "DE",
-    "accountNo": "S1605677",
-    "sourceBankAccountNo": "111375004",
-    "sourceBankBSB": "015141",
     "destinationBankBSB": "484799",
     "destinationBankAccountNo": "300500",
     "destinationBankAccountName": "JOHN CITIZEN",
@@ -146,9 +148,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "DE",
-    "accountNo": "S1605677",
-    "sourceBankAccountNo": "111375004",
-    "sourceBankBSB": "015141",
     "destinationBankBSB": "484799",
     "destinationBankAccountNo": "300500",
     "destinationBankAccountName": "JOHN CITIZEN",
@@ -157,9 +156,6 @@ $body = @'
   },
   {
     "paymentTypeCode": "DE",
-    "accountNo": "S1605678",
-    "sourceBankAccountNo": "222486115",
-    "sourceBankBSB": "063111",
     "destinationBankBSB": "062999",
     "destinationBankAccountNo": "412233",
     "destinationBankAccountName": "OLIVIA BROWN",
@@ -237,15 +233,6 @@ shown.
 
 | Rule | Mutation | Expected `errors[].reason` (substring) | `index` |
 |---|---|---|---|
-| `accountNo` blank | `instructions[0].accountNo = ""` | `AccountNo must not be blank` | `0` |
-| `sourceBankBSB` malformed (hyphen) | `instructions[0].sourceBankBSB = "015-141"` | `SourceBankBsb '015-141' must be exactly 6 numeric digits` | `0` |
-| `sourceBankBSB` too short | `instructions[0].sourceBankBSB = "01514"` | `SourceBankBsb` ... `must be exactly 6 numeric digits` | `0` |
-| `sourceBankBSB` too long | `instructions[0].sourceBankBSB = "0151411"` | `SourceBankBsb` ... `must be exactly 6 numeric digits` | `0` |
-| `sourceBankBSB` non-numeric | `instructions[0].sourceBankBSB = "01514A"` | `SourceBankBsb` ... `must be exactly 6 numeric digits` | `0` |
-| `sourceBankAccountNo` too long (10 chars) | `instructions[0].sourceBankAccountNo = "1234567890"` | `SourceBankAccountNo` ... `is invalid` | `0` |
-| `sourceBankAccountNo` disallowed character | `instructions[0].sourceBankAccountNo = "12345$678"` | `SourceBankAccountNo` ... `is invalid` | `0` |
-| `sourceBankAccountNo` all-zero | `instructions[0].sourceBankAccountNo = "000000000"` | `SourceBankAccountNo` ... `is invalid` | `0` |
-| `sourceBankAccountNo` all-blank | `instructions[0].sourceBankAccountNo = "   "` | `SourceBankAccountNo` ... `is invalid` | `0` |
 | `destinationBankBsb` malformed (hyphen) | `instructions[0].destinationBankBsb = "484-799"` | `DestinationBankBsb '484-799' must be exactly 6 numeric digits` | `0` |
 | `destinationBankBsb` too short | `instructions[0].destinationBankBsb = "48479"` | `DestinationBankBsb` ... `must be exactly 6 numeric digits` | `0` |
 | `destinationBankBsb` too long | `instructions[0].destinationBankBsb = "4847999"` | `DestinationBankBsb` ... `must be exactly 6 numeric digits` | `0` |
@@ -260,7 +247,7 @@ shown.
 | `amount` over 10 digits of cents | `instructions[0].amount = 100000000.00` | `Amount` ... `at most 10 digits of cents` | `0` |
 | Minimum batch size (F-014) | remove all instructions (`[]`) | `Payment file must contain at least 1 payment instruction(s) (found 0)` | `-1` |
 
-**One-invalid-among-many (regression-sensitive):** apply only the `sourceBankBSB`-format mutation to
+**One-invalid-among-many (regression-sensitive):** apply only the `destinationBankBsb`-format mutation to
 `instructions[0]` in a batch that otherwise has 5+ valid instructions. Expected: the whole batch is
 still rejected with exactly one error entry (`index: 0`) — the 5+ remaining valid instructions must
 not appear anywhere in the response, and must not be partially converted.
@@ -376,14 +363,12 @@ individual detail records' Amount fields, with no drift.
 Using the F-003 happy-path response, extract `convertedText`, split on `\r\n`, and inspect line 2
 (the first real Detail Record — 1-based line 1 is the Header). Each Detail Record is exactly **120
 characters**. Field positions (1-based, inclusive), using the first instruction from the F-003
-two-instruction sample (`sourceBankBSB: "015141"`, `sourceBankAccountNo: "111375004"`,
-`destinationBankBSB: "484799"`, `destinationBankAccountNo: "300500"`,
+two-instruction sample (`destinationBankBSB: "484799"`, `destinationBankAccountNo: "300500"`,
 `destinationBankAccountName: "JOHN CITIZEN"`, `amount: 7500.0`):
 
 > **Field-source note (bug fix):** the BSB/Account Number/Title positions below are sourced from the
-> request's **destination** account fields, not the source account fields used for F-005 validation
-> elsewhere in the request — `sourceBank*` never appears anywhere in the converted Detail record.
-> Previously these three positions were (incorrectly) sourced from
+> request's **destination** account fields, per the F-005 validation table above. Previously these
+> three positions were (incorrectly) sourced from
 > `settings.TraceAccountBsb`/`TraceAccountAccNo`/`NameOfRemitter` instead, which meant every converted
 > file credited Shaw's own settlement/remitter details rather than the actual payee — this was the
 > primary production bug this round fixed.
@@ -426,8 +411,7 @@ amount field is `0000001001` (rounds away-from-zero to `10.01` → `1001` cents)
 
 **Account number boundary case:** convert two instructions — one with `destinationBankAccountNo` at
 exactly 9 characters (`"123456789"`, needs no padding) and one at 4 characters (`"1000"`, expect
-`     1000`, right-justified with 5 leading spaces). Note this position now reflects
-`destinationBankAccountNo`, not `sourceBankAccountNo` — see the field-source note above.
+`     1000`, right-justified with 5 leading spaces).
 
 ---
 
@@ -511,11 +495,8 @@ the top of this document).
 
 | Field | Max length / bound |
 |---|---|
-| `sourceBankBSB` | exactly 6 numeric digits (no hyphen) |
-| `sourceBankAccountNo` | 9 characters; digits/letters/hyphens/spaces only, not all-zero, not all-blank |
-| `destinationBankBsb` | exactly 6 numeric digits (no hyphen); same rule as `sourceBankBSB` |
-| `destinationBankAccountNo` | 9 characters; digits/letters/hyphens/spaces only, not all-zero, not all-blank; same rule as `sourceBankAccountNo` |
+| `destinationBankBsb` | exactly 6 numeric digits (no hyphen) |
+| `destinationBankAccountNo` | 9 characters; digits/letters/hyphens/spaces only, not all-zero, not all-blank |
 | `destinationBankAccountName` | must not be blank (no length limit enforced) |
 | `amount` | greater than 0, up to 99,999,999.99 (converts to at most 10 digits of cents) |
-| `accountNo` | must not be blank (no length limit enforced) |
 | minimum batch size | 1 payment instruction (reduced from 2 by F-014) |

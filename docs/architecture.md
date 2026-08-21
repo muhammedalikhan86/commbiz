@@ -39,8 +39,7 @@ Entry credits (see §3, Direct Entry Configuration).
   accepts a batch conversion request and returns a result. The endpoint is payment-type-agnostic;
   it does not know which slice will ultimately handle the batch.
 - **Inputs:** HTTP request body containing a plain JSON array of payment instructions, in Shaw
-  and Partners' own native payload shape (e.g. `paymentTypeCode`, `accountNo`,
-  `sourceBankAccountNo`, `sourceBankBSB`, `destinationBankAccountName`,
+  and Partners' own native payload shape (e.g. `paymentTypeCode`, `destinationBankAccountName`,
   `destinationBankAccountNo`, `destinationBankBsb`, `paymentDate`, `amount`) — not a
   shape pre-mapped to any single bank format's fields.
 - **Outputs:** JSON response containing either the converted output content as text plus its

@@ -17,9 +17,6 @@ public class ConvertDirectEntryBatchHandlerTests
     private static PaymentInstructionRequest Instruction(string paymentTypeCode) =>
         new(
             PaymentTypeCode: paymentTypeCode,
-            AccountNo: "S1605677",
-            SourceBankAccountNo: "111375004",
-            SourceBankBsb: "015141",
             DestinationBankBsb: "484799",
             DestinationBankAccountNo: "300500",
             DestinationBankAccountName: "JOHN CITIZEN",
@@ -91,8 +88,8 @@ public class ConvertDirectEntryBatchHandlerTests
     [Fact]
     public void Multi_instruction_batch_produces_one_crlf_terminated_detail_record_per_instruction_in_order()
     {
-        var first = Instruction("DE") with { SourceBankAccountNo = "111375004" };
-        var second = Instruction("DE") with { SourceBankAccountNo = "222486115" };
+        var first = Instruction("DE");
+        var second = Instruction("DE");
         var command = CommandWith([first, second]);
 
         var result = ConvertDirectEntryBatchHandler.Handle(command, Settings);

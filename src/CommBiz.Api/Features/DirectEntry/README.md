@@ -94,9 +94,8 @@ partial conversion.
 | Field | Non-negotiable rule |
 |---|---|
 | Batch size | at least 1 payment instruction per file |
-| AccountNo | must not be blank |
-| SourceBankBsb / DestinationBankBsb | exactly 6 numeric digits |
-| SourceBankAccountNo / DestinationBankAccountNo | 1-9 characters, letters/digits/hyphen/space only, not blank once separators are stripped, not all zeros |
+| DestinationBankBsb | exactly 6 numeric digits |
+| DestinationBankAccountNo | 1-9 characters, letters/digits/hyphen/space only, not blank once separators are stripped, not all zeros |
 | DestinationBankAccountName | must not be blank |
 | Amount | must be positive and convert to at most 10 digits of cents (≤ 99,999,999.99) |
 

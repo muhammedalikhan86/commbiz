@@ -27,7 +27,6 @@ public class BPayConvertEndpointTests(WebApplicationFactory<Program> factory)
         new
         {
             PaymentTypeCode = "BPAY",
-            AccountNo = "S1218937",
             PaymentDate = DateTime.UtcNow.Date.AddDays(1),
             Amount = 10000.00m,
             BPayBillerCode = billerCode,

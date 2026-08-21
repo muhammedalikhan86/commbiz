@@ -17,9 +17,6 @@ public class DirectEntryDetailRecordMapperTests
     private static PaymentInstructionRequest ValidInstruction() =>
         new(
             PaymentTypeCode: "DE",
-            AccountNo: "S1605677",
-            SourceBankAccountNo: "111375004",
-            SourceBankBsb: "015141",
             DestinationBankBsb: "484799",
             DestinationBankAccountNo: "300500",
             DestinationBankAccountName: "JOHN CITIZEN",
@@ -51,16 +48,6 @@ public class DirectEntryDetailRecordMapperTests
         Assert.Equal("21120227", record[87..96].Trim()); // Trace Account Number (Trace setting), position 88-96, length 9
         Assert.Equal("SHAW AND PARTNER", record[96..112].TrimEnd()); // Name of Remitter (NameOfRemitter setting), position 97-112, length 16
         Assert.Equal("00000000", record[112..120]); // Withholding Tax Amount, position 113-120, length 8
-    }
-
-    [Fact]
-    public void Bsb_number_and_account_number_always_come_from_the_payloads_destination_regardless_of_source()
-    {
-        var record = DirectEntryDetailRecordMapper.Map(
-            ValidInstruction() with { SourceBankBsb = "999999", SourceBankAccountNo = "999999999" }, Settings);
-
-        Assert.Equal("484-799", record[1..8]);
-        Assert.Equal("300500", record[8..17].Trim());
     }
 
     [Fact]

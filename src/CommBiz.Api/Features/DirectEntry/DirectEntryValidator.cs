@@ -42,21 +42,6 @@ public static class DirectEntryValidator
 
     private static IEnumerable<string> ValidateInstruction(PaymentInstructionRequest instruction)
     {
-        if (string.IsNullOrWhiteSpace(instruction.AccountNo))
-        {
-            yield return "AccountNo must not be blank.";
-        }
-
-        if (!IsValidBsb(instruction.SourceBankBsb))
-        {
-            yield return $"SourceBankBsb '{instruction.SourceBankBsb}' must be exactly 6 numeric digits.";
-        }
-
-        if (!IsValidAccountNumber(instruction.SourceBankAccountNo))
-        {
-            yield return $"SourceBankAccountNo '{instruction.SourceBankAccountNo}' is invalid.";
-        }
-
         if (!IsValidBsb(instruction.DestinationBankBsb))
         {
             yield return $"DestinationBankBsb '{instruction.DestinationBankBsb}' must be exactly 6 numeric digits.";

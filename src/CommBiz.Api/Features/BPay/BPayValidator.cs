@@ -58,11 +58,6 @@ public static class BPayValidator
 
     private static IEnumerable<string> ValidateInstruction(BPayPaymentInstructionRequest instruction)
     {
-        if (string.IsNullOrWhiteSpace(instruction.AccountNo))
-        {
-            yield return "AccountNo must not be blank.";
-        }
-
         if (!IsValidNumericField(instruction.BPayBillerCode, MaxBillerCodeLength))
         {
             yield return $"BPayBillerCode '{instruction.BPayBillerCode}' must be numeric, 1-{MaxBillerCodeLength} digits.";

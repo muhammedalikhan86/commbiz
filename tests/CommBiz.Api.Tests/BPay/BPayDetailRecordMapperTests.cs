@@ -7,7 +7,6 @@ public class BPayDetailRecordMapperTests
     private static BPayPaymentInstructionRequest ValidInstruction() =>
         new(
             PaymentTypeCode: "BPAY",
-            AccountNo: "S1218937",
             PaymentDate: DateTime.UtcNow.Date.AddDays(1),
             Amount: 10000.00m,
             BPayBillerCode: "488577",

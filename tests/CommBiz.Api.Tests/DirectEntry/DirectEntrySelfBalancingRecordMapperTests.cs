@@ -20,9 +20,6 @@ public class DirectEntrySelfBalancingRecordMapperTests
     private static PaymentInstructionRequest Instruction(decimal amount) =>
         new(
             PaymentTypeCode: "DE",
-            AccountNo: "S1605677",
-            SourceBankAccountNo: "111375004",
-            SourceBankBsb: "015141",
             DestinationBankBsb: "484799",
             DestinationBankAccountNo: "300500",
             DestinationBankAccountName: "JOHN CITIZEN",
@@ -60,7 +57,7 @@ public class DirectEntrySelfBalancingRecordMapperTests
     public void Account_is_the_configured_settlement_account_not_any_instructions_account()
     {
         var record = DirectEntrySelfBalancingRecordMapper.Map(
-            [Instruction(100.50m) with { SourceBankBsb = "111222", SourceBankAccountNo = "999999999" }],
+            [Instruction(100.50m) with { DestinationBankBsb = "111222", DestinationBankAccountNo = "999999999" }],
             DebitSettings);
 
         Assert.Equal("062-000", record[1..8]);

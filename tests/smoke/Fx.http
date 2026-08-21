@@ -74,9 +74,6 @@ Content-Type: application/json
   },
   {
     "paymentTypeCode": "DE",
-    "accountNo": "S1605677",
-    "sourceBankAccountNo": "111375004",
-    "sourceBankBSB": "015141",
     "paymentDate": "2026-08-20T10:00:00",
     "amount": 7500.0
   }

@@ -28,12 +28,9 @@ public class DirectEntryConvertEndpointTests(WebApplicationFactory<Program> fact
                 builder.ConfigureAppConfiguration((_, config) => config.AddInMemoryCollection(DirectEntryConfig)))
             .CreateClient();
 
-    private static PaymentInstructionRequest ValidInstruction(string accountNo = "S1605677") =>
+    private static PaymentInstructionRequest ValidInstruction() =>
         new(
             PaymentTypeCode: "DE",
-            AccountNo: accountNo,
-            SourceBankAccountNo: "111375004",
-            SourceBankBsb: "015141",
             DestinationBankBsb: "484799",
             DestinationBankAccountNo: "300500",
             DestinationBankAccountName: "JOHN CITIZEN",
@@ -42,7 +39,7 @@ public class DirectEntryConvertEndpointTests(WebApplicationFactory<Program> fact
 
     private static List<PaymentInstructionRequest> WellFormedBatch(
         IReadOnlyList<PaymentInstructionRequest>? instructions = null) =>
-        [.. instructions ?? [ValidInstruction("S1605677"), ValidInstruction("S1605678")]];
+        [.. instructions ?? [ValidInstruction(), ValidInstruction()]];
 
     [Fact]
     public async Task Well_formed_batch_is_dispatched_through_wolverine_and_returns_success_with_converted_text()
@@ -101,9 +98,9 @@ public class DirectEntryConvertEndpointTests(WebApplicationFactory<Program> fact
         var client = CreateClient();
         var request = WellFormedBatch(
         [
-            ValidInstruction("S1605677"),
-            ValidInstruction("S1605678"),
-            ValidInstruction("S1605679")
+            ValidInstruction(),
+            ValidInstruction(),
+            ValidInstruction()
         ]);
 
         var response = await client.PostAsJsonAsync("/convert", request);

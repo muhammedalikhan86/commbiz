@@ -1,8 +1,11 @@
 # Test Runbook: Phase 2 — Additional Payment Types I
 
 > Status: DRAFT
-> Version: v4
-> Last updated: 2026-08-18
+> Version: v5
+> Last updated: 2026-08-21
+> Changelog: v5 — removed BPay's `AccountNo` and Direct Entry's `accountNo` from every sample payload
+> in this runbook; removed TC-058 (BPay `AccountNo` blank rejected) since the field and its validation
+> no longer exist (see [docs/project-management.md](../project-management.md) PM-015)
 > Covers: F-015–F-018, F-021, F-022, F-023 (see [docs/project-management.md](../project-management.md))
 > Scenario reference: [docs/test-cases.md](../test-cases.md) TC-051–TC-065 (independently numbered
 > range, disjoint from test-cases.md's own TC-033–TC-050 Phase 2 section — some scenarios below are
@@ -70,13 +73,11 @@ $body = @'
 [
   {
     "paymentTypeCode": "BPAY",
-    "accountNo": "S1605677",
     "paymentDate": "2026-08-20T10:00:00",
     "amount": 7500.0,
   },
   {
     "paymentTypeCode": "DE",
-    "accountNo": "S1605678",
     "paymentDate": "2026-08-20T10:00:00",
     "amount": 12500.0,
   }
@@ -109,7 +110,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "XX",
-    "accountNo": "S1605677",
     "paymentDate": "2026-08-20T10:00:00",
     "amount": 7500.0,
   }
@@ -141,7 +141,6 @@ $body = @'
 [
   {
     "PaymentTypeCode": "bpay",
-    "AccountNo": "S1218944",
     "PaymentDate": "2026-08-11T11:45:00",
     "Amount": 15000.00,
     "BPayBillerCode": "488577",
@@ -204,7 +203,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "de",
-    "accountNo": "S1605677",
     "paymentDate": "2026-08-20T10:00:00",
     "amount": 7500.0,
   }
@@ -286,7 +284,6 @@ $body = @'
 [
   {
     "PaymentTypeCode": "BPAY",
-    "AccountNo": "S1218945",
     "PaymentDate": "2026-08-11T12:00:00",
     "Amount": 625.90,
     "BPayBillerCode": "488577",
@@ -294,7 +291,6 @@ $body = @'
   },
   {
     "PaymentTypeCode": "BPAY",
-    "AccountNo": "S1218946",
     "PaymentDate": "2026-08-11T12:15:00",
     "Amount": 2200.00,
     "BPayBillerCode": "488577",
@@ -340,7 +336,6 @@ $body = @'
 [
   {
     "PaymentTypeCode": "BPAY",
-    "AccountNo": "S1218944",
     "PaymentDate": "2026-08-11T11:45:00",
     "Amount": 15000.00,
     "BPayBillerCode": "488577",
@@ -363,7 +358,6 @@ POST. All return `200 OK` with `"success": false`, `"convertedText": null`.
 
 | TC | Mutation | Expected `errors[0].reason` | `index` |
 |---|---|---|---|
-| TC-058 | `AccountNo = ""` | `AccountNo must not be blank.` | `0` |
 | TC-059 | `BPayBillerCode = "48857A"` (non-numeric) | `BPayBillerCode '48857A' must be numeric, 1-10 digits.` | `0` |
 | TC-060 | `Amount = 0` | `Amount '0' must be positive and convert to at most 12 digits of cents.` | `0` |
 
@@ -372,10 +366,9 @@ $body = @'
 [
   {
     "PaymentTypeCode": "BPAY",
-    "AccountNo": "",
+    "BPayBillerCode": "48857A",
     "PaymentDate": "2026-08-11T11:45:00",
     "Amount": 15000.00,
-    "BPayBillerCode": "488577",
     "BPayReference": "1202194308172125"
   }
 ]
@@ -385,13 +378,13 @@ Invoke-RestMethod -Uri http://localhost:5182/convert -Method Post `
   -ContentType 'application/json' -Body $body
 ```
 
-**Expected (TC-058):**
+**Expected (TC-059):**
 ```json
 {
   "success": false,
   "convertedText": null,
   "errors": [
-    { "index": 0, "reason": "AccountNo must not be blank." }
+    { "index": 0, "reason": "BPayBillerCode '48857A' must be numeric, 1-10 digits." }
   ]
 }
 ```
@@ -705,7 +698,7 @@ with `convertedText` splitting into 4 lines for a single-instruction batch (per 
 
 ### TC-070 — Regression: a validation-failure response has `Mappings: null`
 
-Reuse any Field validation failure body from this runbook (e.g. TC-058, BPay `AccountNo = ""`) or from
+Reuse any Field validation failure body from this runbook (e.g. TC-059, BPay `BPayBillerCode = "48857A"`) or from
 [phase-1-direct-entry-conversion-core.md](phase-1-direct-entry-conversion-core.md):
 
 ```powershell
@@ -815,7 +808,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "DE",
-    "accountNo": "S1605677",
     "paymentDate": "2026-08-20T10:00:00",
     "amount": 7500.0,
   },
