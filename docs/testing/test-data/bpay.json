@@ -11,7 +11,7 @@
   "DestinationBankAccountName": null,
   "DestinationBankAccountNo": null,
   "DestinationBankBSB": null,
-  "PaymentDate": "2026-08-03T02:00:00.000",
+  "PaymentDate": "2026-08-23T02:00:00.000",
   "SourceCurrency": "AUD",
   "SourceAmount": 0.0000,
   "Amount": 70720.3200,

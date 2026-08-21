@@ -16,7 +16,6 @@ public class FxRecordMapperTests
     private static FxPaymentInstructionRequest ValidInstruction() =>
         new(
             PaymentTypeCode: "FOREX",
-            PaymentSourceTypeCode: "CMA",
             PaymentDate: new DateTime(2026, 4, 10, 10, 0, 0),
             Amount: 500.00m,
             Notes: "New Settlement",

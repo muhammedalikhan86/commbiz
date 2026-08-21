@@ -28,8 +28,7 @@ public class BPayConvertEndpointTests(WebApplicationFactory<Program> factory)
         {
             PaymentTypeCode = "BPAY",
             AccountNo = "S1218937",
-            PaymentSourceTypeCode = "LEDGER",
-            PaymentDate = new DateTime(2026, 8, 11, 10, 0, 0),
+            PaymentDate = DateTime.UtcNow.Date.AddDays(1),
             Amount = 10000.00m,
             BPayBillerCode = billerCode,
             BPayReference = reference,

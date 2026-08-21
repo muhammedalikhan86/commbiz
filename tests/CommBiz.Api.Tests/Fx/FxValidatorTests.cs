@@ -8,7 +8,6 @@ public class FxValidatorTests
     private static FxPaymentInstructionRequest ValidInstruction() =>
         new(
             PaymentTypeCode: "FOREX",
-            PaymentSourceTypeCode: "CMA",
             PaymentDate: DateTime.UtcNow.Date,
             Amount: 500.00m,
             Notes: "New Settlement",

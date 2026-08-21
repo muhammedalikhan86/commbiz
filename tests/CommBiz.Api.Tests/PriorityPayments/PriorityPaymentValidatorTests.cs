@@ -8,7 +8,6 @@ public class PriorityPaymentValidatorTests
     private static PriorityPaymentInstructionRequest ValidInstruction() =>
         new(
             PaymentTypeCode: "RTGS",
-            PaymentSourceTypeCode: "CMA",
             SourceBankAccountName: "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
             SourceBankAccountNo: "114316871",
             SourceBankBsb: "012141",

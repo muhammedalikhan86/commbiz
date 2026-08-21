@@ -10,7 +10,6 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentSourceTypeCode": "CMA",
     "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
     "notes": "New Settlement",
@@ -33,7 +32,6 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentSourceTypeCode": "CMA",
     "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
     "notes": "New Settlement",
@@ -47,7 +45,6 @@ Content-Type: application/json
   },
   {
     "paymentTypeCode": "FOREX",
-    "paymentSourceTypeCode": "CMA",
     "paymentDate": "2026-08-18T10:00:00",
     "amount": 1250.75,
     "notes": "New Settlement",
@@ -71,7 +68,6 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentSourceTypeCode": "CMA",
     "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
     "notes": "New Settlement",
@@ -95,7 +91,6 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentSourceTypeCode": "CMA",
     "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
     "notes": "New Settlement",
@@ -110,7 +105,6 @@ Content-Type: application/json
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605677",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015141",

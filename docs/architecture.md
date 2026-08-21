@@ -199,7 +199,7 @@ Entry credits (see §3, Direct Entry Configuration).
   shape. Fields specific to IDR/CNH/KRW currency pairs (Purpose of Payment, CNAPS Code,
   Beneficiary Company Name/Contact/SSN) are not yet supported (see Open Questions & Risks, A6) —
   unlike 8-20, no source data for these exists in the payload at all.
-  `PaymentSourceTypeCode`, `PaymentDate`, `Notes`, `RateTypeCode`, `ValueDateTypeCode`,
+  `PaymentDate`, `Notes`, `RateTypeCode`, `ValueDateTypeCode`,
   `FeeTypeCode`, and `FeeOtherTypeCode` are carried in the request but unused — none of the IPFX
   file's 27 field positions correspond to them.
 - **Inputs:** Validated batch of FX-typed payment instructions; FX Configuration.

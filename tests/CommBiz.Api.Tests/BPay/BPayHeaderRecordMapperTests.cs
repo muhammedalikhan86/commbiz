@@ -14,7 +14,6 @@ public class BPayHeaderRecordMapperTests
         new(
             PaymentTypeCode: "BPAY",
             AccountNo: "S1218937",
-            PaymentSourceTypeCode: "LEDGER",
             PaymentDate: paymentDate,
             Amount: amount,
             BPayBillerCode: "488577",

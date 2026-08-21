@@ -71,7 +71,6 @@ $body = @'
   {
     "paymentTypeCode": "BPAY",
     "accountNo": "S1605677",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015141",
@@ -84,7 +83,6 @@ $body = @'
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605678",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "LIAM NGUYEN",
     "sourceBankAccountNo": "222486115",
     "sourceBankBSB": "063111",
@@ -124,7 +122,6 @@ $body = @'
   {
     "paymentTypeCode": "XX",
     "accountNo": "S1605677",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015141",
@@ -163,7 +160,6 @@ $body = @'
   {
     "PaymentTypeCode": "bpay",
     "AccountNo": "S1218944",
-    "PaymentSourceTypeCode": "LEDGER",
     "PaymentDate": "2026-08-11T11:45:00",
     "Amount": 15000.00,
     "BPayBillerCode": "488577",
@@ -189,7 +185,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "tt",
-    "paymentSourceTypeCode": "LEDGER",
     "sourceBankAccountName": null,
     "sourceBankAccountNo": null,
     "sourceBankBSB": null,
@@ -237,7 +232,6 @@ $body = @'
   {
     "paymentTypeCode": "de",
     "accountNo": "S1605677",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015141",
@@ -326,7 +320,6 @@ $body = @'
   {
     "PaymentTypeCode": "BPAY",
     "AccountNo": "S1218945",
-    "PaymentSourceTypeCode": "LEDGER",
     "PaymentDate": "2026-08-11T12:00:00",
     "Amount": 625.90,
     "BPayBillerCode": "488577",
@@ -335,7 +328,6 @@ $body = @'
   {
     "PaymentTypeCode": "BPAY",
     "AccountNo": "S1218946",
-    "PaymentSourceTypeCode": "LEDGER",
     "PaymentDate": "2026-08-11T12:15:00",
     "Amount": 2200.00,
     "BPayBillerCode": "488577",
@@ -382,7 +374,6 @@ $body = @'
   {
     "PaymentTypeCode": "BPAY",
     "AccountNo": "S1218944",
-    "PaymentSourceTypeCode": "LEDGER",
     "PaymentDate": "2026-08-11T11:45:00",
     "Amount": 15000.00,
     "BPayBillerCode": "488577",
@@ -415,7 +406,6 @@ $body = @'
   {
     "PaymentTypeCode": "BPAY",
     "AccountNo": "",
-    "PaymentSourceTypeCode": "LEDGER",
     "PaymentDate": "2026-08-11T11:45:00",
     "Amount": 15000.00,
     "BPayBillerCode": "488577",
@@ -461,7 +451,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "TT",
-    "paymentSourceTypeCode": "LEDGER",
     "sourceBankAccountName": null,
     "sourceBankAccountNo": null,
     "sourceBankBSB": null,
@@ -513,7 +502,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "TT",
-    "paymentSourceTypeCode": "LEDGER",
     "sourceBankAccountName": null,
     "sourceBankAccountNo": null,
     "sourceBankBSB": null,
@@ -539,7 +527,6 @@ $body = @'
   },
   {
     "paymentTypeCode": "TT",
-    "paymentSourceTypeCode": "LEDGER",
     "sourceBankAccountName": null,
     "sourceBankAccountNo": null,
     "sourceBankBSB": null,
@@ -591,7 +578,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "TT",
-    "paymentSourceTypeCode": "LEDGER",
     "sourceBankAccountName": null,
     "sourceBankAccountNo": null,
     "sourceBankBSB": null,
@@ -849,7 +835,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "RTGS",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
     "sourceBankAccountNo": "114316871",
     "sourceBankBSB": "012141",
@@ -905,7 +890,6 @@ $body = @'
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605677",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015141",
@@ -917,7 +901,6 @@ $body = @'
   },
   {
     "paymentTypeCode": "RTGS",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
     "sourceBankAccountNo": "114316871",
     "sourceBankBSB": "012141",
@@ -961,7 +944,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "RTGS",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
     "sourceBankAccountNo": "114316871",
     "sourceBankBSB": "012141",
@@ -1023,7 +1005,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentSourceTypeCode": "CMA",
     "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
     "notes": "New Settlement",
@@ -1056,7 +1037,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentSourceTypeCode": "CMA",
     "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
     "notes": "New Settlement",
@@ -1098,7 +1078,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentSourceTypeCode": "CMA",
     "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
     "notes": "New Settlement",
@@ -1112,7 +1091,6 @@ $body = @'
   },
   {
     "paymentTypeCode": "DE",
-    "paymentSourceTypeCode": "CMA"
   }
 ]
 '@
@@ -1200,7 +1178,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentSourceTypeCode": "CMA",
     "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
     "notes": "New Settlement",
@@ -1214,7 +1191,6 @@ $body = @'
   },
   {
     "paymentTypeCode": "FOREX",
-    "paymentSourceTypeCode": "CMA",
     "paymentDate": "2026-08-18T10:00:00",
     "amount": 1250.75,
     "notes": "New Settlement",
@@ -1261,7 +1237,6 @@ function New-FxBatch([int]$count) {
     1..$count | ForEach-Object {
         [PSCustomObject]@{
             paymentTypeCode  = "FOREX"
-            paymentSourceTypeCode = "CMA"
             paymentDate      = "2026-08-18T10:00:00"
             amount           = 500.00
             notes            = "New Settlement"
@@ -1297,7 +1272,6 @@ function New-FxCurrencyPairBatch([string[]]$buyCurrencies) {
     $buyCurrencies | ForEach-Object {
         [PSCustomObject]@{
             paymentTypeCode  = "FOREX"
-            paymentSourceTypeCode = "CMA"
             paymentDate      = "2026-08-18T10:00:00"
             amount           = 500.00
             notes            = "New Settlement"
@@ -1351,7 +1325,6 @@ $body = @'
 [
   {
     "paymentTypeCode": "FOREX",
-    "paymentSourceTypeCode": "CMA",
     "paymentDate": "2026-08-18T10:00:00",
     "amount": 500.00,
     "notes": "New Settlement",

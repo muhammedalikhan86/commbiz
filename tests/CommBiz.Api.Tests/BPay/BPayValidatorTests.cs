@@ -8,8 +8,7 @@ public class BPayValidatorTests
         new(
             PaymentTypeCode: "BPAY",
             AccountNo: "S1218937",
-            PaymentSourceTypeCode: "LEDGER",
-            PaymentDate: new DateTime(2026, 8, 11, 10, 0, 0),
+            PaymentDate: DateTime.UtcNow.Date.AddDays(1),
             Amount: 10000.00m,
             BPayBillerCode: "488577",
             BPayReference: "1202194308172118");
@@ -105,6 +104,30 @@ public class BPayValidatorTests
     [Fact]
     public void AccountNo_populated_is_valid() =>
         AssertValid(BatchWith(ValidInstruction() with { AccountNo = "S1218937" }));
+
+    // --- PaymentDate ---
+
+    [Fact]
+    public void PaymentDate_today_is_valid() =>
+        AssertValid(BatchWith(ValidInstruction() with { PaymentDate = DateTime.UtcNow.Date }));
+
+    [Fact]
+    public void PaymentDate_15_months_ahead_is_valid() =>
+        AssertValid(BatchWith(ValidInstruction() with { PaymentDate = DateTime.UtcNow.Date.AddMonths(15) }));
+
+    [Fact]
+    public void PaymentDate_beyond_15_months_ahead_is_invalid() =>
+        AssertSingleInvalidField(
+            BatchWith(ValidInstruction() with { PaymentDate = DateTime.UtcNow.Date.AddMonths(15).AddDays(1) }),
+            0,
+            "PaymentDate");
+
+    [Fact]
+    public void PaymentDate_in_the_past_is_invalid() =>
+        AssertSingleInvalidField(
+            BatchWith(ValidInstruction() with { PaymentDate = DateTime.UtcNow.Date.AddDays(-1) }),
+            0,
+            "PaymentDate");
 
     // --- Batch-level instruction count ---
 

@@ -18,7 +18,6 @@ public class ConvertDirectEntryBatchHandlerTests
         new(
             PaymentTypeCode: paymentTypeCode,
             AccountNo: "S1605677",
-            PaymentSourceTypeCode: "CMA",
             SourceBankAccountName: "SOPHIA CLARK",
             SourceBankAccountNo: "111375004",
             SourceBankBsb: "015141",

@@ -7,7 +7,6 @@ namespace CommBiz.Api.Features.Imt;
 // DestinationBankAddress, IntermediaryBankAddress) - not used in this feature's mapping.
 public record ImtPaymentInstructionRequest(
     string PaymentTypeCode,
-    string PaymentSourceTypeCode,
     string? SourceBankAccountName,
     string? SourceBankAccountNo,
     string? SourceBankBsb,

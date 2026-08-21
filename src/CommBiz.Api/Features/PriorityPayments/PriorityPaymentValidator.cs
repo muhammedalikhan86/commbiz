@@ -7,7 +7,7 @@ namespace CommBiz.Api.Features.PriorityPayments;
 // International Money Transfers Priority Payments Non CBA Payment Requests (MT101) v9.md §1.2/§1.5):
 // mirrors ImtValidator's style. Any field failure, anywhere in the batch, rejects the whole batch - no
 // partial conversion. SourceBankBsb/SourceBankAccountNo/SourceBankAccountName/SourceCurrency/
-// PaymentSourceTypeCode/SourceAmount are never validated - unused, same as IMT's unused fields.
+// SourceAmount are never validated - unused, same as IMT's unused fields.
 public static partial class PriorityPaymentValidator
 {
     // Sentinel index for batch-header-level errors (not tied to a specific instruction).

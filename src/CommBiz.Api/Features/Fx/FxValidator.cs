@@ -6,9 +6,8 @@ namespace CommBiz.Api.Features.Fx;
 // FX field-level validation (F-023, docs/stash/CommBiz IPFX Bulk Settlement Upload - File
 // Specification v4.0 2.md "File Description and Business Rules" / "File Contents - Data Rows Format"):
 // mirrors PriorityPaymentValidator's style. Any field failure, anywhere in the batch, rejects the
-// whole batch - no partial conversion. PaymentSourceTypeCode/PaymentDate/Notes/RateTypeCode/
-// ValueDateTypeCode/FeeTypeCode/FeeOtherTypeCode are never validated - unused, same as IMT/PP's
-// unused fields.
+// whole batch - no partial conversion. PaymentDate/Notes/RateTypeCode/ValueDateTypeCode/FeeTypeCode/
+// FeeOtherTypeCode are never validated - unused, same as IMT/PP's unused fields.
 public static partial class FxValidator
 {
     // Sentinel index for batch-header-level errors (not tied to a specific instruction).

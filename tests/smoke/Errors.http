@@ -12,7 +12,6 @@ Content-Type: application/json
   {
     "paymentTypeCode": "XX",
     "accountNo": "S1605677",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015141",
@@ -34,7 +33,6 @@ Content-Type: application/json
   {
     "paymentTypeCode": "BPAY",
     "accountNo": "S1605677",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015141",
@@ -47,7 +45,6 @@ Content-Type: application/json
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605678",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "LIAM NGUYEN",
     "sourceBankAccountNo": "222486115",
     "sourceBankBSB": "063111",
@@ -71,7 +68,6 @@ Content-Type: application/json
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605677",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015141",
@@ -83,7 +79,6 @@ Content-Type: application/json
   },
   {
     "paymentTypeCode": "RTGS",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
     "sourceBankAccountNo": "114316871",
     "sourceBankBSB": "012141",
@@ -110,7 +105,6 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "RTGS",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
     "sourceBankAccountNo": "114316871",
     "sourceBankBSB": "012141",
@@ -136,7 +130,6 @@ Content-Type: application/json
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605677",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015-141",
@@ -152,7 +145,6 @@ Content-Type: application/json
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605678",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "LIAM NGUYEN",
     "sourceBankAccountNo": "222486115",
     "sourceBankBSB": "063111",
@@ -176,7 +168,6 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "TT",
-    "paymentSourceTypeCode": "LEDGER",
     "sourceBankAccountName": null,
     "sourceBankAccountNo": null,
     "sourceBankBSB": null,
@@ -211,7 +202,6 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "TT",
-    "paymentSourceTypeCode": "LEDGER",
     "sourceBankAccountName": null,
     "sourceBankAccountNo": null,
     "sourceBankBSB": null,
@@ -246,7 +236,6 @@ Content-Type: application/json
 [
   {
     "paymentTypeCode": "TT",
-    "paymentSourceTypeCode": "LEDGER",
     "sourceBankAccountName": null,
     "sourceBankAccountNo": null,
     "sourceBankBSB": null,

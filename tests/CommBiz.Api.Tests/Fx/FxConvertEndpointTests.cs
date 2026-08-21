@@ -31,7 +31,6 @@ public class FxConvertEndpointTests(WebApplicationFactory<Program> factory)
         new
         {
             PaymentTypeCode = "FOREX",
-            PaymentSourceTypeCode = "CMA",
             PaymentDate = DateTime.UtcNow.Date,
             Amount = 500.00m,
             Notes = "New Settlement",
@@ -89,7 +88,7 @@ public class FxConvertEndpointTests(WebApplicationFactory<Program> factory)
         var batch = new object[]
         {
             ValidInstruction(),
-            new { PaymentTypeCode = "DE", PaymentSourceTypeCode = "CMA" },
+            new { PaymentTypeCode = "DE" },
         };
 
         var response = await client.PostAsJsonAsync("/convert", batch);

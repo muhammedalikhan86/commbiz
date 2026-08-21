@@ -14,7 +14,6 @@ public class ConvertImtBatchHandlerTests
     private static ImtPaymentInstructionRequest ValidInstruction() =>
         new(
             PaymentTypeCode: "TT",
-            PaymentSourceTypeCode: "LEDGER",
             SourceBankAccountName: null,
             SourceBankAccountNo: null,
             SourceBankBsb: null,

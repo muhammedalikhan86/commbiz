@@ -29,7 +29,6 @@ public class ImtConvertEndpointTests(WebApplicationFactory<Program> factory)
         new
         {
             PaymentTypeCode = "TT",
-            PaymentSourceTypeCode = "LEDGER",
             SourceBankAccountName = (string?)null,
             SourceBankAccountNo = (string?)null,
             SourceBankBSB = (string?)null,

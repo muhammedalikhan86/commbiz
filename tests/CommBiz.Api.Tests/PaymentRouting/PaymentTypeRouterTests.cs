@@ -47,7 +47,6 @@ public class PaymentTypeRouterTests(WebApplicationFactory<Program> factory)
         {
             PaymentTypeCode = paymentTypeCode,
             AccountNo = accountNo,
-            PaymentSourceTypeCode = "CMA",
             SourceBankAccountName = "SOPHIA CLARK",
             SourceBankAccountNo = "111375004",
             SourceBankBsb = "015141",
@@ -145,8 +144,7 @@ public class PaymentTypeRouterTests(WebApplicationFactory<Program> factory)
             {
                 PaymentTypeCode = paymentTypeCode,
                 AccountNo = "S1218937",
-                PaymentSourceTypeCode = "LEDGER",
-                PaymentDate = new DateTime(2026, 8, 11, 10, 0, 0),
+                PaymentDate = DateTime.UtcNow.Date.AddDays(1),
                 Amount = 10000.00m,
                 BPayBillerCode = "488577",
                 BPayReference = "1202194308172118",
@@ -165,7 +163,6 @@ public class PaymentTypeRouterTests(WebApplicationFactory<Program> factory)
         new
         {
             PaymentTypeCode = paymentTypeCode,
-            PaymentSourceTypeCode = "CMA",
             SourceBankAccountName = "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
             SourceBankAccountNo = "114316871",
             SourceBankBSB = "012141",

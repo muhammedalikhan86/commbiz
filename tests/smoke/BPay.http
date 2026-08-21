@@ -10,7 +10,6 @@ Content-Type: application/json
   {
     "PaymentTypeCode": "BPAY",
     "AccountNo": "S1218945",
-    "PaymentSourceTypeCode": "LEDGER",
     "PaymentDate": "2026-08-11T12:00:00",
     "Amount": 625.90,
     "BPayBillerCode": "488577",
@@ -19,7 +18,6 @@ Content-Type: application/json
   {
     "PaymentTypeCode": "BPAY",
     "AccountNo": "S1218946",
-    "PaymentSourceTypeCode": "LEDGER",
     "PaymentDate": "2026-08-11T12:15:00",
     "Amount": 2200.00,
     "BPayBillerCode": "488577",
@@ -37,7 +35,6 @@ Content-Type: application/json
   {
     "PaymentTypeCode": "BPAY",
     "AccountNo": "S1218944",
-    "PaymentSourceTypeCode": "LEDGER",
     "PaymentDate": "2026-08-11T11:45:00",
     "Amount": 15000.00,
     "BPayBillerCode": "488577",

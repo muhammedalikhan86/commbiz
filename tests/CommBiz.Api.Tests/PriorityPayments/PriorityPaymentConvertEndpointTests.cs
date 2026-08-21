@@ -29,7 +29,6 @@ public class PriorityPaymentConvertEndpointTests(WebApplicationFactory<Program> 
         new
         {
             PaymentTypeCode = "RTGS",
-            PaymentSourceTypeCode = "CMA",
             SourceBankAccountName = "J & D SARGENT SUPER CO PTY LTD ATF JASON & DYNA SARGENT SF",
             SourceBankAccountNo = "114316871",
             SourceBankBSB = "012141",

@@ -17,6 +17,11 @@ public static class BPayValidator
     private const int MaxReferenceLength = 20;
     private const decimal MaxAmount = 9_999_999_999.99m;
 
+    // File Format Rules §1.1 rule 6 (Payment Date, field 6): up to 15 months into the future from the
+    // lodgement date. Treated as "from today" (rejecting past dates too), same window style as
+    // ImtValidator/PriorityPaymentValidator's own PaymentDate checks.
+    private const int MaxPaymentDateMonthsAhead = 15;
+
     public static IReadOnlyList<BPayInstructionError>? Validate(IReadOnlyList<BPayPaymentInstructionRequest> instructions)
     {
         List<BPayInstructionError>? errors = null;
@@ -72,8 +77,21 @@ public static class BPayValidator
         {
             yield return $"Amount '{instruction.Amount}' must be positive and convert to at most 12 digits of cents.";
         }
+
+        if (!IsWithinPaymentDateWindow(instruction.PaymentDate))
+        {
+            yield return $"PaymentDate '{instruction.PaymentDate:yyyy-MM-dd}' must be between today and " +
+                $"{MaxPaymentDateMonthsAhead} months ahead.";
+        }
     }
 
     private static bool IsValidNumericField(string value, int maxLength) =>
         !string.IsNullOrEmpty(value) && value.Length <= maxLength && value.All(char.IsDigit);
+
+    private static bool IsWithinPaymentDateWindow(DateTime paymentDate)
+    {
+        var today = DateTime.UtcNow.Date;
+        var processDate = paymentDate.Date;
+        return processDate >= today && processDate <= today.AddMonths(MaxPaymentDateMonthsAhead);
+    }
 }

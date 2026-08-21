@@ -9,7 +9,6 @@ namespace CommBiz.Api.Features.DirectEntry;
 public record PaymentInstructionRequest(
     string PaymentTypeCode,
     string AccountNo,
-    string PaymentSourceTypeCode,
     string SourceBankAccountName,
     string SourceBankAccountNo,
     string SourceBankBsb,

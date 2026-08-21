@@ -101,7 +101,6 @@ $body = @'
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605677",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015141",
@@ -152,7 +151,6 @@ $body = @'
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605677",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "SOPHIA CLARK",
     "sourceBankAccountNo": "111375004",
     "sourceBankBSB": "015141",
@@ -168,7 +166,6 @@ $body = @'
   {
     "paymentTypeCode": "DE",
     "accountNo": "S1605678",
-    "paymentSourceTypeCode": "CMA",
     "sourceBankAccountName": "LIAM NGUYEN",
     "sourceBankAccountNo": "222486115",
     "sourceBankBSB": "063111",

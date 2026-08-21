@@ -32,7 +32,6 @@ public class DirectEntryConvertEndpointTests(WebApplicationFactory<Program> fact
         new(
             PaymentTypeCode: "DE",
             AccountNo: accountNo,
-            PaymentSourceTypeCode: "CMA",
             SourceBankAccountName: "SOPHIA CLARK",
             SourceBankAccountNo: "111375004",
             SourceBankBsb: "015141",

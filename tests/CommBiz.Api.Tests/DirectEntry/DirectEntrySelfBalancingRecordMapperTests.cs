@@ -21,7 +21,6 @@ public class DirectEntrySelfBalancingRecordMapperTests
         new(
             PaymentTypeCode: "DE",
             AccountNo: "S1605677",
-            PaymentSourceTypeCode: "CMA",
             SourceBankAccountName: "SOPHIA CLARK",
             SourceBankAccountNo: "111375004",
             SourceBankBsb: "015141",
